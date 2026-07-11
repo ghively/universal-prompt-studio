@@ -1,6 +1,6 @@
 # Universal Prompt Studio
 
-A browser-based prompt engineering tool for building structured prompts across five modes: Image, Video, LLM, Dev, and Marketing.
+A browser-based prompt engineering tool for building structured prompts across nine modes: Image, Video, LLM, Dev, Marketing, Vibe Coder, Frontend Design, Audio, and Agent.
 
 **Zero dependencies. No build step. Just open the HTML file.**
 
@@ -20,13 +20,17 @@ A browser-based prompt engineering tool for building structured prompts across f
 
 ## What It Does
 
-Universal Prompt Studio provides a guided, form-based interface for constructing detailed prompts across five modes:
+Universal Prompt Studio provides a guided, form-based interface for constructing detailed prompts across nine modes:
 
-- **Image Prompt Builder** — For Gemini, Flux, Midjourney, DALL-E, Stable Diffusion. Covers subject, scene, camera settings, lighting, composition, style, text rendering, and advanced parameters like samplers and ControlNet hints.
-- **Video Prompt Builder** — For Veo 3, Sora, Runway, Kling, Hailuo. Extends image prompts with motion, audio, duration, and transition controls.
-- **LLM Prompt Builder** — For ChatGPT, Claude, Gemini, Llama. Covers role/persona, task definition, context, output format, behavior frameworks (ROSES, CO-STAR, PTCF, etc.), memory, citation, iteration, and safety guardrails. Includes an industry skills picker with 25+ domains.
+- **Image Prompt Builder** — For Nano Banana (Gemini/Imagen), GPT-image, Midjourney, Flux, and Stable Diffusion. Covers subject, scene, camera settings, lighting, composition, style, text rendering, reference-image / character-consistency controls, plus a dedicated section for local Stable Diffusion knobs (samplers, CLIP skip, ControlNet hints).
+- **Video Prompt Builder** — For Veo 3, Sora 2, Runway, Kling, Hailuo. Extends image prompts with motion, native audio, resolution, duration, and transition controls.
+- **LLM Prompt Builder** — For ChatGPT, Claude, Gemini, DeepSeek, Qwen, Llama. Covers role/persona, task definition, context, output format, behavior frameworks (ROSES, CO-STAR, PTCF, etc.), memory, citation, iteration, and safety guardrails. Includes an industry skills picker with 25+ domains.
 - **Dev Prompt Builder** — For code generation, debugging, refactoring, and architecture tasks. Covers language/framework selection, code context, constraints, testing requirements, and output format preferences.
 - **Marketing Prompt Builder** — For ad copy, social media, email campaigns, and brand content. Covers audience targeting, tone/voice, platform constraints, CTAs, and campaign objectives.
+- **Vibe Coder Prompt Builder** — Build web apps with AI, guided by The Vibe Coder's Handbook: 14 tech-stack decisions (runtime, framework, styling, database, auth, deploy) with inline guidance for each choice.
+- **Frontend Design Prompt Builder** — For v0, Lovable, Bolt, Claude Code, Cursor, Figma Make, and Framer AI. Covers visual design language (30 aesthetic directions, color systems, typography), layout & structure (page sections, grids, navigation), components, imagery, motion & interaction, frontend tech stack, responsive/accessibility targets, performance budgets, and design references. Ships with 5 presets from SaaS landing page to dark-luxury agency site.
+- **Audio Prompt Builder** — For Suno, Udio (music), ElevenLabs / TTS (voice), and sound design. Covers genre, mood, tempo, instruments, lyrics, voice style, and production notes.
+- **Agent Prompt Builder** — For tool-use and multi-agent systems (Claude Agent SDK, MCP, LangGraph). Covers objective, tool surface, reasoning loop, memory strategy, guardrails, and output.
 - **Chain Builder** — Build multi-step prompt pipelines where each step's output feeds the next. Add translate steps to push to 23+ platform targets (Canva, Figma, GitHub, Vercel, n8n, etc.).
 
 ## Quick Start
@@ -44,7 +48,8 @@ That's it. Everything runs client-side in your browser.
 | Schema-driven forms | All UI generated dynamically from schema definitions |
 | Presets | One-click presets (Cinematic Portrait, Cyberpunk Scene, Code Review, etc.) |
 | Templates | Save, load, and manage custom templates via localStorage |
-| Import / Export | JSON import/export for sharing prompts |
+| Import / Export | JSON import/export for sharing prompts; export/import the entire template library to a file for backup |
+| Field Search | Filter fields by name across all sections of a builder |
 | Output modes | Generate JSON or plain text output |
 | Chain Builder | Multi-step sequential pipelines with output chaining |
 | Medium aesthetics | 10 artistic mediums with curated aesthetic keyword sets |

@@ -48,13 +48,11 @@
     const IMAGE_SCHEMA = {
       user_intent: { type: 'textarea', label: 'What do you want to create?', placeholder: 'Describe your vision in plain English...', section: 'intent' },
       // Meta
-      'meta.aspect_ratio': { type: 'select', label: 'Aspect Ratio', options: ['16:9', '9:16', '1:1', '4:3', '3:4', '21:9', '3:2'], default: '16:9', section: 'meta' },
-      'meta.quality': { type: 'select', label: 'Quality Mode', options: ['ultra_photorealistic', 'standard', 'raw', 'anime', '3d_render', 'oil_painting', 'watercolor', 'sketch', 'pixel_art', 'vector'], default: 'ultra_photorealistic', section: 'meta' },
-      'meta.steps': { type: 'number', label: 'Steps (10-100)', default: 40, min: 10, max: 100, section: 'meta' },
-      'meta.guidance_scale': { type: 'number', label: 'Guidance Scale (1-20)', default: 7.5, min: 1, max: 20, step: 0.5, section: 'meta' },
+      'meta.aspect_ratio': { type: 'select', label: 'Aspect Ratio', options: ['16:9', '9:16', '1:1', '4:3', '3:4', '21:9', '3:2', '2:1', '5:4'], default: '16:9', section: 'meta' },
+      'meta.quality': { type: 'select', label: 'Render Quality', options: ['ultra', 'high', 'standard', 'draft', 'raw'], default: 'high', placeholder: 'Fidelity/detail level. Artistic look is set under Style → Artistic Medium.', section: 'meta' },
       'meta.seed': { type: 'number', label: 'Seed (for reproducibility)', placeholder: 'Random if empty', section: 'meta' },
       // Subject
-      'subject.type': { type: 'select', label: 'Subject Type', options: ['person', 'animal', 'cyborg', 'monster', 'robot', 'vehicle', 'object', 'landscape'], default: 'person', section: 'subject' },
+      'subject.type': { type: 'select', label: 'Subject Type', options: ['person', 'animal', 'cyborg', 'monster', 'robot', 'vehicle', 'object', 'landscape', 'architecture', 'food', 'plant', 'abstract'], default: 'person', section: 'subject' },
       'subject.name': { type: 'text', label: 'Name (if famous)', placeholder: 'e.g., Batman, Pikachu', section: 'subject' },
       'subject.description': { type: 'textarea', label: 'Visual Description', placeholder: 'Physical traits, distinguishing features...', section: 'subject' },
       'subject.age': { type: 'text', label: 'Age', placeholder: 'e.g., 30, elderly, young adult', section: 'subject' },
@@ -74,7 +72,7 @@
       'scene.lighting_direction': { type: 'select', label: 'Light Direction', options: ['front_lit', 'back_lit', 'side_lit', 'top_down', 'rim_light', 'silhouette', 'under_lit'], default: 'front_lit', section: 'scene' },
       'scene.background_elements': { type: 'text', label: 'Background Elements', placeholder: 'e.g., flying cars, cherry blossoms, neon signs', section: 'scene' },
       // Technical
-      'technical.camera_model': { type: 'select', label: 'Camera Model', options: ['', 'iPhone 15 Pro', 'Sony A7R IV', 'Leica M6', 'Canon EOS R5', 'Hasselblad X2D', 'Polaroid', 'GoPro', 'CCTV'], section: 'technical' },
+      'technical.camera_model': { type: 'select', label: 'Camera Model', options: ['', 'iPhone 17 Pro', 'Samsung Galaxy S25 Ultra', 'Sony A7R V', 'Leica M11', 'Canon EOS R5', 'Hasselblad X2D', 'Polaroid', 'GoPro', 'CCTV'], section: 'technical' },
       'technical.lens': { type: 'select', label: 'Lens', options: ['16mm', '24mm', '35mm', '50mm', '85mm', '105mm', '200mm', 'macro_100mm', 'fisheye_8mm'], default: '50mm', section: 'technical' },
       'technical.aperture': { type: 'select', label: 'Aperture', options: ['f/1.2', 'f/1.4', 'f/1.8', 'f/2.8', 'f/4.0', 'f/5.6', 'f/8.0', 'f/11', 'f/16'], default: 'f/2.8', section: 'technical' },
       'technical.shutter_speed': { type: 'select', label: 'Shutter Speed', options: ['1/8000', '1/4000', '1/1000', '1/500', '1/250', '1/125', '1/60', '1/30', '1s', 'long_exposure'], default: '1/250', section: 'technical' },
@@ -110,13 +108,21 @@
       'advanced.vignette': { type: 'select', label: 'Vignette', options: ['none', 'subtle', 'moderate', 'heavy'], default: 'none', section: 'advanced' },
       'advanced.chromatic_aberration': { type: 'checkbox', label: 'Chromatic Aberration', section: 'advanced' },
       'advanced.tiling': { type: 'checkbox', label: 'Seamless / Tiling Texture', section: 'advanced' },
-      'advanced.denoise_strength': { type: 'number', label: 'Denoise Strength (0.0–1.0)', default: 0.75, min: 0, max: 1, step: 0.05, section: 'advanced' },
       'advanced.style_transfer_strength': { type: 'select', label: 'Style Transfer Strength', options: ['', 'subtle', 'moderate', 'strong', 'maximum'], section: 'advanced' },
       'advanced.upscale_mode': { type: 'select', label: 'Upscale Mode', options: ['none', '2x', '4x', 'face_enhance', 'creative_upscale'], default: 'none', section: 'advanced' },
-      'advanced.sampler': { type: 'select', label: 'Sampler', options: ['Euler_a', 'DPM++_2M_Karras', 'DPM++_SDE_Karras', 'DDIM', 'UniPC', 'LMS', 'Heun', 'DPM_adaptive'], default: 'DPM++_2M_Karras', section: 'advanced' },
-      'advanced.clip_skip': { type: 'select', label: 'CLIP Skip', options: ['1', '2', '3'], default: '1', section: 'advanced' },
       'advanced.mood_override': { type: 'select', label: 'Mood Override', options: ['', 'ethereal', 'gritty', 'clean', 'dark_and_moody', 'bright_and_airy', 'vibrant', 'muted_melancholy', 'tense', 'peaceful', 'epic', 'intimate'], section: 'advanced' },
-      'advanced.controlnet_hint': { type: 'text', label: 'ControlNet Hint', placeholder: 'e.g., pose reference, depth map, canny edges', section: 'advanced' },
+      // Reference & consistency — image-to-image, character refs, style refs (Midjourney --cref, Nano Banana, gpt-image)
+      'reference.mode': { type: 'select', label: 'Reference Mode', options: ['none', 'image_to_image', 'character_reference', 'style_reference', 'inpaint', 'outpaint'], default: 'none', section: 'reference' },
+      'reference.image_url': { type: 'text', label: 'Reference Image (URL or note)', placeholder: 'Paste a reference/source image URL or describe it', section: 'reference' },
+      'reference.strength': { type: 'select', label: 'Reference Strength', options: ['', 'subtle', 'moderate', 'strong', 'maximum'], section: 'reference' },
+      'reference.character_consistency': { type: 'text', label: 'Character Consistency Notes', placeholder: 'e.g., keep the same face/identity across shots', section: 'reference' },
+      // Local diffusion (Stable Diffusion / A1111 / ComfyUI) — these knobs are ignored by API models (Gemini, Midjourney, GPT-image, DALL·E)
+      'sd_local.steps': { type: 'number', label: 'Steps (10-100)', default: 40, min: 10, max: 100, section: 'sd_local' },
+      'sd_local.guidance_scale': { type: 'number', label: 'Guidance Scale / CFG (1-20)', default: 7.5, min: 1, max: 20, step: 0.5, section: 'sd_local' },
+      'sd_local.denoise_strength': { type: 'number', label: 'Denoise Strength (0.0–1.0)', default: 0.75, min: 0, max: 1, step: 0.05, section: 'sd_local' },
+      'sd_local.sampler': { type: 'select', label: 'Sampler', options: ['Euler_a', 'DPM++_2M_Karras', 'DPM++_SDE_Karras', 'DDIM', 'UniPC', 'LMS', 'Heun', 'DPM_adaptive'], default: 'DPM++_2M_Karras', section: 'sd_local' },
+      'sd_local.clip_skip': { type: 'select', label: 'CLIP Skip', options: ['1', '2', '3'], default: '1', section: 'sd_local' },
+      'sd_local.controlnet_hint': { type: 'text', label: 'ControlNet Hint', placeholder: 'e.g., pose reference, depth map, canny edges', section: 'sd_local' },
     };
 
     const VIDEO_SCHEMA = {
@@ -124,18 +130,22 @@
       // Override/Add video-specific fields
       'meta.duration': { type: 'select', label: 'Duration', options: ['5s', '10s', '15s', '30s', '60s'], default: '10s', section: 'meta' },
       'meta.fps': { type: 'select', label: 'Frame Rate', options: ['24fps', '30fps', '60fps'], default: '24fps', section: 'meta' },
+      'meta.resolution': { type: 'select', label: 'Resolution', options: ['720p', '1080p', '4K'], default: '1080p', section: 'meta' },
       // Motion
       'motion.camera_movement': { type: 'select', label: 'Camera Movement', options: ['static', 'slow_pan_left', 'slow_pan_right', 'slow_dolly_in', 'slow_dolly_out', 'tracking_shot', 'crane_up', 'crane_down', 'handheld', 'orbit'], default: 'static', section: 'motion' },
       'motion.camera_speed': { type: 'select', label: 'Camera Speed', options: ['very_slow', 'slow', 'medium', 'fast'], default: 'slow', section: 'motion' },
       'motion.subject_action': { type: 'textarea', label: 'Subject Action', placeholder: 'Describe what the subject does over the duration...', section: 'motion' },
       'motion.physics': { type: 'select', label: 'Physics Simulation', options: ['standard', 'liquid_simulation', 'particle_effects', 'cloth_physics', 'hair_physics', 'slow_motion'], default: 'standard', section: 'motion' },
       // Audio
+      'audio.native_audio': { type: 'checkbox', label: 'Generate native audio (Veo 3 / Sora 2)', default: true, section: 'audio' },
       'audio.music_style': { type: 'text', label: 'Music Style', placeholder: 'e.g., upbeat electronic, ambient cinematic', section: 'audio' },
       'audio.sound_effects': { type: 'text', label: 'Sound Effects', placeholder: 'e.g., footsteps, wind, city ambiance', section: 'audio' },
       'audio.dialogue': { type: 'textarea', label: 'Dialogue/Voiceover', placeholder: 'Any spoken words...', section: 'audio' },
       // Transitions
-      'transitions.type': { type: 'select', label: 'Transition Style', options: ['none', 'fade', 'cut', 'dissolve', 'wipe'], default: 'none', section: 'transitions' },
+      'transitions.type': { type: 'select', label: 'Transition Style', options: ['none', 'fade', 'cut', 'dissolve', 'wipe', 'zoom', 'match_cut', 'whip_pan'], default: 'none', section: 'transitions' },
     };
+    // Video uses API models (Veo, Sora, Runway, Kling) — strip the Stable-Diffusion-only knobs inherited from IMAGE_SCHEMA
+    ['sd_local.steps','sd_local.guidance_scale','sd_local.denoise_strength','sd_local.sampler','sd_local.clip_skip','sd_local.controlnet_hint'].forEach(k => { delete VIDEO_SCHEMA[k]; });
 
     const INDUSTRY_SKILLS = {
       // Tech & Development
@@ -290,7 +300,7 @@
       'database.seeding': { type: 'checkbox', label: 'Include seed data', section: 'database' },
       // Auth
       'auth.strategy': { type: 'select', label: 'Auth Strategy', options: ['jwt_stateless', 'session_cookie', 'oauth2_only', 'magic_link', 'passkeys_webauthn', 'api_keys', 'none'], section: 'auth' },
-      'auth.auth_provider': { type: 'select', label: 'Auth Provider', options: ['custom', 'clerk', 'auth0', 'supabase_auth', 'firebase_auth', 'nextauth_authjs', 'lucia', 'kinde', 'keycloak'], section: 'auth' },
+      'auth.auth_provider': { type: 'select', label: 'Auth Provider', options: ['custom', 'better_auth', 'clerk', 'auth0', 'supabase_auth', 'firebase_auth', 'nextauth_authjs', 'lucia', 'kinde', 'keycloak', 'workos'], section: 'auth' },
       'auth.social_providers': { type: 'multiselect', label: 'Social Providers', options: ['google', 'github', 'apple', 'microsoft', 'discord', 'twitter', 'facebook', 'linkedin'], section: 'auth' },
       'auth.mfa': { type: 'checkbox', label: 'Multi-factor authentication', section: 'auth' },
       'auth.rbac': { type: 'checkbox', label: 'Role-based access control', section: 'auth' },
@@ -433,11 +443,11 @@
       'analytics.optimization_cadence': { type: 'select', label: 'Optimization Cadence', options: ['daily', 'weekly', 'bi_weekly', 'monthly', 'quarterly'], section: 'analytics' },
       // AI Tools
       'ai_tools.content_gen': { type: 'checkbox', label: 'AI content generation', section: 'ai_tools' },
-      'ai_tools.content_gen_tools': { type: 'multiselect', label: 'Content Gen Tools', options: ['chatgpt', 'claude', 'jasper', 'copy_ai', 'writesonic', 'notion_ai'], section: 'ai_tools', condition: 'ai_tools.content_gen' },
+      'ai_tools.content_gen_tools': { type: 'multiselect', label: 'Content Gen Tools', options: ['chatgpt', 'claude', 'gemini', 'jasper', 'copy_ai', 'writesonic', 'notion_ai'], section: 'ai_tools', condition: 'ai_tools.content_gen' },
       'ai_tools.image_gen': { type: 'checkbox', label: 'AI image generation', section: 'ai_tools' },
-      'ai_tools.image_gen_tools': { type: 'multiselect', label: 'Image Gen Tools', options: ['midjourney', 'dall_e', 'stable_diffusion', 'flux', 'canva_ai', 'adobe_firefly'], section: 'ai_tools', condition: 'ai_tools.image_gen' },
+      'ai_tools.image_gen_tools': { type: 'multiselect', label: 'Image Gen Tools', options: ['gemini_nano_banana', 'gpt_image', 'midjourney', 'flux', 'ideogram', 'recraft', 'leonardo', 'stable_diffusion', 'canva_ai', 'adobe_firefly', 'dall_e_legacy'], section: 'ai_tools', condition: 'ai_tools.image_gen' },
       'ai_tools.video_gen': { type: 'checkbox', label: 'AI video generation', section: 'ai_tools' },
-      'ai_tools.video_gen_tools': { type: 'multiselect', label: 'Video Gen Tools', options: ['veo', 'sora', 'runway', 'synthesia', 'heygen', 'descript'], section: 'ai_tools', condition: 'ai_tools.video_gen' },
+      'ai_tools.video_gen_tools': { type: 'multiselect', label: 'Video Gen Tools', options: ['veo', 'sora', 'runway', 'kling', 'hailuo', 'pika', 'luma_dream_machine', 'synthesia', 'heygen', 'descript'], section: 'ai_tools', condition: 'ai_tools.video_gen' },
       'ai_tools.personalization': { type: 'checkbox', label: 'AI personalization', section: 'ai_tools' },
       'ai_tools.predictive_analytics': { type: 'checkbox', label: 'Predictive analytics', section: 'ai_tools' },
       'ai_tools.chatbot': { type: 'checkbox', label: 'AI chatbot', section: 'ai_tools' },
@@ -469,22 +479,248 @@
       'research.seasonal_factors': { type: 'textarea', label: 'Seasonal Factors', placeholder: 'Key dates, seasons, events to consider...', section: 'research' },
       'research.industry_considerations': { type: 'textarea', label: 'Industry Considerations', placeholder: 'Regulations, norms, best practices...', section: 'research' },
       // Campaign Meta
-      'meta.campaign_name': { type: 'text', label: 'Campaign Name', placeholder: 'e.g., Q1 2025 Brand Launch', section: 'meta' },
-      'meta.launch_date': { type: 'text', label: 'Launch Date', placeholder: 'e.g., March 15, 2025', section: 'meta' },
+      'meta.campaign_name': { type: 'text', label: 'Campaign Name', placeholder: 'e.g., Q3 2026 Brand Launch', section: 'meta' },
+      'meta.launch_date': { type: 'text', label: 'Launch Date', placeholder: 'e.g., September 15, 2026', section: 'meta' },
       'meta.campaign_owner': { type: 'text', label: 'Campaign Owner', placeholder: 'Who is responsible?', section: 'meta' },
       'meta.success_criteria': { type: 'textarea', label: 'Success Criteria', placeholder: 'How will you measure success?', section: 'meta' },
       'meta.constraints': { type: 'textarea', label: 'Constraints', placeholder: 'Budget, time, or resource limitations...', section: 'meta' },
       'meta.ai_limitations': { type: 'textarea', label: 'AI Limitations', placeholder: 'What should AI NOT do in this campaign?', section: 'meta' },
     };
 
-    const SCHEMAS = { image: IMAGE_SCHEMA, video: VIDEO_SCHEMA, llm: LLM_SCHEMA, dev: DEV_SCHEMA, marketing: MARKETING_SCHEMA };
+    const VIBE_SCHEMA = {
+      // Project Vision
+      'vision.description': { type: 'textarea', label: 'What do you want to build?', placeholder: 'Describe your app idea in plain English — e.g., "A task management app where teams can create projects, assign tasks, and track progress"', section: 'vision' },
+      'vision.app_type': { type: 'select', label: 'App Type', options: ['SaaS', 'e_commerce', 'portfolio_blog', 'social_platform', 'dashboard', 'internal_tool', 'mobile_app', 'api_backend', 'landing_page', 'game'], default: 'SaaS', section: 'vision' },
+      'vision.target_users': { type: 'textarea', label: 'Who will use this?', placeholder: 'e.g., Small business owners who need to manage remote teams', section: 'vision' },
+      'vision.key_features': { type: 'textarea', label: 'Core Features', placeholder: 'List the main features — e.g.,\n- User accounts with profiles\n- Real-time notifications\n- Dashboard with analytics\n- File upload and sharing', section: 'vision' },
+      'vision.scale': { type: 'select', label: 'Project Scale', options: ['personal_project', 'small_business', 'startup_mvp', 'enterprise'], default: 'startup_mvp', section: 'vision' },
+
+      // Language & Runtime
+      'runtime.language': { type: 'select', label: 'Language', options: ['TypeScript', 'JavaScript'], default: 'TypeScript', placeholder: '~85% of new projects use TypeScript. Use JS only for throwaway scripts.', section: 'runtime' },
+      'runtime.runtime': { type: 'select', label: 'Runtime', options: ['Node.js', 'Bun', 'Deno'], default: 'Node.js', placeholder: 'Node.js is the engine everything else runs on. Consider Bun for speed later.', section: 'runtime' },
+      'runtime.package_manager': { type: 'select', label: 'Package Manager', options: ['npm', 'pnpm', 'yarn_berry', 'bun'], default: 'npm', placeholder: 'npm comes free with Node.js. Every tutorial uses it.', section: 'runtime' },
+
+      // Frontend Framework
+      'frontend.framework': { type: 'select', label: 'Frontend Framework', options: ['React', 'Vue', 'Svelte', 'Angular', 'none'], default: 'React', placeholder: '~40-45% market share. Largest ecosystem, most jobs, most tutorials.', section: 'frontend' },
+      'frontend.component_library': { type: 'select', label: 'Component Library', options: ['none', 'shadcn_ui', 'material_ui', 'chakra_ui', 'ant_design', 'headless_ui', 'daisyui'], default: 'none', placeholder: 'Pre-built UI components. shadcn/ui is the most popular for React + Tailwind.', section: 'frontend' },
+
+      // Meta-Framework
+      'meta_framework.choice': { type: 'select', label: 'Meta-Framework', options: ['Next.js', 'Nuxt', 'SvelteKit', 'Remix', 'TanStack Start', 'Astro', 'none_vite_only'], default: 'Next.js', placeholder: 'Next.js is the fully assembled car. The engine is still React.', section: 'meta_framework' },
+      'meta_framework.rendering': { type: 'select', label: 'Rendering Strategy', options: ['SSR', 'SSG', 'ISR', 'SPA', 'hybrid'], default: 'SSR', placeholder: 'SSR pre-builds HTML on the server for faster loads and better SEO.', section: 'meta_framework' },
+
+      // Styling
+      'styling.approach': { type: 'select', label: 'Styling Approach', options: ['Tailwind CSS', 'CSS Modules', 'styled_components', 'plain_css_scss'], default: 'Tailwind CSS', placeholder: '~55% of new projects. AI tools love it — every class name states its intent.', section: 'styling' },
+
+      // Backend
+      'backend.approach': { type: 'select', label: 'Backend Approach', options: ['Next.js API Routes', 'Express', 'Fastify', 'NestJS', 'Hono', 'none'], default: 'Next.js API Routes', placeholder: 'For small-medium projects, Next.js API Routes eliminate the need for a separate server.', section: 'backend' },
+      'backend.api_style': { type: 'select', label: 'API Style', options: ['REST', 'tRPC', 'GraphQL'], default: 'REST', placeholder: 'REST is the standard. tRPC gives end-to-end type safety with TypeScript.', section: 'backend' },
+
+      // Database
+      'database.type': { type: 'select', label: 'Database', options: ['PostgreSQL', 'MySQL', 'SQLite', 'MongoDB', 'none'], default: 'PostgreSQL', placeholder: 'Free, powerful, handles everything from a blog to a Fortune 500 app.', section: 'database' },
+      'database.hosting': { type: 'select', label: 'Database Hosting', options: ['Supabase', 'Neon', 'PlanetScale', 'Railway', 'self_hosted', 'none'], default: 'Supabase', placeholder: 'Managed PostgreSQL with dashboard, auth, file storage, and real-time features.', section: 'database' },
+      'database.orm': { type: 'select', label: 'ORM', options: ['Drizzle', 'Prisma', 'none_raw_sql'], default: 'Drizzle', placeholder: '"If you know SQL, you know Drizzle." ~7KB, ideal for serverless. Prisma abstracts SQL away.', section: 'database' },
+
+      // State & Data
+      'state.client_state': { type: 'select', label: 'Client State', options: ['Zustand', 'Redux', 'Jotai', 'none'], default: 'Zustand', placeholder: '~1KB, near-zero boilerplate. Replaced Redux as the default for React projects.', section: 'state' },
+      'state.server_state': { type: 'select', label: 'Server State / Data Fetching', options: ['TanStack Query', 'SWR', 'none'], default: 'TanStack Query', placeholder: 'Handles fetching, caching, background refetching, retry logic. Used alongside Zustand.', section: 'state' },
+      'state.validation': { type: 'select', label: 'Validation', options: ['Zod', 'Yup', 'Joi', 'none'], default: 'Zod', placeholder: 'Runtime validation AND compile-time type safety from a single definition.', section: 'state' },
+      'state.forms': { type: 'select', label: 'Form Library', options: ['React Hook Form', 'Formik', 'native', 'none'], default: 'React Hook Form', placeholder: 'The standard combo in 2026: Zustand + TanStack Query + React Hook Form.', section: 'state' },
+
+      // Auth & Security
+      'auth.provider': { type: 'select', label: 'Auth Provider', options: ['Supabase Auth', 'Better Auth', 'Clerk', 'NextAuth_Auth.js', 'Firebase Auth', 'none'], default: 'Supabase Auth', placeholder: 'Built into Supabase. Best if you are already using Supabase for your database. Better Auth is the framework-agnostic, self-hosted favorite.', section: 'auth' },
+      'auth.methods': { type: 'multiselect', label: 'Login Methods', options: ['email_password', 'google_oauth', 'github_oauth', 'apple_oauth', 'magic_links', 'two_factor'], section: 'auth' },
+      'auth.security_notes': { type: 'textarea', label: 'Security Concerns', placeholder: 'e.g., handles payments, medical data, GDPR compliance needed, multi-tenant...', section: 'auth' },
+
+      // Build & Deploy
+      'deploy.build_tool': { type: 'select', label: 'Build Tool', options: ['Vite', 'Turbopack_auto_nextjs', 'Webpack'], default: 'Vite', placeholder: 'You rarely configure this directly. Your framework handles it.', section: 'deploy' },
+      'deploy.platform': { type: 'select', label: 'Deployment Platform', options: ['Vercel', 'Netlify', 'Railway', 'Cloudflare', 'AWS', 'Render', 'self_hosted'], default: 'Vercel', placeholder: 'Created Next.js. Optimized for frontend + full-stack JS. Generous free tier.', section: 'deploy' },
+      'deploy.git': { type: 'select', label: 'Git Platform', options: ['GitHub', 'GitLab', 'Bitbucket', 'none'], default: 'GitHub', placeholder: 'Most deployment platforms auto-deploy from GitHub pushes.', section: 'deploy' },
+
+      // AI Tool & Output
+      'output.target_tool': { type: 'select', label: 'Target AI Tool', options: ['any_ai_tool', 'Cursor', 'Claude Code', 'Bolt.new', 'Lovable', 'Replit', 'Windsurf', 'ChatGPT'], default: 'any_ai_tool', placeholder: 'Cursor/Claude Code for complex projects, Bolt/Lovable for quick prototypes.', section: 'output' },
+      'output.prompt_style': { type: 'select', label: 'Prompt Style', options: ['comprehensive', 'concise', 'step_by_step'], default: 'comprehensive', placeholder: 'Comprehensive gives AI the most context. Step-by-step breaks the build into phases.', section: 'output' },
+      'output.include_stack_rationale': { type: 'checkbox', label: 'Include "Why this stack" section explaining each technology choice', default: true, section: 'output' },
+      'output.include_file_structure': { type: 'checkbox', label: 'Include suggested folder structure (app/, components/, lib/, db/)', default: true, section: 'output' },
+      'output.include_security_checklist': { type: 'checkbox', label: 'Include security essentials checklist from the handbook', default: true, section: 'output' },
+      'output.additional_instructions': { type: 'textarea', label: 'Additional Instructions', placeholder: 'Anything else the AI should know — design preferences, existing code, specific APIs to integrate, color schemes...', section: 'output' },
+    };
+
+    const AUDIO_SCHEMA = {
+      user_intent: { type: 'textarea', label: 'What do you want to create?', placeholder: 'Describe the track, voiceover, or sound in plain English...', section: 'intent' },
+      // Meta
+      'meta.audio_type': { type: 'select', label: 'Audio Type', options: ['music', 'voice', 'sfx', 'podcast'], default: 'music', section: 'meta' },
+      'meta.target_tool': { type: 'select', label: 'Target Tool', options: ['', 'suno', 'udio', 'elevenlabs', 'openai_tts', 'google_tts', 'stable_audio', 'adobe_podcast'], section: 'meta' },
+      'meta.duration': { type: 'select', label: 'Duration', options: ['', '0:15', '0:30', '1:00', '2:00', '3:00', 'full_song'], section: 'meta' },
+      'meta.format': { type: 'select', label: 'Output Format', options: ['mp3', 'wav', 'flac', 'ogg'], default: 'mp3', section: 'meta' },
+      // Music
+      'music.genre': { type: 'text', label: 'Genre / Style', placeholder: 'e.g., lo-fi hip hop, cinematic orchestral, synthwave', section: 'music' },
+      'music.mood': { type: 'multiselect', label: 'Mood', options: ['uplifting', 'melancholic', 'energetic', 'calm', 'dark', 'dreamy', 'epic', 'playful', 'tense', 'romantic', 'nostalgic', 'aggressive'], section: 'music' },
+      'music.tempo': { type: 'select', label: 'Tempo', options: ['', 'very_slow', 'slow', 'medium', 'upbeat', 'fast', 'very_fast'], section: 'music' },
+      'music.tempo_bpm': { type: 'number', label: 'Tempo (BPM)', placeholder: 'e.g., 120', min: 40, max: 220, section: 'music' },
+      'music.key': { type: 'text', label: 'Musical Key', placeholder: 'e.g., C minor, A major', section: 'music' },
+      'music.instruments': { type: 'multiselect', label: 'Instruments', options: ['piano', 'acoustic_guitar', 'electric_guitar', 'bass', 'drums', 'synth', 'strings', 'brass', 'woodwinds', 'vocals', 'choir', '808', 'percussion', 'organ', 'pads'], section: 'music' },
+      'music.vocals': { type: 'select', label: 'Vocals', options: ['none', 'male_lead', 'female_lead', 'duet', 'choir', 'rap', 'spoken_word'], default: 'none', section: 'music' },
+      'music.structure': { type: 'text', label: 'Song Structure', placeholder: 'e.g., intro - verse - chorus - verse - chorus - bridge - outro', section: 'music' },
+      // Lyrics
+      'lyrics.content': { type: 'textarea', label: 'Lyrics', placeholder: 'Write the lyrics, or describe the theme for the AI to write them...', section: 'lyrics' },
+      'lyrics.language': { type: 'text', label: 'Language', placeholder: 'e.g., English, Spanish', section: 'lyrics' },
+      // Voice
+      'voice.voice_style': { type: 'text', label: 'Voice Style', placeholder: 'e.g., warm narrator, energetic announcer, calm meditative', section: 'voice' },
+      'voice.gender': { type: 'select', label: 'Voice Gender', options: ['', 'male', 'female', 'neutral'], section: 'voice' },
+      'voice.age': { type: 'select', label: 'Voice Age', options: ['', 'child', 'young_adult', 'adult', 'mature', 'elderly'], section: 'voice' },
+      'voice.accent': { type: 'text', label: 'Accent', placeholder: 'e.g., American, British, Australian', section: 'voice' },
+      'voice.emotion': { type: 'select', label: 'Emotion', options: ['', 'neutral', 'happy', 'excited', 'serious', 'sad', 'authoritative', 'friendly', 'dramatic'], section: 'voice' },
+      'voice.pacing': { type: 'select', label: 'Pacing', options: ['', 'very_slow', 'slow', 'natural', 'fast', 'very_fast'], section: 'voice' },
+      'voice.script': { type: 'textarea', label: 'Script / Text to Speak', placeholder: 'The exact words to be spoken...', section: 'voice' },
+      // Production
+      'production.mixing_notes': { type: 'textarea', label: 'Mixing / Production Notes', placeholder: 'e.g., heavy reverb, lo-fi vinyl crackle, wide stereo, sidechain compression', section: 'production' },
+      'production.reference_track': { type: 'text', label: 'Reference Track', placeholder: 'e.g., "sounds like Bonobo - Kerala"', section: 'production' },
+    };
+
+    const AGENT_SCHEMA = {
+      user_intent: { type: 'textarea', label: 'What should this agent accomplish?', placeholder: 'Describe the agent and the job it does in plain English...', section: 'intent' },
+      // Meta
+      'meta.agent_name': { type: 'text', label: 'Agent Name', placeholder: 'e.g., Research Assistant, Coding Agent', section: 'meta' },
+      'meta.model': { type: 'select', label: 'Model', options: ['Claude Opus 4.8', 'Claude Sonnet 4.6', 'Claude Haiku 4.5', 'Claude Fable 5', 'GPT-5.x', 'Gemini 2.x', 'other'], default: 'Claude Opus 4.8', placeholder: 'Default to the most capable Claude model for hard agentic work; use Sonnet/Haiku for speed/cost.', section: 'meta' },
+      'meta.runtime': { type: 'select', label: 'Runtime / Framework', options: ['', 'Claude Agent SDK', 'Anthropic Managed Agents', 'MCP (Model Context Protocol)', 'LangGraph', 'OpenAI Agents SDK', 'CrewAI', 'custom_loop'], section: 'meta' },
+      // Objective
+      'objective.goal': { type: 'textarea', label: 'Primary Goal', placeholder: 'The single outcome the agent is responsible for...', section: 'objective' },
+      'objective.success_criteria': { type: 'textarea', label: 'Success Criteria', placeholder: 'How do we know the task is done and correct? (gradeable, specific)', section: 'objective' },
+      'objective.stop_conditions': { type: 'textarea', label: 'Stop Conditions', placeholder: 'When should the agent stop — completion, max steps, or a blocking condition?', section: 'objective' },
+      // Tools
+      'tools.allowed_tools': { type: 'multiselect', label: 'Allowed Tools', options: ['web_search', 'web_fetch', 'code_execution', 'bash', 'file_read', 'file_write', 'file_edit', 'database_query', 'api_call', 'send_email', 'calendar', 'image_generation'], section: 'tools' },
+      'tools.tool_definitions': { type: 'textarea', label: 'Custom Tool Definitions', placeholder: 'Describe any custom tools: name, what they do, inputs, outputs...', section: 'tools' },
+      'tools.mcp_servers': { type: 'text', label: 'MCP Servers', placeholder: 'e.g., github, linear, filesystem', section: 'tools' },
+      'tools.parallel_tools': { type: 'checkbox', label: 'Allow parallel tool calls', default: true, section: 'tools' },
+      // Loop / reasoning
+      'loop.planning_style': { type: 'select', label: 'Planning Style', options: ['react', 'plan_then_execute', 'reflexion', 'tree_of_thought', 'simple_loop'], default: 'plan_then_execute', section: 'loop' },
+      'loop.max_steps': { type: 'number', label: 'Max Steps / Iterations', placeholder: 'e.g., 25', min: 1, max: 1000, section: 'loop' },
+      'loop.self_verification': { type: 'checkbox', label: 'Self-verify results before finishing', default: true, section: 'loop' },
+      'loop.subagents': { type: 'checkbox', label: 'May delegate to subagents', section: 'loop' },
+      // Memory
+      'memory.state_handling': { type: 'textarea', label: 'State / Context Handling', placeholder: 'What must persist across steps? Scratchpad, memory file, vector store...', section: 'memory' },
+      'memory.context_strategy': { type: 'select', label: 'Long-Context Strategy', options: ['', 'none', 'compaction', 'context_editing', 'external_memory', 'rag'], section: 'memory' },
+      // Guardrails
+      'guardrails.permissions': { type: 'textarea', label: 'Permissions / Boundaries', placeholder: 'What the agent must NOT do; which actions need approval...', section: 'guardrails' },
+      'guardrails.human_in_loop': { type: 'select', label: 'Human-in-the-Loop', options: ['none', 'confirm_destructive', 'confirm_all_actions', 'review_final_output'], default: 'confirm_destructive', section: 'guardrails' },
+      'guardrails.sandbox': { type: 'checkbox', label: 'Run tools in a sandbox', default: true, section: 'guardrails' },
+      'guardrails.cost_limit': { type: 'text', label: 'Cost / Token Budget', placeholder: 'e.g., 100k tokens per run, $2 max', section: 'guardrails' },
+      // Output
+      'output.format': { type: 'select', label: 'Final Output Format', options: ['natural_language', 'json', 'markdown_report', 'structured_summary', 'code', 'file_artifact'], default: 'natural_language', section: 'output' },
+      'output.reporting': { type: 'textarea', label: 'Progress Reporting', placeholder: 'How should the agent report progress and final results?', section: 'output' },
+    };
+
+    const FRONTEND_SCHEMA = {
+      // Project Vision
+      user_intent: { type: 'textarea', label: 'What do you want to design & build?', placeholder: 'Describe the site or UI in plain English — e.g., "A landing page for an AI note-taking app, calm and premium, that converts visitors to a waitlist"', section: 'vision' },
+      'vision.site_type': { type: 'select', label: 'Site / Page Type', options: ['landing_page', 'marketing_site_multipage', 'portfolio', 'blog_magazine', 'saas_app_ui', 'dashboard', 'e_commerce_storefront', 'product_detail_page', 'documentation_site', 'agency_studio_site', 'event_conference_site', 'restaurant_local_business', 'personal_site_link_hub', 'web_app_ui', 'email_template', 'single_component'], section: 'vision' },
+      'vision.target_audience': { type: 'text', label: 'Target Audience', placeholder: 'e.g., startup founders, home cooks, enterprise IT buyers', section: 'vision' },
+      'vision.primary_goal': { type: 'select', label: 'Primary Goal', options: ['convert_signups', 'sell_products', 'generate_leads', 'showcase_work', 'inform_educate', 'build_community', 'book_appointments', 'drive_downloads', 'establish_credibility', 'entertain_delight'], section: 'vision' },
+      // Brand & Content
+      'brand.name': { type: 'text', label: 'Brand / Product Name', placeholder: 'e.g., Driftnote', section: 'brand' },
+      'brand.tagline': { type: 'text', label: 'Tagline / Headline', placeholder: 'e.g., "Notes that organize themselves"', section: 'brand' },
+      'brand.tone': { type: 'multiselect', label: 'Brand Tone', options: ['professional', 'friendly', 'playful', 'bold', 'luxurious', 'technical', 'warm', 'edgy', 'quiet_understated', 'quirky', 'authoritative', 'youthful'], section: 'brand' },
+      'brand.content_source': { type: 'select', label: 'Copy / Content Source', options: ['generate_realistic_copy', 'use_placeholder_copy', 'i_will_provide_copy', 'mix_generate_and_provided'], default: 'generate_realistic_copy', placeholder: 'Generated realistic copy makes mockups feel real. Placeholder = lorem ipsum.', section: 'brand' },
+      'brand.copy_notes': { type: 'textarea', label: 'Key Messages / Copy Notes', placeholder: 'Value props, feature names, taglines, CTAs to include verbatim...', section: 'brand' },
+      // Visual Style
+      'aesthetic.style': { type: 'select', label: 'Aesthetic Direction', options: ['minimalist', 'brutalist', 'neo_brutalist', 'glassmorphism', 'claymorphism', 'neumorphism', 'flat_design', 'material_design', 'skeuomorphic', 'retro_web_90s', 'y2k', 'vaporwave', 'editorial_magazine', 'swiss_international', 'art_deco', 'bauhaus', 'memphis', 'organic_natural', 'dark_luxury', 'corporate_clean', 'playful_cartoon', 'hand_drawn', 'cyberpunk_tech', 'sci_fi_hud', 'terminal_cli', 'bento_grid_modern', 'gradient_rich', 'pastel_soft', 'monochrome', 'maximalist'], placeholder: 'The single strongest lever for the whole design. Pick one and commit.', section: 'aesthetic' },
+      'aesthetic.era_vibe': { type: 'select', label: 'Era / Vibe', options: ['cutting_edge_2026', 'timeless_classic', 'retro_70s', 'retro_80s', 'retro_90s', 'y2k_2000s', 'futuristic'], section: 'aesthetic' },
+      'aesthetic.mood': { type: 'multiselect', label: 'Mood', options: ['calm', 'energetic', 'trustworthy', 'luxurious', 'playful', 'serious', 'warm', 'cool', 'mysterious', 'optimistic', 'rebellious', 'sophisticated'], section: 'aesthetic' },
+      'aesthetic.density': { type: 'select', label: 'Visual Density', options: ['ultra_minimal', 'airy_generous_whitespace', 'balanced', 'dense', 'information_rich'], default: 'balanced', section: 'aesthetic' },
+      'aesthetic.signature_details': { type: 'multiselect', label: 'Signature Details', options: ['grain_noise_texture', 'mesh_gradients', 'glass_blur_panels', 'oversized_typography', 'thin_hairline_borders', 'heavy_borders_hard_shadows', 'dotted_grid_background', 'marquee_ticker', 'sticker_badges', 'custom_cursor', 'asymmetric_layout', 'floating_3d_objects', 'duotone_images', 'scanlines_crt', 'spotlight_glows', 'numbered_sections'], section: 'aesthetic' },
+      // Color & Theme
+      'color.palette_style': { type: 'select', label: 'Palette Style', options: ['neutral_with_one_accent', 'monochromatic', 'analogous', 'complementary', 'triadic', 'duotone', 'pastel', 'earth_tones', 'jewel_tones', 'neon', 'muted_desaturated', 'high_contrast_black_white', 'brand_driven'], placeholder: 'Neutral + one accent is the safest modern default; neon/duotone are statement choices.', section: 'color' },
+      'color.brand_colors': { type: 'text', label: 'Specific Colors', placeholder: 'e.g., #0F172A primary, #F59E0B accent, warm off-white background', section: 'color' },
+      'color.background_style': { type: 'select', label: 'Background Style', options: ['solid_light', 'solid_dark', 'warm_off_white', 'subtle_gradient', 'mesh_gradient', 'textured_paper_grain', 'geometric_pattern', 'image_with_overlay', 'animated_gradient'], section: 'color' },
+      'color.dark_mode': { type: 'checkbox', label: 'Include dark mode', section: 'color' },
+      'color.theme_default': { type: 'select', label: 'Default Theme', options: ['light_default', 'dark_default', 'follow_system_preference'], default: 'light_default', section: 'color', condition: 'color.dark_mode' },
+      'color.dark_mode_notes': { type: 'text', label: 'Dark Mode Notes', placeholder: 'e.g., true black OLED, desaturate accents, elevate cards with lighter surfaces', section: 'color', condition: 'color.dark_mode' },
+      // Typography
+      'typography.heading_style': { type: 'select', label: 'Heading Font Style', options: ['geometric_sans', 'humanist_sans', 'neo_grotesque', 'grotesque_display', 'serif_modern', 'serif_classic_oldstyle', 'slab_serif', 'condensed_sans', 'wide_expanded_sans', 'monospace', 'display_decorative', 'handwritten_script', 'rounded_sans', 'variable_font', 'blackletter'], section: 'typography' },
+      'typography.body_style': { type: 'select', label: 'Body Font Style', options: ['geometric_sans', 'humanist_sans', 'neo_grotesque', 'serif_modern', 'serif_classic_oldstyle', 'slab_serif', 'monospace', 'rounded_sans', 'system_ui_stack'], section: 'typography' },
+      'typography.font_pairing': { type: 'text', label: 'Specific Fonts / Pairing', placeholder: 'e.g., Clash Display + Inter, Playfair Display + Source Sans 3, Space Grotesk + IBM Plex Mono', section: 'typography' },
+      'typography.scale': { type: 'select', label: 'Type Scale', options: ['compact_1.2', 'classic_1.25', 'comfortable_1.333', 'dramatic_1.5_plus', 'oversized_editorial'], placeholder: 'Ratio between heading sizes. Dramatic/oversized = big expressive headlines.', section: 'typography' },
+      'typography.heading_treatment': { type: 'multiselect', label: 'Heading Treatments', options: ['all_caps', 'tight_letter_spacing', 'loose_tracking', 'gradient_text', 'outlined_stroke_text', 'highlighter_marker_accent', 'underline_accents', 'mixed_weights_inline', 'italic_serif_accents', 'kinetic_animated_text'], section: 'typography' },
+      'typography.font_source': { type: 'select', label: 'Font Source', options: ['google_fonts', 'fontshare', 'adobe_fonts', 'self_hosted_woff2', 'system_fonts_only', 'variable_fonts_preferred'], default: 'google_fonts', section: 'typography' },
+      // Layout & Structure
+      'layout.page_sections': { type: 'multiselect', label: 'Page Sections', options: ['announcement_bar', 'navbar', 'hero', 'logo_cloud_social_proof', 'features_grid', 'how_it_works_steps', 'product_showcase', 'stats_metrics', 'testimonials', 'pricing', 'comparison_table', 'faq_accordion', 'team', 'blog_preview', 'case_studies', 'gallery_portfolio_grid', 'newsletter_signup', 'contact_form', 'cta_banner', 'about_story', 'integrations_marketplace', 'changelog_roadmap', 'footer'], section: 'layout' },
+      'layout.hero_style': { type: 'select', label: 'Hero Style', options: ['centered_headline_cta', 'split_text_and_visual', 'full_bleed_image', 'product_screenshot_framed', 'animated_illustration', 'video_background', 'typographic_only', '3d_scene', 'bento_hero', 'signup_form_first', 'carousel_slides'], section: 'layout' },
+      'layout.grid_system': { type: 'select', label: 'Grid System', options: ['12_column_standard', '8_column', 'asymmetric_editorial', 'bento_grid', 'masonry', 'single_column_centered', 'split_screen', 'broken_grid_overlapping', 'magazine_multi_column'], placeholder: 'Bento and broken grids are the current statement looks; 12-column is the reliable default.', section: 'layout' },
+      'layout.max_width': { type: 'select', label: 'Content Width', options: ['narrow_720px', 'standard_1200px', 'wide_1440px', 'full_bleed_edge_to_edge', 'mixed_per_section'], section: 'layout' },
+      'layout.navigation': { type: 'select', label: 'Navigation Pattern', options: ['top_navbar_links', 'sticky_navbar_on_scroll', 'transparent_over_hero', 'hamburger_all_sizes', 'sidebar_nav', 'mega_menu', 'floating_pill_nav', 'bottom_tab_bar_mobile', 'command_palette_ctrl_k', 'minimal_logo_only'], section: 'layout' },
+      'layout.footer_style': { type: 'select', label: 'Footer Style', options: ['minimal_one_line', 'standard_link_columns', 'fat_footer_sitemap', 'big_cta_footer', 'oversized_brand_wordmark', 'no_footer'], section: 'layout' },
+      // Components
+      'components.inventory': { type: 'multiselect', label: 'Component Inventory', options: ['buttons_ctas', 'cards', 'modals_dialogs', 'tabs', 'accordion', 'dropdown_menus', 'tooltips', 'form_inputs', 'data_table', 'charts_graphs', 'carousel_slider', 'avatars_badges', 'breadcrumbs', 'pagination', 'toast_notifications', 'progress_steppers', 'search_autocomplete', 'date_picker', 'pricing_cards', 'timeline', 'kanban_board', 'chat_widget', 'video_player', 'map_embed'], section: 'components' },
+      'components.card_style': { type: 'select', label: 'Card Style', options: ['flat_with_border', 'soft_shadow', 'elevated_layered', 'glass_translucent', 'gradient_border', 'neubrutalist_hard_shadow', 'borderless_whitespace_only', 'inset_pressed'], section: 'components' },
+      'components.button_style': { type: 'select', label: 'Button Style', options: ['solid_rounded', 'solid_pill', 'solid_sharp_corners', 'outline_ghost', 'gradient_fill', 'glow_shadow', 'brutalist_offset_shadow', 'text_link_underline', 'icon_leading_label'], section: 'components' },
+      'components.corner_radius': { type: 'select', label: 'Corner Radius', options: ['sharp_0px', 'subtle_4px', 'medium_8px', 'rounded_16px', 'extra_24px_plus', 'pill_fully_rounded', 'mixed_intentional'], section: 'components' },
+      // Imagery & Icons
+      'imagery.image_style': { type: 'select', label: 'Imagery Style', options: ['lifestyle_photography', 'studio_product_photography', 'product_screenshots', '3d_renders', 'flat_illustration', 'line_art_illustration', 'isometric_illustration', 'hand_drawn_doodles', 'abstract_shapes', 'collage_mixed_media', 'duotone_treated_photos', 'grainy_analog_photos', 'generative_ai_art', 'no_imagery_typography_only'], section: 'imagery' },
+      'imagery.image_source': { type: 'select', label: 'Image Source', options: ['css_svg_generated_placeholders', 'placeholder_service_picsum', 'stock_unsplash_pexels', 'ai_generated_include_prompts', 'i_will_supply_assets'], placeholder: 'CSS/SVG placeholders keep single-file builds self-contained.', section: 'imagery' },
+      'imagery.icon_style': { type: 'select', label: 'Icon Style', options: ['outline_stroke', 'solid_filled', 'duotone', 'hand_drawn', 'pixel_art', '3d_icons', 'emoji'], section: 'imagery' },
+      'imagery.icon_library': { type: 'select', label: 'Icon Library', options: ['lucide', 'heroicons', 'phosphor', 'tabler', 'feather', 'font_awesome', 'material_symbols', 'remix_icon', 'custom_inline_svg'], section: 'imagery' },
+      'imagery.decorative_elements': { type: 'multiselect', label: 'Decorative Elements', options: ['blob_shapes', 'dot_grid_patterns', 'gradient_orbs', 'noise_texture_overlay', 'geometric_line_accents', 'floating_shapes', 'wave_section_dividers', 'diagonal_section_cuts', 'confetti_particles', 'glow_spotlights'], section: 'imagery' },
+      // Motion & Interaction
+      'motion.animation_level': { type: 'select', label: 'Animation Intensity', options: ['static_none', 'subtle', 'moderate', 'rich', 'showpiece_awwwards'], default: 'subtle', placeholder: 'Subtle = tasteful fades and hovers. Showpiece = scroll-driven theatrics everywhere.', section: 'motion' },
+      'motion.entrance_effects': { type: 'multiselect', label: 'Entrance Effects', options: ['fade_up_on_scroll', 'staggered_reveals', 'scale_in', 'blur_to_sharp', 'clip_path_reveals', 'typewriter_text', 'number_counters', 'skeleton_to_content'], section: 'motion' },
+      'motion.scroll_effects': { type: 'multiselect', label: 'Scroll Effects', options: ['parallax_layers', 'sticky_pinned_sections', 'horizontal_scroll_section', 'scroll_progress_bar', 'scrollytelling_steps', 'infinite_marquee', 'zoom_on_scroll', 'section_snap'], section: 'motion' },
+      'motion.hover_states': { type: 'multiselect', label: 'Hover States', options: ['lift_with_shadow', 'scale_grow', 'color_shift', 'underline_slide_in', 'image_zoom', '3d_tilt', 'magnetic_cursor_pull', 'glow_border', 'reveal_caption_overlay'], section: 'motion' },
+      'motion.micro_interactions': { type: 'multiselect', label: 'Micro-interactions', options: ['button_press_feedback', 'inline_form_validation', 'animated_toggles', 'success_check_animations', 'copy_to_clipboard_feedback', 'like_heart_burst', 'drag_to_reorder', 'loading_spinners_skeletons'], section: 'motion' },
+      'motion.animation_library': { type: 'select', label: 'Animation Approach', options: ['css_only_transitions', 'css_scroll_driven_animations', 'framer_motion', 'gsap_scrolltrigger', 'motion_one', 'auto_animate', 'lottie', 'rive', 'view_transitions_api'], section: 'motion' },
+      // Tech Stack
+      'tech.framework': { type: 'select', label: 'Framework', options: ['plain_html_css_js', 'react', 'nextjs', 'vue', 'nuxt', 'svelte', 'sveltekit', 'astro', 'solid', 'angular', 'htmx_alpine', 'web_components'], placeholder: 'Plain HTML for single-file demos; React/Next.js for v0, Lovable, Bolt.', section: 'tech' },
+      'tech.css_approach': { type: 'select', label: 'CSS Approach', options: ['tailwind_v4', 'tailwind_v3_cdn', 'vanilla_css_modern', 'css_modules', 'sass_scss', 'styled_components', 'panda_css', 'uno_css', 'open_props', 'bootstrap'], section: 'tech' },
+      'tech.component_library': { type: 'select', label: 'Component Library', options: ['shadcn_ui', 'radix_primitives', 'headless_ui', 'daisyui', 'mantine', 'chakra_ui', 'material_ui', 'ant_design', 'ark_ui', 'flowbite', 'preline', 'build_custom_from_scratch'], section: 'tech' },
+      'tech.language': { type: 'select', label: 'Language', options: ['typescript', 'javascript'], default: 'typescript', section: 'tech' },
+      'tech.deliverable': { type: 'select', label: 'Deliverable Format', options: ['single_html_file', 'react_components', 'multi_page_static_site', 'full_project_repo', 'design_spec_only'], placeholder: 'Single HTML file = paste-and-open. Full repo = proper project structure.', section: 'tech' },
+      'tech.interactivity': { type: 'select', label: 'Interactivity Level', options: ['static_no_js', 'light_vanilla_js', 'interactive_components', 'full_spa_with_state', 'forms_and_api_calls'], section: 'tech' },
+      'tech.build_constraints': { type: 'multiselect', label: 'Build Constraints', options: ['no_build_step_cdn_only', 'no_external_dependencies', 'works_offline', 'semantic_html_required', 'css_variables_for_theming', 'bem_naming', 'no_inline_styles', 'progressive_enhancement', 'core_works_without_js'], section: 'tech' },
+      // Responsive & Accessibility
+      'responsive.strategy': { type: 'select', label: 'Responsive Strategy', options: ['mobile_first', 'desktop_first', 'fluid_container_queries'], default: 'mobile_first', section: 'responsive' },
+      'responsive.breakpoints': { type: 'multiselect', label: 'Target Breakpoints', options: ['mobile_360', 'mobile_landscape_480', 'tablet_768', 'laptop_1024', 'desktop_1280', 'wide_1536', 'ultrawide_1920_plus'], section: 'responsive' },
+      'responsive.a11y_level': { type: 'select', label: 'Accessibility Level', options: ['wcag_aa', 'wcag_aaa', 'basic_semantics', 'best_effort'], default: 'wcag_aa', section: 'responsive' },
+      'responsive.a11y_features': { type: 'multiselect', label: 'Accessibility Features', options: ['keyboard_navigation', 'visible_focus_rings', 'aria_labels_landmarks', 'skip_to_content_link', 'respect_prefers_reduced_motion', 'contrast_4.5_minimum', 'alt_text_all_images', 'form_error_announcements', 'touch_targets_44px'], section: 'responsive' },
+      // Performance
+      'performance.budget': { type: 'select', label: 'Page Weight Budget', options: ['ultra_light_under_100kb', 'light_under_500kb', 'standard_under_1mb', 'rich_media_ok'], placeholder: 'Under 100KB forces system fonts and CSS-only visuals — a legitimate aesthetic.', section: 'performance' },
+      'performance.targets': { type: 'multiselect', label: 'Performance Targets', options: ['lighthouse_90_plus', 'lcp_under_2.5s', 'cls_near_zero', 'inp_under_200ms', 'fast_on_3g'], section: 'performance' },
+      'performance.techniques': { type: 'multiselect', label: 'Optimization Techniques', options: ['lazy_load_images', 'responsive_srcset', 'webp_avif_formats', 'font_subsetting_and_swap', 'critical_css_inline', 'defer_noncritical_js', 'preload_hero_assets', 'minimal_third_party_scripts'], section: 'performance' },
+      'performance.seo_basics': { type: 'multiselect', label: 'SEO Essentials', options: ['semantic_heading_hierarchy', 'meta_title_description', 'open_graph_social_cards', 'structured_data_jsonld', 'canonical_urls', 'sitemap_robots_txt'], section: 'performance' },
+      // References & Inspiration
+      'references.inspiration_sites': { type: 'textarea', label: 'Inspiration Sites', placeholder: 'e.g., linear.app (hero + gradients), stripe.com (docs nav), vercel.com (dark theme), rauno.me (motion)', section: 'references' },
+      'references.style_of': { type: 'text', label: 'In the Style Of', placeholder: 'e.g., Apple product page, Swiss poster design, early Teenage Engineering', section: 'references' },
+      'references.avoid': { type: 'textarea', label: 'What to Avoid', placeholder: 'e.g., generic bootstrap look, purple-gradient-on-dark AI cliché, stock photo handshakes, emoji in headings', section: 'references' },
+      'references.existing_assets': { type: 'textarea', label: 'Existing Brand Assets', placeholder: 'Logo description, locked brand colors/fonts, design tokens, screenshots of current site...', section: 'references' },
+      // Target Tool & Output
+      'output.target_tool': { type: 'select', label: 'Target AI Tool', options: ['any_ai_tool', 'v0', 'Lovable', 'Bolt.new', 'Replit', 'Claude Code', 'Cursor', 'Windsurf', 'ChatGPT_Claude_chat', 'Figma_Make', 'Framer_AI'], default: 'any_ai_tool', placeholder: 'v0/Lovable/Bolt generate UI directly; Claude Code/Cursor for real codebases; chat for specs.', section: 'output' },
+      'output.output_type': { type: 'select', label: 'Output Type', options: ['working_code', 'design_spec_document', 'code_plus_design_rationale', 'wireframe_description'], default: 'working_code', section: 'output' },
+      'output.include_design_tokens': { type: 'checkbox', label: 'Include design tokens (CSS variables for colors, spacing, radii, type scale)', default: true, section: 'output' },
+      'output.include_section_walkthrough': { type: 'checkbox', label: 'Describe the page section-by-section, top to bottom', default: true, section: 'output' },
+      'output.include_asset_prompts': { type: 'checkbox', label: 'Include AI image-generation prompts for any needed imagery', section: 'output' },
+      'output.additional_instructions': { type: 'textarea', label: 'Additional Instructions', placeholder: 'Anything else — specific copy, links, embeds, must-have details, things to keep from an existing design...', section: 'output' },
+    };
+
+    const SCHEMAS = { image: IMAGE_SCHEMA, video: VIDEO_SCHEMA, llm: LLM_SCHEMA, dev: DEV_SCHEMA, marketing: MARKETING_SCHEMA, vibe: VIBE_SCHEMA, frontend: FRONTEND_SCHEMA, audio: AUDIO_SCHEMA, agent: AGENT_SCHEMA };
+
+    const SELECT_SENTINELS = ['', 'none', 'ask_me', 'best_fit'];
+    const SENTINEL_LABELS = {
+      '':         '\u2014 Skip \u2014',
+      'none':     '\u2014 None \u2014',
+      'ask_me':   '\u2014 Ask Me About It \u2014',
+      'best_fit': '\u2014 Best Fit \u2014',
+    };
+    const SENTINEL_OUTPUT = { 'ask_me': '[Ask me about this]', 'best_fit': '[Pick the best fit]' };
+    const resolveSentinel = (v) => SENTINEL_OUTPUT[v] || v;
 
     const TYPE_META = {
-      image:     { icon: '🖼️', title: 'Image Prompt', shortTitle: 'Image', desc: 'Gemini, Flux, Midjourney, DALL-E, SD', color: 'from-pink-500 to-rose-500', pasteTarget: 'Gemini, ChatGPT, or your image generator' },
-      video:     { icon: '🎬', title: 'Video Prompt', shortTitle: 'Video', desc: 'Veo 3, Sora, Runway, Kling, Hailuo', color: 'from-blue-500 to-cyan-500', pasteTarget: 'Veo, Sora, Runway, or your video generator' },
-      llm:       { icon: '🤖', title: 'LLM Prompt', shortTitle: 'LLM', desc: 'ChatGPT, Claude, Gemini, Llama', color: 'from-green-500 to-emerald-500', pasteTarget: 'ChatGPT, Claude, or your LLM' },
+      image:     { icon: '🖼️', title: 'Image Prompt', shortTitle: 'Image', desc: 'Nano Banana, GPT-image, Midjourney, Flux, SD', color: 'from-pink-500 to-rose-500', pasteTarget: 'Gemini, ChatGPT, or your image generator' },
+      video:     { icon: '🎬', title: 'Video Prompt', shortTitle: 'Video', desc: 'Veo 3, Sora 2, Runway, Kling, Hailuo', color: 'from-blue-500 to-cyan-500', pasteTarget: 'Veo, Sora, Runway, or your video generator' },
+      llm:       { icon: '🤖', title: 'LLM Prompt', shortTitle: 'LLM', desc: 'ChatGPT, Claude, Gemini, DeepSeek, Qwen, Llama', color: 'from-green-500 to-emerald-500', pasteTarget: 'ChatGPT, Claude, or your LLM' },
       dev:       { icon: '💻', title: 'Dev Prompt', shortTitle: 'Dev', desc: 'Web, mobile, desktop, API — full stack specs', color: 'from-violet-500 to-purple-500', pasteTarget: 'ChatGPT, Claude, Cursor, or your AI coding tool' },
       marketing: { icon: '📢', title: 'Marketing Prompt', shortTitle: 'Marketing', desc: 'Campaigns, SEO, ads, content, analytics', color: 'from-amber-500 to-orange-500', pasteTarget: 'ChatGPT, Claude, Jasper, or your AI marketing tool' },
+      vibe:      { icon: '🚀', title: 'Vibe Coder Prompt', shortTitle: 'Vibe', desc: 'Build web apps with AI — guided by The Vibe Coder\'s Handbook', color: 'from-teal-500 to-cyan-500', pasteTarget: 'Cursor, Claude Code, Bolt, Lovable, Replit, or your AI coding tool' },
+      frontend:  { icon: '🎨', title: 'Frontend Design Prompt', shortTitle: 'Frontend', desc: 'Websites & UI — visual design + implementation specs', color: 'from-sky-500 to-violet-500', pasteTarget: 'v0, Lovable, Bolt, Claude Code, or your AI design tool' },
+      audio:     { icon: '🎵', title: 'Audio Prompt', shortTitle: 'Audio', desc: 'Suno, Udio, ElevenLabs — music, voice, SFX', color: 'from-fuchsia-500 to-pink-500', pasteTarget: 'Suno, Udio, ElevenLabs, or your audio generator' },
+      agent:     { icon: '🤖', title: 'Agent Prompt', shortTitle: 'Agent', desc: 'Tool-use & multi-agent systems — MCP, Agent SDK', color: 'from-indigo-500 to-blue-500', pasteTarget: 'Claude Agent SDK, MCP, LangGraph, or your agent framework' },
     };
 
     const SECTION_INFO = {
@@ -496,8 +732,10 @@
         technical: { title: 'Camera', icon: '📷', desc: 'Virtual photography settings' },
         composition: { title: 'Composition', icon: '🖼️', desc: 'Framing and angle' },
         style: { title: 'Style', icon: '🎨', desc: 'Artistic direction' },
+        reference: { title: 'Reference & Consistency', icon: '🖇️', desc: 'Image-to-image, character & style refs' },
         text: { title: 'Text Rendering', icon: '✏️', desc: 'Text inside the image' },
         advanced: { title: 'Advanced', icon: '🔧', desc: 'Fine-tuning options' },
+        sd_local: { title: 'Local Diffusion (SD)', icon: '🧪', desc: 'Stable Diffusion / ComfyUI only — ignored by API models' },
       },
       video: {
         intent: { title: 'Vision', icon: '💡', desc: 'Describe what you want to create' },
@@ -509,6 +747,7 @@
         technical: { title: 'Camera', icon: '📷', desc: 'Virtual cinematography' },
         composition: { title: 'Composition', icon: '🖼️', desc: 'Framing and angle' },
         style: { title: 'Style', icon: '🎨', desc: 'Artistic direction' },
+        reference: { title: 'Reference & Consistency', icon: '🖇️', desc: 'Source image, character & style refs' },
         transitions: { title: 'Transitions', icon: '➡️', desc: 'Scene transitions' },
         text: { title: 'Text Rendering', icon: '✏️', desc: 'Text inside the video' },
         advanced: { title: 'Advanced', icon: '🔧', desc: 'Fine-tuning options' },
@@ -562,13 +801,60 @@
         visual:      { title: 'Visual Branding',   icon: '🎨', desc: 'Colors, typography, imagery' },
         research:    { title: 'Market Research',    icon: '🔬', desc: 'Competitors, trends, seasonal' },
         meta:        { title: 'Campaign Meta',      icon: '📋', desc: 'Name, dates, success criteria' },
+      },
+      vibe: {
+        vision:         { title: 'Project Vision',      icon: '💡', desc: 'Describe your app idea' },
+        runtime:        { title: 'Language & Runtime',   icon: '⚡', desc: 'TypeScript/JS, Node.js, package manager' },
+        frontend:       { title: 'Frontend Framework',   icon: '🖥️', desc: 'React, Vue, Svelte, or Angular' },
+        meta_framework: { title: 'Meta-Framework',       icon: '📦', desc: 'Next.js, Nuxt, SvelteKit, Astro' },
+        styling:        { title: 'Styling',              icon: '🎨', desc: 'How your app looks' },
+        backend:        { title: 'Backend',              icon: '⚙️', desc: 'Server logic and APIs' },
+        database:       { title: 'Database',             icon: '🗄️', desc: 'Data storage and ORM' },
+        state:          { title: 'State & Data',         icon: '🔄', desc: 'Client state, server state, validation' },
+        auth:           { title: 'Auth & Security',      icon: '🔐', desc: 'Login, OAuth, security essentials' },
+        deploy:         { title: 'Build & Deploy',       icon: '🚀', desc: 'Build tools, hosting, Git' },
+        output:         { title: 'AI Tool & Output',     icon: '🤖', desc: 'Target tool and prompt options' },
+      },
+      frontend: {
+        vision:      { title: 'Project Vision',        icon: '💡', desc: 'What are you designing and for whom?' },
+        brand:       { title: 'Brand & Content',       icon: '🏷️', desc: 'Name, tagline, tone, copy source' },
+        aesthetic:   { title: 'Visual Style',          icon: '🎨', desc: 'Aesthetic direction, mood, density' },
+        color:       { title: 'Color & Theme',         icon: '🌈', desc: 'Palette, backgrounds, dark mode' },
+        typography:  { title: 'Typography',            icon: '🔤', desc: 'Font styles, pairing, scale' },
+        layout:      { title: 'Layout & Structure',    icon: '📐', desc: 'Sections, grid, navigation' },
+        components:  { title: 'Components',            icon: '🧩', desc: 'UI inventory, cards, buttons, radii' },
+        imagery:     { title: 'Imagery & Icons',       icon: '🖼️', desc: 'Image style, icons, decoration' },
+        motion:      { title: 'Motion & Interaction',  icon: '✨', desc: 'Animation, scroll, hover, micro-UX' },
+        tech:        { title: 'Tech Stack',            icon: '⚡', desc: 'Framework, CSS, deliverable format' },
+        responsive:  { title: 'Responsive & A11y',     icon: '📱', desc: 'Breakpoints, WCAG, reduced motion' },
+        performance: { title: 'Performance',           icon: '🚀', desc: 'Weight budget, Core Web Vitals, SEO' },
+        references:  { title: 'References',            icon: '🖇️', desc: 'Inspiration, style-of, what to avoid' },
+        output:      { title: 'Target Tool & Output',  icon: '📤', desc: 'AI tool, code vs spec, extras' },
+      },
+      audio: {
+        intent:     { title: 'Vision',     icon: '💡', desc: 'Describe what you want to create' },
+        meta:       { title: 'Output Settings', icon: '⚙️', desc: 'Type, tool, duration, format' },
+        music:      { title: 'Music',      icon: '🎼', desc: 'Genre, mood, tempo, instruments' },
+        lyrics:     { title: 'Lyrics',     icon: '✍️', desc: 'Words and theme' },
+        voice:      { title: 'Voice',      icon: '🎙️', desc: 'Narration & TTS settings' },
+        production: { title: 'Production',  icon: '🎚️', desc: 'Mixing and reference' },
+      },
+      agent: {
+        intent:     { title: 'Vision',       icon: '💡', desc: 'What should this agent do?' },
+        meta:       { title: 'Agent Setup',  icon: '⚙️', desc: 'Name, model, runtime' },
+        objective:  { title: 'Objective',    icon: '🎯', desc: 'Goal, success, stop conditions' },
+        tools:      { title: 'Tools',        icon: '🛠️', desc: 'Tool surface and MCP' },
+        loop:       { title: 'Reasoning Loop', icon: '🔁', desc: 'Planning, steps, verification' },
+        memory:     { title: 'Memory',       icon: '💾', desc: 'State and long-context strategy' },
+        guardrails: { title: 'Guardrails',   icon: '🛡️', desc: 'Permissions, approvals, limits' },
+        output:     { title: 'Output',       icon: '📤', desc: 'Final format and reporting' },
       }
     };
 
     const PRESETS = {
       image: {
         'Cinematic Portrait': {
-          'meta.quality': 'ultra_photorealistic',
+          'meta.quality': 'ultra',
           'meta.aspect_ratio': '3:2',
           'technical.lens': '85mm',
           'technical.aperture': 'f/1.4',
@@ -578,7 +864,7 @@
           'scene.lighting_type': 'cinematic',
         },
         'Cyberpunk Scene': {
-          'meta.quality': 'ultra_photorealistic',
+          'meta.quality': 'ultra',
           'scene.time': 'midnight',
           'scene.weather': 'rainy',
           'scene.lighting_type': 'neon_lights',
@@ -586,13 +872,13 @@
           'scene.background_elements': 'neon signs, flying cars, holograms',
         },
         'Anime Character': {
-          'meta.quality': 'anime',
+          'meta.quality': 'high',
           'style.medium': 'anime',
           'composition.framing': 'medium_shot',
           'subject.expression': 'smiling',
         },
         'Product Shot': {
-          'meta.quality': 'ultra_photorealistic',
+          'meta.quality': 'ultra',
           'meta.aspect_ratio': '1:1',
           'scene.location': 'white studio',
           'scene.lighting_type': 'studio_softbox',
@@ -856,6 +1142,258 @@
           'analytics.tool_stack': ['google_analytics_4', 'segment'],
         },
       },
+      vibe: {
+        'The 2026 Standard': {
+          'runtime.language': 'TypeScript', 'runtime.runtime': 'Node.js', 'runtime.package_manager': 'npm',
+          'frontend.framework': 'React', 'frontend.component_library': 'shadcn_ui',
+          'meta_framework.choice': 'Next.js', 'meta_framework.rendering': 'SSR',
+          'styling.approach': 'Tailwind CSS',
+          'backend.approach': 'Next.js API Routes', 'backend.api_style': 'REST',
+          'database.type': 'PostgreSQL', 'database.hosting': 'Supabase', 'database.orm': 'Drizzle',
+          'state.client_state': 'Zustand', 'state.server_state': 'TanStack Query', 'state.validation': 'Zod', 'state.forms': 'React Hook Form',
+          'auth.provider': 'Supabase Auth',
+          'deploy.build_tool': 'Vite', 'deploy.platform': 'Vercel', 'deploy.git': 'GitHub',
+          'output.target_tool': 'any_ai_tool', 'output.prompt_style': 'comprehensive',
+          'output.include_stack_rationale': true, 'output.include_file_structure': true, 'output.include_security_checklist': true,
+        },
+        'SaaS Starter': {
+          'vision.app_type': 'SaaS', 'vision.scale': 'startup_mvp',
+          'runtime.language': 'TypeScript', 'runtime.runtime': 'Node.js', 'runtime.package_manager': 'npm',
+          'frontend.framework': 'React', 'frontend.component_library': 'shadcn_ui',
+          'meta_framework.choice': 'Next.js', 'meta_framework.rendering': 'SSR',
+          'styling.approach': 'Tailwind CSS',
+          'backend.approach': 'Next.js API Routes', 'backend.api_style': 'REST',
+          'database.type': 'PostgreSQL', 'database.hosting': 'Supabase', 'database.orm': 'Drizzle',
+          'state.client_state': 'Zustand', 'state.server_state': 'TanStack Query', 'state.validation': 'Zod', 'state.forms': 'React Hook Form',
+          'auth.provider': 'Clerk', 'auth.methods': ['email_password', 'google_oauth'],
+          'deploy.build_tool': 'Vite', 'deploy.platform': 'Vercel', 'deploy.git': 'GitHub',
+          'output.target_tool': 'any_ai_tool', 'output.prompt_style': 'comprehensive',
+          'output.include_stack_rationale': true, 'output.include_file_structure': true, 'output.include_security_checklist': true,
+        },
+        'Portfolio / Blog': {
+          'vision.app_type': 'portfolio_blog', 'vision.scale': 'personal_project',
+          'runtime.language': 'TypeScript', 'runtime.runtime': 'Node.js', 'runtime.package_manager': 'npm',
+          'frontend.framework': 'none', 'frontend.component_library': 'none',
+          'meta_framework.choice': 'Astro', 'meta_framework.rendering': 'SSG',
+          'styling.approach': 'Tailwind CSS',
+          'backend.approach': 'none', 'backend.api_style': 'REST',
+          'database.type': 'none', 'database.hosting': 'none', 'database.orm': 'none_raw_sql',
+          'state.client_state': 'none', 'state.server_state': 'none', 'state.validation': 'none', 'state.forms': 'none',
+          'auth.provider': 'none',
+          'deploy.build_tool': 'Vite', 'deploy.platform': 'Netlify', 'deploy.git': 'GitHub',
+          'output.target_tool': 'any_ai_tool', 'output.prompt_style': 'concise',
+          'output.include_stack_rationale': true, 'output.include_file_structure': true, 'output.include_security_checklist': false,
+        },
+        'Quick Prototype': {
+          'vision.scale': 'personal_project',
+          'runtime.language': 'TypeScript', 'runtime.runtime': 'Node.js', 'runtime.package_manager': 'npm',
+          'frontend.framework': 'React', 'frontend.component_library': 'none',
+          'meta_framework.choice': 'Next.js', 'meta_framework.rendering': 'SSR',
+          'styling.approach': 'Tailwind CSS',
+          'backend.approach': 'Next.js API Routes', 'backend.api_style': 'REST',
+          'database.type': 'SQLite', 'database.hosting': 'none', 'database.orm': 'Drizzle',
+          'state.client_state': 'Zustand', 'state.server_state': 'TanStack Query', 'state.validation': 'Zod', 'state.forms': 'React Hook Form',
+          'auth.provider': 'none',
+          'deploy.build_tool': 'Vite', 'deploy.platform': 'Vercel', 'deploy.git': 'GitHub',
+          'output.target_tool': 'Bolt.new', 'output.prompt_style': 'concise',
+          'output.include_stack_rationale': false, 'output.include_file_structure': true, 'output.include_security_checklist': false,
+        },
+        'Enterprise Full-Stack': {
+          'vision.scale': 'enterprise',
+          'runtime.language': 'TypeScript', 'runtime.runtime': 'Node.js', 'runtime.package_manager': 'pnpm',
+          'frontend.framework': 'React', 'frontend.component_library': 'shadcn_ui',
+          'meta_framework.choice': 'Next.js', 'meta_framework.rendering': 'SSR',
+          'styling.approach': 'Tailwind CSS',
+          'backend.approach': 'NestJS', 'backend.api_style': 'REST',
+          'database.type': 'PostgreSQL', 'database.hosting': 'Supabase', 'database.orm': 'Prisma',
+          'state.client_state': 'Zustand', 'state.server_state': 'TanStack Query', 'state.validation': 'Zod', 'state.forms': 'React Hook Form',
+          'auth.provider': 'Clerk', 'auth.methods': ['email_password', 'google_oauth', 'github_oauth'],
+          'deploy.build_tool': 'Vite', 'deploy.platform': 'AWS', 'deploy.git': 'GitHub',
+          'output.target_tool': 'Claude Code', 'output.prompt_style': 'comprehensive',
+          'output.include_stack_rationale': true, 'output.include_file_structure': true, 'output.include_security_checklist': true,
+        },
+      },
+      frontend: {
+        'SaaS Landing Page': {
+          'vision.site_type': 'landing_page', 'vision.primary_goal': 'convert_signups',
+          'brand.tone': ['professional', 'friendly'], 'brand.content_source': 'generate_realistic_copy',
+          'aesthetic.style': 'corporate_clean', 'aesthetic.era_vibe': 'cutting_edge_2026',
+          'aesthetic.mood': ['trustworthy', 'optimistic'], 'aesthetic.density': 'airy_generous_whitespace',
+          'aesthetic.signature_details': ['mesh_gradients', 'thin_hairline_borders'],
+          'color.palette_style': 'neutral_with_one_accent', 'color.background_style': 'warm_off_white',
+          'color.dark_mode': true, 'color.theme_default': 'light_default',
+          'typography.heading_style': 'geometric_sans', 'typography.body_style': 'humanist_sans',
+          'typography.font_pairing': 'Inter Display + Inter', 'typography.scale': 'comfortable_1.333',
+          'layout.page_sections': ['navbar', 'hero', 'logo_cloud_social_proof', 'features_grid', 'how_it_works_steps', 'testimonials', 'pricing', 'faq_accordion', 'cta_banner', 'footer'],
+          'layout.hero_style': 'product_screenshot_framed', 'layout.grid_system': '12_column_standard',
+          'layout.max_width': 'standard_1200px', 'layout.navigation': 'sticky_navbar_on_scroll', 'layout.footer_style': 'standard_link_columns',
+          'components.card_style': 'soft_shadow', 'components.button_style': 'solid_rounded', 'components.corner_radius': 'medium_8px',
+          'imagery.image_style': 'product_screenshots', 'imagery.icon_style': 'outline_stroke', 'imagery.icon_library': 'lucide',
+          'motion.animation_level': 'subtle', 'motion.entrance_effects': ['fade_up_on_scroll', 'staggered_reveals'],
+          'motion.hover_states': ['lift_with_shadow', 'underline_slide_in'], 'motion.animation_library': 'framer_motion',
+          'tech.framework': 'nextjs', 'tech.css_approach': 'tailwind_v4', 'tech.component_library': 'shadcn_ui',
+          'tech.language': 'typescript', 'tech.deliverable': 'react_components',
+          'responsive.strategy': 'mobile_first', 'responsive.a11y_level': 'wcag_aa',
+          'responsive.a11y_features': ['keyboard_navigation', 'visible_focus_rings', 'respect_prefers_reduced_motion', 'contrast_4.5_minimum'],
+          'performance.targets': ['lighthouse_90_plus', 'lcp_under_2.5s', 'cls_near_zero'],
+          'output.target_tool': 'v0', 'output.output_type': 'working_code',
+          'output.include_design_tokens': true, 'output.include_section_walkthrough': true,
+        },
+        'Glassmorphic Dashboard': {
+          'vision.site_type': 'dashboard', 'vision.primary_goal': 'inform_educate',
+          'aesthetic.style': 'glassmorphism', 'aesthetic.mood': ['cool', 'sophisticated'], 'aesthetic.density': 'information_rich',
+          'aesthetic.signature_details': ['glass_blur_panels', 'mesh_gradients', 'spotlight_glows', 'thin_hairline_borders'],
+          'color.palette_style': 'analogous', 'color.brand_colors': 'deep indigo base, cyan accent, frosted white glass surfaces',
+          'color.background_style': 'mesh_gradient', 'color.dark_mode': true, 'color.theme_default': 'dark_default',
+          'color.dark_mode_notes': 'Dark is the primary theme; glass panels over a dim mesh gradient',
+          'typography.heading_style': 'geometric_sans', 'typography.body_style': 'system_ui_stack', 'typography.scale': 'compact_1.2',
+          'layout.grid_system': 'bento_grid', 'layout.max_width': 'wide_1440px', 'layout.navigation': 'sidebar_nav', 'layout.footer_style': 'no_footer',
+          'components.inventory': ['cards', 'charts_graphs', 'data_table', 'tabs', 'dropdown_menus', 'tooltips', 'avatars_badges', 'search_autocomplete', 'toast_notifications', 'progress_steppers'],
+          'components.card_style': 'glass_translucent', 'components.button_style': 'glow_shadow', 'components.corner_radius': 'rounded_16px',
+          'imagery.image_style': 'abstract_shapes', 'imagery.icon_style': 'duotone', 'imagery.icon_library': 'phosphor',
+          'motion.animation_level': 'moderate', 'motion.entrance_effects': ['staggered_reveals', 'number_counters', 'skeleton_to_content'],
+          'motion.hover_states': ['glow_border', 'scale_grow'], 'motion.micro_interactions': ['animated_toggles', 'loading_spinners_skeletons', 'inline_form_validation'],
+          'motion.animation_library': 'framer_motion',
+          'tech.framework': 'react', 'tech.css_approach': 'tailwind_v4', 'tech.component_library': 'shadcn_ui',
+          'tech.language': 'typescript', 'tech.deliverable': 'react_components', 'tech.interactivity': 'full_spa_with_state',
+          'responsive.strategy': 'desktop_first', 'responsive.a11y_level': 'wcag_aa',
+          'responsive.a11y_features': ['keyboard_navigation', 'visible_focus_rings', 'aria_labels_landmarks', 'contrast_4.5_minimum'],
+          'output.target_tool': 'Lovable', 'output.output_type': 'working_code', 'output.include_design_tokens': true,
+        },
+        'Brutalist Portfolio': {
+          'vision.site_type': 'portfolio', 'vision.primary_goal': 'showcase_work',
+          'brand.tone': ['bold', 'edgy', 'quirky'], 'brand.content_source': 'use_placeholder_copy',
+          'aesthetic.style': 'neo_brutalist', 'aesthetic.era_vibe': 'retro_90s', 'aesthetic.mood': ['rebellious', 'playful'],
+          'aesthetic.density': 'dense',
+          'aesthetic.signature_details': ['heavy_borders_hard_shadows', 'oversized_typography', 'marquee_ticker', 'sticker_badges', 'custom_cursor', 'numbered_sections'],
+          'color.palette_style': 'high_contrast_black_white', 'color.brand_colors': 'black + white + one loud accent (electric yellow #FFE600)',
+          'color.background_style': 'solid_light',
+          'typography.heading_style': 'grotesque_display', 'typography.body_style': 'monospace',
+          'typography.font_pairing': 'Archivo Black + Space Mono', 'typography.scale': 'oversized_editorial',
+          'typography.heading_treatment': ['all_caps', 'tight_letter_spacing', 'outlined_stroke_text'],
+          'layout.page_sections': ['navbar', 'hero', 'gallery_portfolio_grid', 'about_story', 'contact_form', 'footer'],
+          'layout.hero_style': 'typographic_only', 'layout.grid_system': 'broken_grid_overlapping',
+          'layout.max_width': 'full_bleed_edge_to_edge', 'layout.navigation': 'minimal_logo_only', 'layout.footer_style': 'oversized_brand_wordmark',
+          'components.card_style': 'neubrutalist_hard_shadow', 'components.button_style': 'brutalist_offset_shadow', 'components.corner_radius': 'sharp_0px',
+          'imagery.image_style': 'duotone_treated_photos', 'imagery.image_source': 'css_svg_generated_placeholders',
+          'imagery.icon_style': 'pixel_art', 'imagery.decorative_elements': ['geometric_line_accents', 'dot_grid_patterns'],
+          'motion.animation_level': 'moderate', 'motion.scroll_effects': ['infinite_marquee', 'sticky_pinned_sections'],
+          'motion.hover_states': ['color_shift', 'reveal_caption_overlay'], 'motion.animation_library': 'css_only_transitions',
+          'tech.framework': 'plain_html_css_js', 'tech.css_approach': 'vanilla_css_modern', 'tech.language': 'javascript',
+          'tech.deliverable': 'single_html_file', 'tech.interactivity': 'light_vanilla_js',
+          'tech.build_constraints': ['no_build_step_cdn_only', 'semantic_html_required', 'css_variables_for_theming'],
+          'responsive.strategy': 'mobile_first', 'responsive.a11y_level': 'wcag_aa',
+          'performance.budget': 'light_under_500kb',
+          'output.target_tool': 'Claude Code', 'output.output_type': 'working_code', 'output.include_section_walkthrough': true,
+        },
+        'E-commerce Storefront': {
+          'vision.site_type': 'e_commerce_storefront', 'vision.primary_goal': 'sell_products',
+          'brand.tone': ['warm', 'friendly'], 'brand.content_source': 'generate_realistic_copy',
+          'aesthetic.style': 'minimalist', 'aesthetic.mood': ['warm', 'trustworthy'], 'aesthetic.density': 'balanced',
+          'color.palette_style': 'earth_tones', 'color.background_style': 'warm_off_white',
+          'typography.heading_style': 'serif_modern', 'typography.body_style': 'humanist_sans',
+          'typography.font_pairing': 'Fraunces + Inter', 'typography.scale': 'classic_1.25',
+          'layout.page_sections': ['announcement_bar', 'navbar', 'hero', 'product_showcase', 'features_grid', 'testimonials', 'newsletter_signup', 'faq_accordion', 'footer'],
+          'layout.hero_style': 'full_bleed_image', 'layout.grid_system': '12_column_standard',
+          'layout.max_width': 'wide_1440px', 'layout.navigation': 'sticky_navbar_on_scroll', 'layout.footer_style': 'fat_footer_sitemap',
+          'components.inventory': ['cards', 'buttons_ctas', 'carousel_slider', 'form_inputs', 'accordion', 'toast_notifications', 'pagination', 'search_autocomplete'],
+          'components.card_style': 'borderless_whitespace_only', 'components.button_style': 'solid_pill', 'components.corner_radius': 'subtle_4px',
+          'imagery.image_style': 'studio_product_photography', 'imagery.image_source': 'stock_unsplash_pexels',
+          'imagery.icon_style': 'outline_stroke', 'imagery.icon_library': 'heroicons',
+          'motion.animation_level': 'subtle', 'motion.hover_states': ['image_zoom', 'lift_with_shadow'],
+          'motion.micro_interactions': ['button_press_feedback', 'success_check_animations', 'inline_form_validation'],
+          'motion.animation_library': 'css_only_transitions',
+          'tech.framework': 'nextjs', 'tech.css_approach': 'tailwind_v4', 'tech.component_library': 'shadcn_ui',
+          'tech.language': 'typescript', 'tech.deliverable': 'multi_page_static_site', 'tech.interactivity': 'forms_and_api_calls',
+          'responsive.strategy': 'mobile_first', 'responsive.breakpoints': ['mobile_360', 'tablet_768', 'laptop_1024', 'desktop_1280'],
+          'responsive.a11y_level': 'wcag_aa', 'responsive.a11y_features': ['keyboard_navigation', 'alt_text_all_images', 'touch_targets_44px', 'form_error_announcements'],
+          'performance.targets': ['lighthouse_90_plus', 'lcp_under_2.5s'], 'performance.techniques': ['lazy_load_images', 'responsive_srcset', 'webp_avif_formats'],
+          'performance.seo_basics': ['semantic_heading_hierarchy', 'meta_title_description', 'open_graph_social_cards', 'structured_data_jsonld'],
+          'output.target_tool': 'Bolt.new', 'output.output_type': 'working_code',
+        },
+        'Dark Luxury Agency': {
+          'vision.site_type': 'agency_studio_site', 'vision.primary_goal': 'establish_credibility',
+          'brand.tone': ['luxurious', 'authoritative', 'quiet_understated'],
+          'aesthetic.style': 'dark_luxury', 'aesthetic.era_vibe': 'timeless_classic', 'aesthetic.mood': ['mysterious', 'sophisticated'],
+          'aesthetic.density': 'ultra_minimal', 'aesthetic.signature_details': ['grain_noise_texture', 'oversized_typography', 'thin_hairline_borders', 'asymmetric_layout'],
+          'color.palette_style': 'monochromatic', 'color.brand_colors': 'near-black #0A0A0A, warm ivory text, champagne gold accent',
+          'color.background_style': 'solid_dark', 'color.dark_mode': true, 'color.theme_default': 'dark_default',
+          'typography.heading_style': 'serif_classic_oldstyle', 'typography.body_style': 'neo_grotesque',
+          'typography.font_pairing': 'Canela or Playfair Display + Neue Haas Grotesk', 'typography.scale': 'oversized_editorial',
+          'typography.heading_treatment': ['italic_serif_accents', 'loose_tracking', 'kinetic_animated_text'],
+          'layout.page_sections': ['navbar', 'hero', 'case_studies', 'stats_metrics', 'team', 'contact_form', 'footer'],
+          'layout.hero_style': 'typographic_only', 'layout.grid_system': 'asymmetric_editorial',
+          'layout.max_width': 'full_bleed_edge_to_edge', 'layout.navigation': 'transparent_over_hero', 'layout.footer_style': 'big_cta_footer',
+          'components.card_style': 'borderless_whitespace_only', 'components.button_style': 'text_link_underline', 'components.corner_radius': 'sharp_0px',
+          'imagery.image_style': 'grainy_analog_photos', 'imagery.image_source': 'ai_generated_include_prompts', 'imagery.icon_style': 'outline_stroke',
+          'motion.animation_level': 'showpiece_awwwards',
+          'motion.entrance_effects': ['clip_path_reveals', 'blur_to_sharp', 'staggered_reveals'],
+          'motion.scroll_effects': ['parallax_layers', 'sticky_pinned_sections', 'scrollytelling_steps', 'horizontal_scroll_section'],
+          'motion.hover_states': ['magnetic_cursor_pull', 'image_zoom', 'reveal_caption_overlay'],
+          'motion.animation_library': 'gsap_scrolltrigger',
+          'tech.framework': 'astro', 'tech.css_approach': 'vanilla_css_modern', 'tech.language': 'typescript', 'tech.deliverable': 'full_project_repo',
+          'responsive.strategy': 'desktop_first', 'responsive.a11y_level': 'wcag_aa',
+          'responsive.a11y_features': ['respect_prefers_reduced_motion', 'keyboard_navigation', 'contrast_4.5_minimum'],
+          'performance.budget': 'standard_under_1mb',
+          'references.style_of': 'Awwwards SOTD agency sites; editorial fashion magazine pacing',
+          'output.target_tool': 'Cursor', 'output.output_type': 'code_plus_design_rationale', 'output.include_asset_prompts': true,
+        },
+      },
+      audio: {
+        'Lo-fi Study Beat': {
+          'meta.audio_type': 'music', 'meta.target_tool': 'suno', 'meta.duration': '2:00',
+          'music.genre': 'lo-fi hip hop', 'music.mood': ['calm', 'nostalgic', 'dreamy'],
+          'music.tempo': 'slow', 'music.tempo_bpm': 75,
+          'music.instruments': ['piano', 'drums', '808', 'pads'], 'music.vocals': 'none',
+          'production.mixing_notes': 'vinyl crackle, tape saturation, soft low-pass filter, mellow',
+        },
+        'Cinematic Trailer': {
+          'meta.audio_type': 'music', 'meta.target_tool': 'udio', 'meta.duration': '1:00',
+          'music.genre': 'cinematic orchestral', 'music.mood': ['epic', 'tense', 'uplifting'],
+          'music.tempo': 'medium', 'music.instruments': ['strings', 'brass', 'percussion', 'choir'],
+          'music.structure': 'slow build - tension - climactic drop - resolution',
+          'production.mixing_notes': 'huge reverb, wide stereo, deep sub hits, rising risers',
+        },
+        'Audiobook Narrator': {
+          'meta.audio_type': 'voice', 'meta.target_tool': 'elevenlabs',
+          'voice.voice_style': 'warm, measured storyteller', 'voice.gender': 'female', 'voice.age': 'adult',
+          'voice.accent': 'British', 'voice.emotion': 'friendly', 'voice.pacing': 'natural',
+        },
+        'Podcast Intro': {
+          'meta.audio_type': 'podcast', 'meta.target_tool': 'suno', 'meta.duration': '0:15',
+          'music.genre': 'upbeat electronic', 'music.mood': ['energetic', 'playful'], 'music.tempo': 'upbeat',
+          'voice.voice_style': 'energetic announcer', 'voice.emotion': 'excited', 'voice.pacing': 'natural',
+        },
+      },
+      agent: {
+        'Research Agent': {
+          'meta.agent_name': 'Research Assistant', 'meta.model': 'Claude Opus 4.8', 'meta.runtime': 'Claude Agent SDK',
+          'objective.goal': 'Answer a research question with well-sourced, fact-checked findings.',
+          'objective.success_criteria': 'A cited report where every key claim is backed by a verifiable source.',
+          'tools.allowed_tools': ['web_search', 'web_fetch', 'file_write'],
+          'loop.planning_style': 'plan_then_execute', 'loop.max_steps': 25, 'loop.self_verification': true,
+          'guardrails.human_in_loop': 'review_final_output',
+          'output.format': 'markdown_report',
+        },
+        'Coding Agent (MCP)': {
+          'meta.agent_name': 'Coding Agent', 'meta.model': 'Claude Opus 4.8', 'meta.runtime': 'MCP (Model Context Protocol)',
+          'objective.goal': 'Implement the requested change, with tests passing.',
+          'objective.success_criteria': 'Code compiles, tests pass, and the change matches the spec.',
+          'tools.allowed_tools': ['file_read', 'file_write', 'file_edit', 'bash', 'code_execution'],
+          'tools.mcp_servers': 'github, filesystem',
+          'loop.planning_style': 'react', 'loop.max_steps': 50, 'loop.self_verification': true,
+          'guardrails.human_in_loop': 'confirm_destructive', 'guardrails.sandbox': true,
+          'output.format': 'code',
+        },
+        'Multi-Agent Orchestrator': {
+          'meta.agent_name': 'Orchestrator', 'meta.model': 'Claude Opus 4.8', 'meta.runtime': 'Anthropic Managed Agents',
+          'objective.goal': 'Coordinate specialist subagents to complete a complex multi-part task.',
+          'loop.planning_style': 'plan_then_execute', 'loop.subagents': true, 'loop.self_verification': true,
+          'memory.context_strategy': 'compaction',
+          'guardrails.human_in_loop': 'review_final_output',
+          'output.format': 'structured_summary',
+        },
+      },
     };
 
     // Safe clipboard utility with fallback for file:// protocol
@@ -915,6 +1453,18 @@
     }
 
     // === DARK MODE ===
+    // Reliable Escape-to-close for modals: a document-level listener that fires
+    // regardless of where focus is (the inline onKeyDown handlers only fire when
+    // focus is already inside the modal).
+    const useEscapeKey = (active, onEscape) => {
+      useEffect(() => {
+        if (!active) return;
+        const handler = (e) => { if (e.key === 'Escape') onEscape(); };
+        document.addEventListener('keydown', handler);
+        return () => document.removeEventListener('keydown', handler);
+      }, [active, onEscape]);
+    };
+
     const useDarkMode = () => {
       const [mode, setModeState] = useState(() => { try { return localStorage.getItem('promptStudioTheme') || 'system'; } catch(e) { return 'system'; } });
       const [isDark, setIsDark] = useState(false);
@@ -934,7 +1484,7 @@
       return [isDark, mode, setMode];
     };
 
-    function ThemeToggle({ isDark, mode, setMode }) {
+    function ThemeToggle({ mode, setMode }) {
       const next = mode === 'light' ? 'dark' : mode === 'dark' ? 'system' : 'light';
       const label = mode === 'light' ? '☀️' : mode === 'dark' ? '🌙' : '💻';
       return (
@@ -991,7 +1541,7 @@
       'n8n', 'Zapier', 'MindStudio', 'HuggingFace', 'Slack',
     ];
 
-    function ChainBuilder({ onBack, isDark, themeMode, setThemeMode }) {
+    function ChainBuilder({ onBack, themeMode, setThemeMode }) {
       const emptyStep = (id) => ({
         id, name: `Step ${id}`, type: 'standard',
         role: '', task: '', inputSource: 'manual', inputData: '',
@@ -1100,7 +1650,7 @@
                 </div>
               </div>
               <div className="flex items-center gap-2">
-                <ThemeToggle isDark={isDark} mode={themeMode} setMode={setThemeMode} />
+                <ThemeToggle mode={themeMode} setMode={setThemeMode} />
                 <button onClick={() => setShowExport(true)}
                   className="px-4 py-2 bg-white text-orange-600 rounded-lg font-semibold hover:bg-orange-50">
                   Export Chain →
@@ -1302,7 +1852,7 @@
     // === COMPONENTS ===
 
     function UniversalPromptStudio() {
-      const [isDark, themeMode, setThemeMode] = useDarkMode();
+      const [, themeMode, setThemeMode] = useDarkMode();
       const [promptType, setPromptType] = useState(null);
       const [showChain, setShowChain] = useState(false);
       const [currentSection, setCurrentSection] = useState(0);
@@ -1323,8 +1873,11 @@
       const [autoSaveData] = useState(() => { try { const s = JSON.parse(localStorage.getItem('promptStudioAutosave')); return s && s.type && s.data && typeof s.data === 'object' && Date.now() - s.timestamp < 86400000 ? s : null; } catch(e) { return null; } });
       const [presetKey, setPresetKey] = useState(0); // for resetting preset dropdown
       const [hasUnsavedChanges, setHasUnsavedChanges] = useState(false);
+      const [fieldSearch, setFieldSearch] = useState(''); // filter fields across all sections
+      const [confirmState, setConfirmState] = useState(null); // { message, confirmLabel, danger, resolve }
       const [autoSaveStatus, setAutoSaveStatus] = useState('');
       const isLoadingTemplateRef = useRef(false);
+      const templateFileInputRef = useRef(null);
 
       // Auto-save with 2s debounce
       useEffect(() => {
@@ -1339,16 +1892,6 @@
         }, 2000);
         return () => clearTimeout(timer);
       }, [formData, promptType, hasUnsavedChanges]);
-
-      // Recovery check on mount
-      useEffect(() => {
-        try {
-          const saved = JSON.parse(localStorage.getItem('promptStudioAutosave'));
-          if (saved && saved.type && saved.data && Date.now() - saved.timestamp < 86400000) {
-            showToast(`Session recovery available (${saved.type} prompt)`, 'info');
-          }
-        } catch (e) { /* ignore */ }
-      }, []);
 
       const schema = SCHEMAS[promptType];
       const sectionInfo = promptType ? SECTION_INFO[promptType] : {};
@@ -1372,6 +1915,7 @@
           setCurrentSection(0);
           setShowOutput(false);
           setHasUnsavedChanges(false);
+          setFieldSearch('');
         }
       }, [promptType]);
 
@@ -1379,6 +1923,35 @@
         setFormData(prev => ({ ...prev, [key]: value }));
         setHasUnsavedChanges(true);
       }, []);
+
+      // Close modals on Escape from anywhere
+      const closeOutput = useCallback(() => setShowOutput(false), []);
+      const closeViewing = useCallback(() => setViewingTemplate(null), []);
+      const closeImport = useCallback(() => { setShowImport(false); setImportText(''); setImportError(''); }, []);
+      useEscapeKey(showOutput, closeOutput);
+      useEscapeKey(!!viewingTemplate, closeViewing);
+      useEscapeKey(showImport, closeImport);
+
+      // Styled, promise-based replacement for window.confirm()
+      const confirmDialog = useCallback((message, opts = {}) => new Promise((resolve) => {
+        setConfirmState({ message, confirmLabel: opts.confirmLabel || 'Confirm', danger: !!opts.danger, resolve });
+      }), []);
+      const resolveConfirm = useCallback((val) => {
+        setConfirmState(prev => { if (prev) prev.resolve(val); return null; });
+      }, []);
+      useEscapeKey(!!confirmState, () => resolveConfirm(false));
+
+      const confirmModal = confirmState && (
+        <div className="fixed inset-0 bg-black/50 flex items-center justify-center p-4 z-[60]" role="dialog" aria-modal="true" onClick={() => resolveConfirm(false)}>
+          <div className="bg-white dark:bg-gray-800 rounded-2xl shadow-2xl max-w-sm w-full p-6" onClick={e => e.stopPropagation()}>
+            <p className="text-gray-800 dark:text-gray-100 mb-6">{confirmState.message}</p>
+            <div className="flex justify-end gap-2">
+              <button onClick={() => resolveConfirm(false)} className="px-4 py-2 rounded-lg bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-200 hover:bg-gray-300 dark:hover:bg-gray-500">Cancel</button>
+              <button onClick={() => resolveConfirm(true)} className={`px-4 py-2 rounded-lg text-white font-semibold ${confirmState.danger ? 'bg-red-600 hover:bg-red-700' : 'bg-blue-600 hover:bg-blue-700'}`} autoFocus>{confirmState.confirmLabel}</button>
+            </div>
+          </div>
+        </div>
+      );
 
       const applyPreset = useCallback((presetName) => {
         const preset = PRESETS[promptType]?.[presetName];
@@ -1401,9 +1974,9 @@
         }
       }, [savedTemplates]);
 
-      const saveTemplate = useCallback(() => {
+      const saveTemplate = useCallback(async () => {
         if (!templateName.trim()) return;
-        if (savedTemplates[templateName] && !confirm(`A template named "${templateName}" already exists. Overwrite it?`)) return;
+        if (savedTemplates[templateName] && !(await confirmDialog(`A template named "${templateName}" already exists. Overwrite it?`, { confirmLabel: 'Overwrite' }))) return;
         const newTemplates = {
           ...savedTemplates,
           [templateName]: { type: promptType, data: formData, savedAt: new Date().toISOString() }
@@ -1415,22 +1988,86 @@
           try { localStorage.removeItem('promptStudioAutosave'); } catch(e) {}
           showToast('Template saved!');
         }
-      }, [templateName, savedTemplates, promptType, formData]);
+      }, [templateName, savedTemplates, promptType, formData, confirmDialog]);
 
-      const deleteTemplate = useCallback((name) => {
-        if (!confirm(`Delete template "${name}"?`)) return;
+      const deleteTemplate = useCallback(async (name) => {
+        if (!(await confirmDialog(`Delete template "${name}"?`, { confirmLabel: 'Delete', danger: true }))) return;
         const newTemplates = { ...savedTemplates };
         delete newTemplates[name];
         setSavedTemplates(newTemplates);
         safeLocalStorageSet('promptStudioTemplates', newTemplates);
+      }, [savedTemplates, confirmDialog]);
+
+      // Export the entire template library to a downloadable JSON file (backup/share)
+      const exportAllTemplates = useCallback(() => {
+        const count = Object.keys(savedTemplates).length;
+        if (!count) { showToast('No templates to export', 'error'); return; }
+        const payload = { _type: 'promptStudioTemplates', exportedAt: new Date().toISOString(), templates: savedTemplates };
+        const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `prompt-studio-templates-${Date.now()}.json`;
+        a.click();
+        URL.revokeObjectURL(url);
+        showToast(`Exported ${count} template${count === 1 ? '' : 's'}`);
       }, [savedTemplates]);
 
+      // Import a template-library file, merging into the current library (suffixing name collisions)
+      const importTemplatesFromFile = useCallback((file) => {
+        if (!file) return;
+        const reader = new FileReader();
+        reader.onload = () => {
+          try {
+            const parsed = JSON.parse(reader.result);
+            const incoming = parsed && parsed.templates && typeof parsed.templates === 'object' ? parsed.templates : parsed;
+            if (!incoming || typeof incoming !== 'object') throw new Error('bad shape');
+            const merged = { ...savedTemplates };
+            let added = 0;
+            Object.entries(incoming).forEach(([name, tpl]) => {
+              if (!tpl || typeof tpl !== 'object' || !tpl.type || !tpl.data) return;
+              let key = name;
+              while (merged[key]) key = `${key} (imported)`;
+              merged[key] = tpl;
+              added++;
+            });
+            if (!added) { showToast('No valid templates found in file', 'error'); return; }
+            if (safeLocalStorageSet('promptStudioTemplates', merged)) {
+              setSavedTemplates(merged);
+              showToast(`Imported ${added} template${added === 1 ? '' : 's'}`);
+            }
+          } catch (e) {
+            showToast('Could not read that file — invalid JSON', 'error');
+          }
+        };
+        reader.readAsText(file);
+      }, [savedTemplates]);
+
+      // Reset the current form back to the active schema's defaults
+      const resetForm = useCallback(async () => {
+        if (!promptType) return;
+        if (!(await confirmDialog('Reset all fields to defaults? Unsaved changes will be lost.', { confirmLabel: 'Reset', danger: true }))) return;
+        const currentSchema = SCHEMAS[promptType] || {};
+        const defaults = {};
+        Object.entries(currentSchema).forEach(([key, config]) => {
+          if (config.default !== undefined) defaults[key] = config.default;
+        });
+        setFormData(defaults);
+        setHasUnsavedChanges(false);
+        showToast('Form reset to defaults');
+      }, [promptType, confirmDialog]);
+
       const buildNestedJSON = useCallback((data) => {
+        const schema = SCHEMAS[promptType] || {};
         const result = {};
         Object.entries(data).forEach(([key, value]) => {
           if (value === '' || value === undefined || value === null) return;
           if (Array.isArray(value) && value.length === 0) return;
           if (key.startsWith('_')) return; // skip internal keys like _industries_selected
+          // Skip fields hidden by an unmet condition so they don't leak into output
+          const cfg = schema[key];
+          if (cfg && cfg.condition && !data[cfg.condition]) return;
+          const resolved = typeof value === 'string' ? resolveSentinel(value) : value;
           const keys = key.split('.');
           let current = result;
           for (let i = 0; i < keys.length - 1; i++) {
@@ -1441,13 +2078,12 @@
             current[keys[i]] = current[keys[i]] || {};
             current = current[keys[i]];
           }
-          current[keys[keys.length - 1]] = value;
+          current[keys[keys.length - 1]] = resolved;
         });
         return JSON.stringify(result, null, 2);
-      }, []);
+      }, [promptType]);
 
       const generatedJSON = useMemo(() => buildNestedJSON(formData), [formData, buildNestedJSON]);
-      const generateJSON = () => generatedJSON;
 
       const jsonToPlainText = useCallback((jsonStr) => {
         try {
@@ -1560,7 +2196,6 @@
 
         return lines.join('\n').trim();
       }, [formData, promptType, buildNestedJSON]);
-      const generatePlainText = () => generatedPlainText;
 
       const importJSON = () => {
         setImportError('');
@@ -1593,14 +2228,14 @@
       };
 
       const copyToClipboard = async () => {
-        const content = outputMode === 'json' ? generateJSON() : generatePlainText();
+        const content = outputMode === 'json' ? generatedJSON : generatedPlainText;
         const ok = await safeClipboardWrite(content);
         if (ok) showToast(`${outputMode === 'json' ? 'JSON' : 'Text'} copied to clipboard!`);
       };
 
       const exportToFile = () => {
         const isJson = outputMode === 'json';
-        const content = isJson ? generateJSON() : generatePlainText();
+        const content = isJson ? generatedJSON : generatedPlainText;
         const blob = new Blob([content], { type: isJson ? 'application/json' : 'text/plain' });
         const url = URL.createObjectURL(blob);
         const a = document.createElement('a');
@@ -1739,22 +2374,30 @@
                 className="w-full p-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 resize-none"
               />
             );
-          case 'select':
+          case 'select': {
+            const schemaOpts = config.options.filter(opt => !SELECT_SENTINELS.includes(opt));
             return (
-              <select
-                id={`field-${key}`}
-                value={value}
-                onChange={e => {
-                  updateField(key, e.target.value);
-                  if (key === 'style.medium') updateField('style.medium_aesthetics', []);
-                }}
-                className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 dark:text-white"
-              >
-                {config.options.map(opt => (
-                  <option key={opt} value={opt}>{opt.replace(/_/g, ' ')}</option>
-                ))}
-              </select>
+              <div>
+                <select
+                  id={`field-${key}`}
+                  value={value}
+                  onChange={e => {
+                    updateField(key, e.target.value);
+                    if (key === 'style.medium') updateField('style.medium_aesthetics', []);
+                  }}
+                  className="w-full p-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 bg-white dark:bg-gray-700 dark:text-white"
+                >
+                  {SELECT_SENTINELS.map(s => (
+                    <option key={s || '__skip'} value={s} className={s === '' ? 'text-gray-400' : 'italic'}>{SENTINEL_LABELS[s]}</option>
+                  ))}
+                  {schemaOpts.map(opt => (
+                    <option key={opt} value={opt}>{opt.replace(/_/g, ' ')}</option>
+                  ))}
+                </select>
+                {config.placeholder && <p className="text-xs text-gray-500 dark:text-gray-400 mt-1">{config.placeholder}</p>}
+              </div>
             );
+          }
           case 'multiselect':
             const selected = Array.isArray(value) ? value : [];
             return (
@@ -1795,17 +2438,18 @@
       };
 
       // === TYPE SELECTION SCREEN ===
-      if (showChain) return <ChainBuilder onBack={() => setShowChain(false)} isDark={isDark} themeMode={themeMode} setThemeMode={setThemeMode} />;
+      if (showChain) return <ChainBuilder onBack={() => setShowChain(false)} themeMode={themeMode} setThemeMode={setThemeMode} />;
 
       if (!promptType) {
         return (
           <div className="min-h-screen bg-gradient-to-br from-slate-900 via-purple-900 to-slate-900 dark:from-gray-950 dark:via-gray-900 dark:to-gray-950 p-8">
+            {confirmModal}
             <div className="max-w-4xl mx-auto">
               <div className="text-center mb-12">
                 <h1 className="text-4xl font-bold text-white mb-4">Universal Prompt Studio</h1>
                 <p className="text-purple-200 text-lg mb-6">Build structured prompts for AI image, video, text, dev, and marketing workflows</p>
                 <div className="mb-4">
-                  <ThemeToggle isDark={isDark} mode={themeMode} setMode={setThemeMode} />
+                  <ThemeToggle mode={themeMode} setMode={setThemeMode} />
                 </div>
                 <div className="flex items-center justify-center gap-3">
                   <button onClick={() => setShowImport(true)}
@@ -1843,11 +2487,33 @@
                 </button>
               </div>
 
+              {/* Hidden file input for template-library import */}
+              <input
+                ref={templateFileInputRef}
+                type="file"
+                accept="application/json,.json"
+                className="hidden"
+                onChange={e => { const f = e.target.files && e.target.files[0]; importTemplatesFromFile(f); e.target.value = ''; }}
+              />
+
+              {/* Empty-state import (restore a backup) */}
+              {Object.keys(savedTemplates).length === 0 && (
+                <div className="text-center">
+                  <button onClick={() => templateFileInputRef.current && templateFileInputRef.current.click()} className="text-purple-200 text-sm hover:text-white underline">
+                    ⬆ Import templates from a file
+                  </button>
+                </div>
+              )}
+
               {/* Saved Templates */}
               {Object.keys(savedTemplates).length > 0 && (
                 <div className="bg-white/10 backdrop-blur rounded-xl p-6">
                   <div className="flex items-center justify-between mb-4">
                     <h3 className="text-white font-semibold">📁 Saved Templates</h3>
+                    <div className="flex gap-2">
+                      <button onClick={exportAllTemplates} className="px-3 py-1 bg-white/10 text-white rounded text-sm hover:bg-white/20" title="Download all templates as a JSON file">⬇ Export all</button>
+                      <button onClick={() => templateFileInputRef.current && templateFileInputRef.current.click()} className="px-3 py-1 bg-white/10 text-white rounded text-sm hover:bg-white/20" title="Import templates from a JSON file">⬆ Import</button>
+                    </div>
                   </div>
                   <div className="grid gap-2">
                     {Object.entries(savedTemplates).map(([name, template]) => (
@@ -1988,16 +2654,21 @@
       // === BUILDER SCREEN ===
       const currentSectionKey = sections[currentSection];
       const currentSectionInfo = sectionInfo[currentSectionKey];
-      const currentFields = Object.entries(schema).filter(([key, config]) => config.section === currentSectionKey);
+      const searchActive = fieldSearch.trim().length > 0;
+      const searchLower = fieldSearch.trim().toLowerCase();
+      const currentFields = searchActive
+        ? Object.entries(schema).filter(([key, config]) => (config.label || '').toLowerCase().includes(searchLower) || key.toLowerCase().includes(searchLower))
+        : Object.entries(schema).filter(([key, config]) => config.section === currentSectionKey);
 
       return (
         <div className="min-h-screen bg-gray-100 dark:bg-gray-900">
+          {confirmModal}
           {/* Header */}
           <div className="bg-gradient-to-r from-purple-600 to-blue-600 text-white p-4">
             <div className="max-w-6xl mx-auto flex items-center justify-between">
               <div className="flex items-center gap-4">
                 <button
-                  onClick={() => { if (!hasUnsavedChanges || confirm('You have unsaved changes. Leave anyway?')) { setPromptType(null); setHasUnsavedChanges(false); } }}
+                  onClick={async () => { if (!hasUnsavedChanges || (await confirmDialog('You have unsaved changes. Leave anyway?', { confirmLabel: 'Leave' }))) { setPromptType(null); setHasUnsavedChanges(false); } }}
                   className="p-2 hover:bg-white/20 rounded-lg"
                 >
                   ← Back
@@ -2010,7 +2681,7 @@
               </div>
               <div className="flex items-center gap-2">
                 {autoSaveStatus && <span className="text-xs text-white/60">{autoSaveStatus}</span>}
-                <ThemeToggle isDark={isDark} mode={themeMode} setMode={setThemeMode} />
+                <ThemeToggle mode={themeMode} setMode={setThemeMode} />
                 <button
                   onClick={() => setShowImport(true)}
                   className="px-4 py-2 bg-white/20 text-white rounded-lg hover:bg-white/30 text-sm"
@@ -2063,17 +2734,37 @@
 
             {/* Main Content */}
             <div className="flex-1">
-              <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 fade-in" key={currentSectionKey}>
-                <div className="flex items-center gap-3 mb-6">
-                  <span className="text-3xl">{currentSectionInfo.icon}</span>
-                  <div>
-                    <h2 className="text-2xl font-bold text-gray-800 dark:text-white">{currentSectionInfo.title}</h2>
-                    <p className="text-gray-500 dark:text-gray-400">{currentSectionInfo.desc}</p>
+              <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg p-6 fade-in" key={searchActive ? '__search' : currentSectionKey}>
+                <div className="flex items-center justify-between gap-3 mb-6">
+                  <div className="flex items-center gap-3">
+                    <span className="text-3xl">{searchActive ? '🔍' : currentSectionInfo.icon}</span>
+                    <div>
+                      <h2 className="text-2xl font-bold text-gray-800 dark:text-white">{searchActive ? 'Search results' : currentSectionInfo.title}</h2>
+                      <p className="text-gray-500 dark:text-gray-400">{searchActive ? `${currentFields.length} field${currentFields.length === 1 ? '' : 's'} matching "${fieldSearch.trim()}"` : currentSectionInfo.desc}</p>
+                    </div>
+                  </div>
+                  <div className="relative">
+                    <input
+                      type="text"
+                      value={fieldSearch}
+                      onChange={e => setFieldSearch(e.target.value)}
+                      placeholder="Search fields..."
+                      className="w-44 sm:w-56 p-2 pr-7 text-sm border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 dark:text-white focus:ring-2 focus:ring-blue-500"
+                    />
+                    {searchActive && (
+                      <button onClick={() => setFieldSearch('')} className="absolute right-2 top-1/2 -translate-y-1/2 text-gray-400 hover:text-gray-700 dark:hover:text-gray-200" aria-label="Clear search">×</button>
+                    )}
                   </div>
                 </div>
 
+                {searchActive && currentFields.length === 0 && (
+                  <p className="text-gray-500 dark:text-gray-400 text-sm">No fields match your search.</p>
+                )}
+
                 <div className="space-y-4">
                   {currentFields.map(([key, config]) => {
+                    // Skip label + control entirely when the field's condition is unmet
+                    if (config.condition && !formData[config.condition]) return null;
                     if (config.type === 'checkbox') {
                       return (
                         <div key={key}>
@@ -2081,16 +2772,22 @@
                         </div>
                       );
                     }
+                    const isComposite = ['multiselect', 'medium_aesthetics', 'industry_skills_picker'].includes(config.type);
                     return (
                       <div key={key}>
-                        <label htmlFor={`field-${key}`} className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">{config.label}</label>
+                        {isComposite ? (
+                          <div role="group" aria-label={config.label} className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">{config.label}</div>
+                        ) : (
+                          <label htmlFor={`field-${key}`} className="block text-sm font-medium text-gray-700 dark:text-gray-200 mb-1">{config.label}</label>
+                        )}
                         {renderField(key, config)}
                       </div>
                     );
                   })}
                 </div>
 
-                {/* Navigation */}
+                {/* Navigation (hidden while searching across sections) */}
+                {!searchActive && (
                 <div className="flex justify-between mt-8 pt-4 border-t dark:border-gray-600">
                   <button
                     onClick={() => setCurrentSection(Math.max(0, currentSection - 1))}
@@ -2115,6 +2812,7 @@
                     </button>
                   )}
                 </div>
+                )}
               </div>
             </div>
           </div>
@@ -2147,7 +2845,7 @@
 
                 <div className="p-4 space-y-4 overflow-auto max-h-[60vh]">
                   <pre className="bg-gray-900 text-green-400 p-4 rounded-lg text-sm overflow-auto whitespace-pre-wrap">
-                    {outputMode === 'json' ? generateJSON() : generatePlainText()}
+                    {outputMode === 'json' ? generatedJSON : generatedPlainText}
                   </pre>
                 </div>
 
@@ -2167,6 +2865,13 @@
                       className="px-4 py-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700 disabled:opacity-50"
                     >
                       💾 Save Template
+                    </button>
+                    <button
+                      onClick={resetForm}
+                      className="px-4 py-2 bg-gray-200 dark:bg-gray-600 text-gray-700 dark:text-gray-200 rounded-lg hover:bg-gray-300 dark:hover:bg-gray-500"
+                      title="Reset all fields to defaults"
+                    >
+                      ↺ Reset
                     </button>
                   </div>
 
