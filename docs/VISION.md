@@ -2,6 +2,9 @@
 
 *A ground-up rethink. The v11 single-file app is treated as a directional reference only.*
 
+*Rev 2: adds the technique catalog + task profiler/generator (§4.6), the learning layer
+(§4.7), and skills/agent-artifact evaluation (§4.8).*
+
 ---
 
 ## 1. The reframe
@@ -28,9 +31,11 @@ schemas). Keep none of the code.
 
 ## 2. The product in one sentence
 
-A **local-first prompt development environment**: editor + multi-model runner +
-diagnostics + evals + a versioned prompt library, where everything — prompts, model
-knowledge, run history — is plain files in a git repo.
+A **local-first prompt development environment that teaches you the craft as you use
+it**: editor + multi-model runner + diagnostics + evals + a versioned library of
+instruction artifacts (prompts, system prompts, skills, agent definitions), where
+everything — artifacts, model knowledge, technique knowledge, run history — is plain
+files in a git repo.
 
 ## 3. Architecture
 
@@ -41,9 +46,13 @@ prompt-studio/
 ├── web/             # React + Vite frontend
 └── workspace/       # YOUR data — a git repo of plain files
     ├── prompts/     #   one .md file per prompt (frontmatter + body)
+    ├── skills/      #   agent skills / system prompts / agent defs under test (§4.8)
     ├── models/      #   one .yaml card per model
-    ├── knowledge/   #   practices.md — the living prompting-technique rubric
-    ├── evals/       #   test cases and graders
+    ├── knowledge/
+    │   ├── practices.md    # the living prompting/context-engineering rubric
+    │   └── techniques/     # one card per technique (§4.6) — data, not code
+    ├── evals/       #   test cases, graders, and skill scenarios
+    ├── journal/     #   your annotated learning log (§4.7)
     └── runs/        #   append-only JSONL: every execution ever
 ```
 
@@ -172,6 +181,109 @@ attention or activations; anything claiming otherwise is dressed-up self-report.
   suites on it → *"7 prompts hold up, 2 regressed (diffs attached), 1 improved."*
   This is the mechanism behind "which ones still hold up."
 
+### 4.6 Technique generator: catalog + task profiler + bake-off
+
+The request behind this feature is "a generator for different techniques and a way to
+determine which is the best method for what I'm trying to accomplish." One honest
+correction first: **there is no oracle for 'best technique.'** Anyone who tells you
+CoT-vs-few-shot-vs-decomposition can be decided from a lookup table is selling vibes in
+a different costume. What *can* be built is a recommender that proposes strong
+candidates and an arena that decides empirically — and a memory that makes the second
+decision cheaper than the first.
+
+**a) Technique catalog — `knowledge/techniques/*.md`, one card per technique.**
+Organized by *lever*, not by acronym zoo (technique names rot; levers don't):
+
+- **Clarity & structure** — role framing, positive instruction, sectioning, output
+  contracts
+- **Examples** — few-shot selection, contrastive examples, example ordering
+- **Reasoning** — CoT (and when it's harmful), decomposition, plan-then-execute,
+  thinking budgets on reasoning models
+- **Context engineering** — what goes in the window and where: doc placement,
+  quote-then-answer, retrieval snippet hygiene, cache-aware layout, token budgeting,
+  compaction, tool-definition design
+- **Verification** — self-critique passes, rubric-in-prompt, structured outputs as
+  guardrails
+- **Sampling & orchestration** — temperature strategy, best-of-N, multi-call patterns
+
+Each card: what it is, the mechanism (why it works), **when it helps / when it hurts /
+when it's a no-op**, cost profile, a worked before→after example, and sources. Cards
+are data — updated as the field moves, same as model cards.
+
+**b) Task profiler — the front door for a new prompt.**
+You describe the goal in plain language. The profiler asks 2–4 clarifying questions
+(the old app's `[Ask me about this]` sentinel, reborn as actual conversation), then
+classifies the task along the dimensions that actually drive technique choice:
+output verifiability (checkable vs. subjective), reasoning depth, format sensitivity,
+context volume, latency/cost budget, one-shot vs. reusable, agentic vs. single-call.
+
+**c) Candidate generation + bake-off — the recommender proposes, the eval loop
+decides.** From the profile, it drafts **2–3 candidate prompts using different
+technique combinations** (e.g. minimal-instruction vs. few-shot-heavy vs.
+decompose-and-verify), each annotated with *which cards it used and why*. You run them
+head-to-head through §4.3's scoreboard. No "trust me, this is best" — a result you can
+see.
+
+**d) The evidence base — the part that compounds.** Every bake-off verdict is recorded
+against the task profile: over time the recommender ranks candidates using *your own
+history* ("on your extraction tasks, few-shot beat CoT 8 of 9 times"), not just the
+catalog's priors. This is the difference between a tips website and a tool that learns
+your workload.
+
+### 4.7 Learning layer — the tool as curriculum
+
+You're learning prompt/context engineering from scratch; the tool should teach the
+craft *through* use, not beside it. Mechanisms, cheapest first:
+
+- **Explain-everything.** Every lint warning, critique suggestion, and technique
+  recommendation links to its technique card — the *why*, not just the *what*. Terms
+  get hover-glossary treatment. Zero extra API cost; pure UI discipline.
+- **The instruments are the teachers.** The ablation prober (§4.4) shows which parts of
+  a prompt are load-bearing; the consistency probe shows what "model uncertainty"
+  physically looks like; the cross-model diff shows idiom differences. Watching these
+  on your own prompts beats any tutorial.
+- **Predict-then-reveal drills.** Because the tool can generate variants and measure,
+  it can run calibration exercises: here's a task and two prompts — predict which wins
+  and why, then run it and see. Being wrong in a measurable way is the fastest teacher
+  there is. Drills are generated from the technique catalog, so new cards become new
+  drills automatically.
+- **Curriculum path.** An ordered walk through the catalog (fundamentals → structure →
+  examples → reasoning → context engineering → evals → agents/skills), where each stop
+  is a drill plus a "now apply it to one of *your* prompts" step.
+- **Journal.** `journal/` holds annotated entries the tool half-writes for you: what
+  you changed, what the scoreboard said, what you concluded. Six months in, this is
+  your personal textbook — searchable, and mined by the recommender (§4.6d).
+
+### 4.8 Beyond prompts: skills, system prompts, and agent artifacts
+
+A prompt is just one kind of **instruction artifact**. The same
+version → run → measure → regress loop applies to:
+
+- **Agent skills** (SKILL.md + resources, à la Claude Code / claude.ai skills)
+- **System prompts / CLAUDE.md files / agent definitions**
+- **Tool descriptions** (the most under-evaluated prompt surface in agentic systems)
+
+Skills need a different harness than single-call prompts, because a skill is exercised
+across a multi-turn, tool-using trajectory:
+
+- **Scenario-based evals**: each skill carries scenarios — tasks that *should* trigger
+  it, tasks that *shouldn't* (trigger precision matters as much as recall), and
+  expected-outcome checks.
+- **Three measurements per scenario**: (1) *activation* — did the agent load the skill
+  when it should and only then; (2) *compliance* — did the trajectory actually follow
+  the skill's instructions (LLM-rubric over the transcript); (3) *outcome* — did the
+  task end in the right state (assertions on files/outputs).
+- **Runner**: headless agent runs via the Claude Agent SDK (and equivalents later),
+  transcripts captured into `runs/` like any other execution.
+- Everything else is inherited free: skills are already files in git, so versioning,
+  health badges, the regression sentinel ("re-test my skills against the new model"),
+  and A/B of two skill phrasings all come from the machinery in §4.3–4.5.
+
+This is the least-served niche in the ecosystem — prompt evals have promptfoo et al.;
+**nobody has a good personal skill-eval harness.** It is also the heaviest lift
+(agentic trajectories cost more to run and grade), which is why it sits late in the
+build path — but the workspace model is designed for it from day one.
+
 ## 5. Cut list (from the old app)
 
 - The nine mega-schemas and all 450 fields; the 37-preset grid. Replaced by scaffolds.
@@ -195,19 +307,28 @@ One screen, three panes:
 3. **Output + Reaction panel**: the response, plus — thinking trace (when the model
    has one), the interpretation report, and an optional 3-sample consistency score.
 
-Persistence: `prompts/`, `models/`, `runs/log.jsonl`. No evals, no library UI, no
-diffing yet. This slice already delivers the core of goal #4 and makes the model cards
-load-bearing (goal #2).
+Persistence: `prompts/`, `models/`, `runs/log.jsonl` — plus the first ~15 technique
+cards as static content (they're just markdown; writing them costs nothing and the
+learning layer starts working on day one via explain-everything links). No evals, no
+library UI, no diffing yet. This slice already delivers the core of goal #4, makes the
+model cards load-bearing (goal #2), and begins the curriculum (§4.7).
 
 ### Growth
 
 - **v0.2** — test cases + assertions + candidate-vs-incumbent scoreboard; version
-  snapshots; output diff between runs. *(delivers #3)*
-- **v0.3** — library view with health badges; LLM-rubric graders; blind pairwise A/B.
-  *(delivers #5)*
-- **v0.4** — ablation prober; linter + critique pass. *(deepens #4 and #1)*
-- **v0.5** — regression sentinel; model-card refresh assistant. *(completes #2)*
-- **v0.6+** — only if earned: prompt composition/chains, logprob heatmaps, export of
+  snapshots; output diff between runs. *(delivers §4.3 — everything after this can
+  measure itself)*
+- **v0.3** — task profiler + candidate generation + bake-off, built on v0.2's
+  scoreboard; library view with health badges; LLM-rubric graders; blind pairwise A/B.
+  *(delivers §4.6 and §4.5 — the generator arrives only once it can be judged)*
+- **v0.4** — ablation prober; linter + critique pass; predict-then-reveal drills and
+  the journal. *(deepens §4.4, delivers §4.1 and the active half of §4.7)*
+- **v0.5** — regression sentinel; model-card refresh assistant; bake-off evidence base
+  feeding the recommender. *(completes §4.2, compounds §4.6d)*
+- **v0.6** — skill/agent harness: scenario evals, activation/compliance/outcome
+  measurement, headless Agent SDK runner. *(delivers §4.8; pull it forward if skill
+  evaluation becomes the priority — it depends only on v0.2's checks machinery)*
+- **v0.7+** — only if earned: prompt composition/chains, logprob heatmaps, export of
   suites to promptfoo format.
 
 ## 7. Prior art worth stealing from (not competing with)
@@ -216,5 +337,6 @@ load-bearing (goal #2).
 - **Anthropic Console** (prompt improver, eval tool) — UX for critique-then-A/B.
 - **Langfuse / Braintrust** — run-history and trace-viewing patterns.
 
-None of them combine a personal versioned library, model-aware critique, and a
-diagnostics panel in a local-first tool. That combination is this product.
+None of them combine a personal versioned library, model-aware critique, a diagnostics
+panel, a technique recommender that learns from your own bake-offs, and a skill-eval
+harness in a local-first tool. That combination is this product.
