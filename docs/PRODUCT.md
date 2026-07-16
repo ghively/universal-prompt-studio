@@ -218,7 +218,87 @@ edge cases, phrasing a rubric a judge can apply consistently — that's where th
 learning compounds, and it's why case curation is deliberately left as your work
 (§7.2) rather than automated away.
 
-## 9. Size estimate
+*Rev 3 amendment: the table above describes **Lab mode**. §10 introduces Ask mode as
+the primary interface — there, your involvement is answering the interrogation
+honestly and confirming what "good" means when asked; the tool formalizes your
+answers into checks. Craft work is graduated (§10.3), not required.*
+
+## 10. Operating modes — Ask, Coach, Lab
+
+The same engine, three depths of engagement. Ask mode is the front door and the
+default; Lab mode is where artifacts graduate when they matter; Coach mode is
+ambient.
+
+### 10.1 Ask mode — "I need to do X" → a better prompt, explained
+
+1. **You describe the task in a sentence or two.** No form, no fields.
+2. **Interrogation** — 2–4 targeted questions, chosen by the task profiler, never a
+   quiz: *What consumes the output? One-off or recurring? Which model/agent will run
+   it? What does a failure look like?* Each answer is silently captured as an
+   acceptance criterion.
+3. **Generation** — one recommended prompt (Ask mode picks; comparison shopping is
+   Lab mode), compiled against the target model's card and the technique evidence
+   base.
+4. **The explanation** — the generated prompt rendered with every section annotated:
+   why it's there, which technique card it comes from (linked), what typically goes
+   wrong without it, and what about the *target model* made this choice. This is the
+   passive curriculum: every generation is an annotated worked example.
+5. **The receipt** — "better" is demonstrated, not asserted: your original phrasing
+   and the generated prompt both run on 2–3 auto-generated representative inputs,
+   side by side, differences called out. Cost ~$0.10–0.50.
+6. **Save** — the artifact lands in the library with smoke checks auto-derived from
+   your interrogation answers (acceptance criteria → checks; no YAML authored by
+   you).
+
+### 10.2 Coach mode — observes how you actually prompt, everywhere
+
+The observation layer, three adapters in descending fidelity:
+
+- **Gateway proxy** (sees everything): a local OpenAI/Anthropic-compatible endpoint.
+  Point any tool's `base_url` at it; it forwards to the real provider and logs the
+  full request/response stream to `runs/observed/`. Works with anything that lets
+  you set a base URL — most agents, SDKs, and apps do.
+- **Claude Code transcript ingestion** (zero-config): Claude Code already writes
+  full session transcripts as local JSONL (`~/.claude/projects/…`); the studio
+  ingests them directly. Hooks/OTEL export are alternatives for live streaming.
+- **MCP proxy** (partial): the studio wraps your agents' MCP servers, seeing
+  tool-call traffic even where prompts aren't visible.
+
+The **coach job** runs over observed traffic and detects, concretely: retry/rephrase
+loops (your first ask failed — what was missing?); chronic underspecification
+patterns (which dimension you habitually omit — audience, format, scope);
+instructions your agents repeatedly ignore (CLAUDE.md/skill fix candidates); long
+meandering sessions vs. short effective ones on similar tasks; spend hotspots.
+Output: a weekly digest plus specific proposals into the review queue — *"you
+re-explained output format in 6 sessions this week; here's a CLAUDE.md block that
+fixes it permanently — one click to test it in the wind tunnel."* Observed real-world
+failures also become proposed regression cases for library artifacts.
+
+**Privacy is the design constraint**: this firehose is exactly why the product is
+local-first. Observed traffic never leaves disk; the coach's analysis calls redact
+by default (configurable), and the observed store is excluded from any future
+sharing/exchange surface by construction.
+
+### 10.3 Graduated verification (replaces one-size-fits-all suites)
+
+| Tier | What runs | Who does the work | When |
+|---|---|---|---|
+| T0 | Generation + explanation only | — | throwaway asks |
+| T1 (default) | The receipt + auto-derived smoke checks | tool derives from your interrogation answers | every saved artifact |
+| T2 | Curated suite, arena, ablation, sentinel | you, with drafting help | artifacts that matter |
+
+A T1 artifact that keeps getting used gets nudged toward T2 — with the case drafts
+pre-written from observed real inputs (Coach mode), so graduation is mostly
+approval, not authorship.
+
+### 10.4 Staying current
+
+Already specced (§4.2 watcher, §4.1 batteries) plus a **field-scan job**: periodically
+re-read provider docs, release notes, and changelogs; draft updates to model and
+technique cards into the review queue. You approve diffs; Ask mode compiles with the
+updated knowledge immediately after merge.
+
+## 11. Size estimate
 
 Single-user local product: roughly **25–40k lines of TypeScript** (server 40%, UI 40%,
 CLI/MCP/probes 20%), no infrastructure beyond the user's machine and their API keys.
