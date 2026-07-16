@@ -182,7 +182,43 @@ A global monthly cap and per-suite budgets are enforced by the server, not by ho
 5. **The exchange** (NORTHSTAR §7) requires other people; it ships last and the
    product must be complete without it. Everything else here is single-player.
 
-## 8. Size estimate
+## 8. Division of labor — the automation is lab equipment; you are the scientist
+
+Nothing in §4 creates anything. Every automated job is measurement or drudgery;
+every decision that shapes an artifact is human. Explicitly:
+
+| You (the craft) | The tool (the instruments) |
+|---|---|
+| Write and revise the prompts. The workbench is an editor first; most sessions are typing, running, reading the reaction panel, revising. | Make the model's reaction visible so revision is informed, not blind. |
+| Define what "good" means: author/approve every test case and check. The tool drafts cases; you edit or reject each one. | Execute your definition of good, thousands of times, identically. |
+| Hand-label the anchor cases that calibrate each grader. Your taste is the ground truth of the whole system. | Track each grader's agreement with your labels and flag drift. |
+| Judge blind pairwise rounds yourself when it matters. | Track your agreement with LLM judges — so you learn *which graders to trust, and when*. |
+| Predict outcomes before bake-offs run (predict-then-reveal). | Score your calibration over time. |
+| Review and merge every proposal in the queue. | Author proposals with evidence attached; never apply anything. |
+| Decide promotion in the Arena. | Fill in the scoreboard. |
+
+**Automation is opt-in per artifact.** The daemon only touches artifacts explicitly
+marked for maintenance. Something you're actively crafting has zero automation on it.
+The nightly machinery exists for the boring re-verification you'd never do by hand on
+*finished* work — not for creation.
+
+**On "hoping the tests are accurate":** tests here are not an oracle you trust —
+they are *your hypotheses, made executable*. When a result surprises you, that's the
+mechanism working: either the prompt is wrong or the test is wrong, and you
+adjudicate; both are versioned, both improve. The tool never says "this prompt is
+good." It says: *on these 12 cases you wrote, under these checks you approved,
+candidate B beat A 9–3, at $1.40 — transcripts here.* The claim is small, auditable,
+and one click from the raw evidence. Distrust of graders is designed in
+(deterministic checks preferred; graders have their own suites; §7.1), and the
+useful skill you build — noticing when a metric is lying — is prompt engineering's
+actual expert move.
+
+Writing the eval **is** the skill. Deciding what a good output looks like, hunting
+edge cases, phrasing a rubric a judge can apply consistently — that's where the
+learning compounds, and it's why case curation is deliberately left as your work
+(§7.2) rather than automated away.
+
+## 9. Size estimate
 
 Single-user local product: roughly **25–40k lines of TypeScript** (server 40%, UI 40%,
 CLI/MCP/probes 20%), no infrastructure beyond the user's machine and their API keys.
