@@ -83,23 +83,38 @@ label: Claude Sonnet 5
 provider: anthropic             # anthropic | openrouter | openai | local
 api_model_id: claude-sonnet-5   # what goes in the API request
 # base_url: http://localhost:11434/v1   # REQUIRED when provider is local; else absent
-category: general               # general | coding | reasoning | vision | utility
+category: general               # general | coding | reasoning | vision | utility | embedding
+# kind: chat                    # chat (default) | embedding — embedding cards serve /v1/embeddings
 card_depth: full                # full | thin — thin = catalog facts + provider description
                                 #   only; UI badges it and the compiler is told
-# vram_class: 8gb               # local cards only: primary tier: 4gb | 8gb | 16gb | 24gb+
-# rankings:                     # local cards only: a model may rank in several categories
+# vram_class: 8gb               # local cards only: primary tier: 4gb | 8gb | 12gb | 16gb | 24gb | 48gb+
+# mlx_tag: qwen3.5:9b-mlx       # local cards only, optional: the Apple Silicon MLX artifact
+# rankings:                     # local cards only: a model may rank in several categories/tiers
 #   - { category: general, vram_class: 8gb, rank: 1 }
 #   - { category: coding,  vram_class: 8gb, rank: 1 }
 context_window: 1000000
+# context_window_effective: 512000   # optional: served window when below the headline
+#                                    #   (top_provider.context_length) — binding for long-context checks
+# knowledge_cutoff: 2026-02     # optional: training cutoff; compiler injects recency guidance
+# modalities: { input: [text, image], output: [text] }   # optional; from catalog `modality`
 max_output_tokens: 64000
 pricing: { input_per_mtok_usd: 2.0, output_per_mtok_usd: 10.0 }
+# pricing.tiers:                # optional: long-context surcharges (from catalog pricing.overrides)
+#   - { min_prompt_tokens: 200000, input_per_mtok_usd: 4.0, output_per_mtok_usd: 18.0 }
 params: { effort: true, verbosity: true, temperature: false, logprobs: false }
+# params.effort_levels: [low, medium, high]   # optional: the EXACT accepted enum for this model —
+#                                             #   providers differ (some accept only `max`); the
+#                                             #   adapter must send only listed values
 sampling:
   default_temperature: null      # null when the model doesn't expose temperature
   notes: "..."
 reasoning:
   kind: adaptive                 # none | adaptive | always-on | manual
   cot_prompting: harmful         # helpful | neutral | harmful
+  # preserve_in_history: none    # none (default) | recommended | required — required means
+  #                              #   reasoning blocks MUST round-trip in multi-turn calls or
+  #                              #   the API errors/degrades; the runner fails loudly if it
+  #                              #   cannot comply
   notes: "..."
 formatting_idiom: "..."          # free text, injected into compiler prompt
 structured_output: "..."         # free text
@@ -118,8 +133,14 @@ The two canonical, always-current sources of what exists (curated cards cover on
 models worth prompting deliberately):
 - `openrouter.json` — trimmed snapshot of `GET https://openrouter.ai/api/v1/models`
   (no key required): `{ source, fetched, count, models: [{ id, name, created,
-  context_length, prompt_usd_per_tok, completion_usd_per_tok, supported_parameters,
-  modality }] }`. Refreshed automatically (10-CURRENCY §1).
+  context_length, served_context_length, prompt_usd_per_tok, completion_usd_per_tok,
+  cache_read_usd_per_tok, pricing_overrides, supported_parameters, modality }] }`.
+  `served_context_length` = live `top_provider.context_length`; `pricing_overrides`
+  = the live `pricing.overrides` long-context tiers; `cache_read_usd_per_tok` =
+  `input_cache_read`. These three MUST survive the trim — dropping them is how the
+  2026-07 audit found cards warning in prose about tiers the snapshot couldn't see.
+  Rows with sentinel pricing (any price < 0, e.g. `openrouter/auto`) are excluded
+  from the UI picker and the estimator. Refreshed automatically (10-CURRENCY §1).
 - `bedrock.json` — `{ source, fetched, note, providers: { [provider]: [model names] } }`,
   maintained against the AWS Bedrock "models at a glance" page (manual review; HTML,
   no stable API).

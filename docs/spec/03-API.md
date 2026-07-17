@@ -147,7 +147,12 @@ up to whole usd_micro → (5) append run record; update ledger; write cache file
 Before every uncached call: if `ledger.spent + estimate > monthly_cap_usd` →
 throw `budget_exceeded` with message
 `"Monthly cap of $<cap> reached ($<spent> spent). Raise it in settings."`.
-Estimate = `(prompt_chars/4) × input price + max_tokens × output price`.
+Estimate = `(prompt_chars/4) × input price + max_tokens × output price`, where
+prices come from the card's base `pricing` UNLESS the estimated prompt tokens
+(`prompt_chars/4`) exceed a `pricing.tiers[].min_prompt_tokens` — then that
+tier's prices apply (highest matching tier wins). Guard rails: if any resolved
+price is negative (catalog sentinel), throw `bad_request` `"model has no usable
+pricing"` — never let a negative estimate through the cap.
 
 ## 6. Cache — per 02-DATA §5. `promptText` for the key = system + "\n" + all message contents + (tool ? JSON.stringify(tool.input_schema) : "").
 

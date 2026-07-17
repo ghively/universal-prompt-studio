@@ -33,18 +33,42 @@ From the live catalog, sorted by `created` descending, card:
    measurement beats curation.
 
 **Local models — the top-3 rule.** Local coverage is category-first, not
-size-first: for each VRAM tier the owner cares about (currently **8 GB** and
-**4 GB**), card the **top 3 models per category** (general, coding, reasoning,
-vision) as ranked by current community consensus + the studio's own probe results,
-with `vram_class` and `local_rank` fields. Rankings are re-verified on refresh —
-local leaderboards churn faster than hosted ones. Canonical sources:
-`ollama.com/library` + Hugging Face (see LOCAL.md). Local cards mark runtime tags
-`(verify with ollama list)` — tags drift.
+size-first: for each VRAM tier the owner cares about (**8 GB** and **4 GB** in
+full; **16 GB** and **24 GB** ranked; 12 GB and 48 GB+ as delta-notes in
+LOCAL.md), card the **top 3 models per category** (general, coding, reasoning,
+vision, embedding) as ranked by current community consensus + the studio's own
+probe results, using the `vram_class` and `rankings:` fields
+(`[{category, vram_class, rank}]` — one model may rank in several tiers).
+Embedding cards carry `kind: embedding` and serve `/v1/embeddings`. Apple
+Silicon is a mapping, not a tier (see LOCAL.md); cards carry an optional
+`mlx_tag:`. Rankings are re-verified on refresh — local leaderboards churn
+faster than hosted ones. Canonical sources: `ollama.com/library` + Hugging Face
+(see LOCAL.md). Local cards mark runtime tags `(verify with ollama list)` —
+tags drift.
 
 **Card depth is a schema field, not prose.** `card_depth: thin` means catalog facts
 + provider description only; the UI badges it, the compiler is told, and every
 refresh's first job is promoting thin cards to full by researching official docs.
 A thin card that stays thin across two refreshes gets demoted to catalog-only.
 
+## Boundary decisions (2026-07-17 audit — record, don't relitigate)
+
+- **Cohere** (`cohere/command-a`, also Bedrock R+/R): present on both canonical
+  sources but NOT carded — aging flagship (2025-03), enterprise-RAG niche the
+  carded set already covers. Re-evaluate if a new Cohere flagship lands.
+- **Tencent** (`tencent/hy3`, 2026-07-06): fresh major-lab flagship, NOT carded —
+  capability unverified this refresh. Queued for a bake-off probe next refresh;
+  card it if it clears the cheap-generalist bar.
+- **Claude Mythos 5**: listed on Bedrock, NOT carded — restricted to approved
+  organizations, not routable through this studio's providers. Skip until
+  reachable.
+- **Ultra-cheap utility tier** (`inclusionai/ling-2.6-flash` at $0.01/$0.03,
+  `nex-agi/nex-n2-mini` at $0.025/$0.10): 10-50x cheaper than the carded Flash
+  Lite, capability unverified — evaluate with a probe battery before any card;
+  until then Flash Lite/Haiku hold the utility niche.
+- **Router meta-models** (`openrouter/auto|fusion|pareto-code`) carry sentinel
+  pricing (-1) in the catalog: excluded from the picker — a naive estimator
+  computes negative cost and bypasses the budget cap (03-API guard).
+
 Every card carries `last_reviewed`; the UI flags cards older than 120 days. The
-2026-07-17 set: 27 cards (23 hosted + 4 local) against a 344-model catalog.
+2026-07-17 set: 49 cards (26 hosted + 23 local) against a 344-model catalog.

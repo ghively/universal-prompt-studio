@@ -1,0 +1,26 @@
+id: kat-coder-pro-v2.5
+label: KAT Coder Pro V2.5
+provider: openrouter
+api_model_id: kwaipilot/kat-coder-pro-v2.5
+category: coding
+card_depth: thin
+context_window: 256000
+max_output_tokens: 65536
+pricing: { input_per_mtok_usd: 0.74, output_per_mtok_usd: 2.96 }
+params: { effort: false, verbosity: false, temperature: true, logprobs: true }
+sampling:
+  default_temperature: null
+  notes: "Catalog facts only (released 2026-07-10; card thin — verify on refresh). Exposes logprobs — one of the few current coding models that can feed the token-confidence instrument."
+reasoning:
+  kind: none
+  cot_prompting: neutral
+  notes: "(Card thin — no official prompting docs reviewed yet.)"
+formatting_idiom: "(Card thin — verify.)"
+structured_output: "(Card thin — verify.)"
+strengths: [coding-specialist positioning in K2.7 Code's price class, logprobs exposure, 256k context]
+failure_modes:
+  - brand-new and unverified — bake off against kimi-k2.7-code before trusting
+prompting_notes: |
+  - Carded for the logprobs+coding niche; promote to full after the first probe run.
+last_reviewed: 2026-07-17
+sources: ["https://openrouter.ai/kwaipilot/kat-coder-pro-v2.5"]

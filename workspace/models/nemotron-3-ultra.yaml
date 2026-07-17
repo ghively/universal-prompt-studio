@@ -4,13 +4,13 @@ provider: openrouter
 api_model_id: nvidia/nemotron-3-ultra-550b-a55b
 category: general
 card_depth: full
-context_window: 262144
+context_window: 1000000
 max_output_tokens: 65536
-pricing: { input_per_mtok_usd: 0.5, output_per_mtok_usd: 2.2 }
+pricing: { input_per_mtok_usd: 0.6, output_per_mtok_usd: 3.6 }
 params: { effort: true, verbosity: false, temperature: true, logprobs: false }
 sampling:
   default_temperature: 1.0
-  notes: "Official baseline in every doc example: temperature 1.0, top_p 0.95, max_tokens 16000. CONTEXT TRAP: 1M is the architectural max but 262k is the default serving config — routed providers may serve only 262k despite OpenRouter's 1M headline. A :free variant exists."
+  notes: "Official baseline in every doc example: temperature 1.0, top_p 0.95, max_tokens 16000. CONTEXT TRAP: 1M is the catalog headline but the top provider currently serves 512k — verify the routed provider's window before long-context work. A :free variant exists."
 reasoning:
   kind: adaptive
   cot_prompting: neutral
@@ -26,7 +26,7 @@ strengths: [SWE-bench Verified 70.7%, LiveCodeBench 89.0%, RULER@1M 95%, 185 tok
 failure_modes:
   - verbose (110M output tokens on AA Intelligence Index vs 92M peer average) — budget max_tokens generously
   - tool-calling breaks without force_nonempty_content when thinking is on
-  - per-provider context variance (262k vs 1M) — verify before long-context work
+  - per-provider context variance (512k served vs 1M catalog) — verify before long-context work
 prompting_notes: |
   - Pass reasoning mode explicitly; use medium_effort for routine tasks.
   - Keep temp 1.0 / top_p 0.95 (documented baseline).

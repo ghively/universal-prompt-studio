@@ -10,7 +10,7 @@ pricing: { input_per_mtok_usd: 2.5, output_per_mtok_usd: 15.0 }
 params: { effort: true, verbosity: true, temperature: false, logprobs: false }
 sampling:
   default_temperature: null
-  notes: "reasoning_effort + text.verbosity; same guidance as Sol."
+  notes: "reasoning_effort + text.verbosity; same guidance as Sol. PRICING TIER: prompts over 272k tokens bill 2x input / 1.5x output ($5/$22.50). text.verbosity is native-OpenAI-API; unverified on the OpenRouter route."
 reasoning: { kind: adaptive, cot_prompting: harmful, notes: "Medium effort default; everyday coding/reasoning tier between Sol and Luna." }
 formatting_idiom: "Markdown; lean prompts; pin snapshots."
 structured_output: "structured_outputs / json_schema strict."

@@ -6,6 +6,7 @@ base_url: http://localhost:11434/v1
 category: general
 card_depth: full
 vram_class: 8gb
+mlx_tag: gemma4:e4b-mlx
 rankings:
   - { category: general, vram_class: 8gb, rank: 2 }
   - { category: reasoning, vram_class: 8gb, rank: 3 }
@@ -22,6 +23,7 @@ strengths: [best writing/prose quality in the 8GB tier, audio input, comfortable
 failure_modes:
   - trails Qwen3.5-9B on reasoning/knowledge benchmarks
 prompting_notes: |
+  - GGUF FIDELITY CAVEAT: llama.cpp may not implement Gemma 4's per-layer-embedding (PLE) injection (upstream issue unconfirmed) — output can be subtly degraded vs vLLM/MLX/transformers. Prefer -mlx tags on Apple Silicon; re-probe prose quality on refresh.
   - The prose/writing pick; Qwen for tools/reasoning/code.
 last_reviewed: 2026-07-17
 sources: ["https://ollama.com/library/gemma4", "https://ai.google.dev/gemma/docs/core"]

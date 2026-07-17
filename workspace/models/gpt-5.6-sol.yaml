@@ -10,7 +10,7 @@ pricing: { input_per_mtok_usd: 5.0, output_per_mtok_usd: 30.0 }
 params: { effort: true, verbosity: true, temperature: false, logprobs: false }
 sampling:
   default_temperature: null
-  notes: "Sampling controlled via reasoning_effort (none|low|medium|high|xhigh|max) and text.verbosity, not temperature."
+  notes: "Sampling controlled via reasoning_effort (none|low|medium|high|xhigh|max) and text.verbosity, not temperature. PRICING TIER: prompts over 272k tokens bill 2x input / 1.5x output ($10/$45) — the same trap Grok and Gemini cards warn about. text.verbosity is a native-OpenAI-API param; unverified whether the OpenRouter route passes it through."
 reasoning:
   kind: adaptive
   cot_prompting: harmful

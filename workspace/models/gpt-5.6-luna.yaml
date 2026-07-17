@@ -8,7 +8,7 @@ context_window: 1050000
 max_output_tokens: 128000
 pricing: { input_per_mtok_usd: 1.0, output_per_mtok_usd: 6.0 }
 params: { effort: true, verbosity: true, temperature: false, logprobs: false }
-sampling: { default_temperature: null, notes: "reasoning_effort none|low for latency-sensitive work." }
+sampling: { default_temperature: null, notes: "reasoning_effort none|low for latency-sensitive work. PRICING TIER: prompts over 272k tokens bill 2x input / 1.5x output ($2/$9). text.verbosity is native-OpenAI-API; unverified on the OpenRouter route." }
 reasoning: { kind: adaptive, cot_prompting: harmful, notes: "Capable reasoning at high volume; effort none disables it entirely for pure-speed calls." }
 formatting_idiom: "Markdown; lean prompts."
 structured_output: "structured_outputs / json_schema strict."

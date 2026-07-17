@@ -7,6 +7,8 @@ category: coding
 card_depth: full
 vram_class: 8gb
 rankings:
+  - { category: coding, vram_class: 16gb, rank: 1 }
+  - { category: coding, vram_class: 24gb, rank: 2 }
   - { category: coding, vram_class: 8gb, rank: 2 }
 context_window: 262144
 max_output_tokens: 32768

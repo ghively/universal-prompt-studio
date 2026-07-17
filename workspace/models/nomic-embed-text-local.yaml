@@ -1,0 +1,28 @@
+id: nomic-embed-text-local
+label: Nomic Embed Text (local)
+provider: local
+api_model_id: nomic-embed-text
+base_url: http://localhost:11434/v1
+category: embedding
+kind: embedding
+card_depth: full
+vram_class: 4gb
+rankings:
+  - { category: embedding, vram_class: 4gb, rank: 2 }
+  - { category: embedding, vram_class: 8gb, rank: 2 }
+context_window: 8192
+max_output_tokens: 0
+pricing: { input_per_mtok_usd: 0, output_per_mtok_usd: 0 }
+params: { effort: false, verbosity: false, temperature: false, logprobs: false }
+sampling: { default_temperature: null, notes: "EMBEDDING model — /v1/embeddings. 274MB, 768 dims, 8K ctx. The local-ecosystem default: among the most-pulled models on all of Ollama." }
+reasoning: { kind: none, cot_prompting: neutral, notes: "n/a — embedding model." }
+formatting_idiom: "Task-prefix aware: 'search_query: ' vs 'search_document: ' prefixes matter — omit them and retrieval quality silently drops."
+structured_output: "n/a — returns vectors."
+strengths: [tiny (274MB) and fast, ecosystem default with universal tooling support, fine for English-dominant RAG]
+failure_modes:
+  - 8K context ceiling — chunk before embedding
+  - multilingual retrieval well below qwen3-embedding
+prompting_notes: |
+  - The speed/footprint default; step up to qwen3-embedding for quality or multilingual.
+last_reviewed: 2026-07-17
+sources: ["https://ollama.com/library/nomic-embed-text"]

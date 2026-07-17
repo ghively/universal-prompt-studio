@@ -10,7 +10,7 @@ pricing: { input_per_mtok_usd: 3.0, output_per_mtok_usd: 15.0 }
 params: { effort: true, verbosity: false, temperature: false, logprobs: false }
 sampling:
   default_temperature: null
-  notes: "Sampling is FIXED server-side (temp 1.0, top_p 0.95, penalties 0) — OMIT these params entirely. Moonshot's $0.30/M cache-hit input tier isn't surfaced by OpenRouter ($3 cache-miss/$15). 2.8T MoE (~50B active), native text+image+video input; weights release gated until 2026-07-27."
+  notes: "Sampling is FIXED server-side (temp 1.0, top_p 0.95, penalties 0) — OMIT these params entirely. The $0.30/M cache-read tier IS on the live OpenRouter API (input_cache_read) — it's our catalog snapshot that drops cache fields ($3 cache-miss/$15). 2.8T MoE (~50B active), native text+image+video input; weights release gated until 2026-07-27."
 reasoning:
   kind: always-on
   cot_prompting: neutral

@@ -5,6 +5,9 @@ api_model_id: gpt-oss:20b   # verify with `ollama list`
 category: general
 vram_class: 16gb
 card_depth: full
+rankings:
+  - { category: general, vram_class: 16gb, rank: 1 }
+  - { category: reasoning, vram_class: 16gb, rank: 1 }
 base_url: http://localhost:11434/v1
 context_window: 131072
 max_output_tokens: 16384
@@ -17,6 +20,6 @@ structured_output: "JSON mode via runtime; validate + retry."
 strengths: [best capability-per-GB in the seed set, reasoning at zero cost, private]
 failure_modes: [128k context ceiling, below hosted frontier on hard tasks]
 prompting_notes: |
-  - The default local target: capable enough that frontier prompting mostly transfers.
+  - The 16GB-tier default (14GB MXFP4, fastest in tier): capable enough that frontier prompting mostly transfers. At 8GB, qwen3.5:9b is the default instead.
 last_reviewed: 2026-07-17
 sources: ["https://ollama.com/library/gpt-oss"]

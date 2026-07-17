@@ -5,12 +5,12 @@ api_model_id: amazon/nova-premier-v1
 category: general
 card_depth: full
 context_window: 1000000
-max_output_tokens: 10000
+max_output_tokens: 32000
 pricing: { input_per_mtok_usd: 2.5, output_per_mtok_usd: 12.5 }
 params: { effort: false, verbosity: false, temperature: true, logprobs: false }
 sampling:
   default_temperature: 0.7
-  notes: "Defaults temp 0.7 / topP 0.9; official rule: alter temperature OR topP, never both. For structured output use GREEDY decoding (temperature=0). Max output: AWS docs conflict (10K spec table vs 5K schema page) — assume 5K for safety-critical budgets. Bedrock id amazon.nova-premier-v1:0."
+  notes: "Defaults temp 0.7 / topP 0.9; official rule: alter temperature OR topP, never both. For structured output use GREEDY decoding (temperature=0). Max output: the OpenRouter route (this card's provider) serves 32000; AWS-native docs conflict (10K spec table vs 5K schema page) — assume 5K only for Bedrock-direct safety-critical budgets. Bedrock id amazon.nova-premier-v1:0."
 reasoning:
   kind: none
   cot_prompting: helpful

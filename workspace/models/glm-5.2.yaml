@@ -6,7 +6,7 @@ category: general
 card_depth: full
 context_window: 1048576
 max_output_tokens: 131072
-pricing: { input_per_mtok_usd: 0.93, output_per_mtok_usd: 3.0 }
+pricing: { input_per_mtok_usd: 0.9324, output_per_mtok_usd: 2.9304 }
 params: { effort: true, verbosity: false, temperature: true, logprobs: true }
 sampling:
   default_temperature: 1.0

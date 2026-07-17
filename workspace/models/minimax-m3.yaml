@@ -10,7 +10,7 @@ pricing: { input_per_mtok_usd: 0.3, output_per_mtok_usd: 1.2 }
 params: { effort: false, verbosity: false, temperature: true, logprobs: true }
 sampling:
   default_temperature: 1.0
-  notes: "Official card: temp 1.0, top_p 0.95. PRICING TIER: >512K-token inputs silently DOUBLE the rate ($0.60/$2.40) — OpenRouter shows only the standard tier. MoE 428B/23B active with sparse attention: ~1/20 per-token compute of M2, major speedups at long context."
+  notes: "Official card: temp 1.0, top_p 0.95. PRICING TIER: >512K-token inputs silently DOUBLE the rate ($0.60/$2.40). SERVED CONTEXT: the top provider currently serves 524,288 — half the 1M headline, which means the routable window may never legally exceed the standard tier; treat 512K as the binding number. MoE 428B/23B active with sparse attention: ~1/20 per-token compute of M2, major speedups at long context."
 reasoning:
   kind: adaptive
   cot_prompting: neutral

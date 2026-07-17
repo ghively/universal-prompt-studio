@@ -10,7 +10,7 @@ pricing: { input_per_mtok_usd: 5.0, output_per_mtok_usd: 25.0 }
 params: { effort: true, verbosity: true, temperature: false, logprobs: false }
 sampling:
   default_temperature: null
-  notes: "temperature/top_p/top_k non-default -> 400 on every request (correction: earlier card wrongly said temperature supported). 1M context by default, no beta header, no long-context premium. Min cacheable prompt 1024 tokens."
+  notes: "temperature/top_p/top_k non-default -> 400 on every request (correction: earlier card wrongly said temperature supported). CONTRADICTION FLAG: the OpenRouter catalog still lists temperature/verbosity as supported for this model — settle with one probe call before trusting either source. 1M context by default, no beta header, no long-context premium. Min cacheable prompt 1024 tokens."
 reasoning:
   kind: adaptive
   cot_prompting: harmful

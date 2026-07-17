@@ -1,0 +1,32 @@
+id: qwen3.6-27b-local
+label: Qwen3.6 27B (local)
+provider: local
+api_model_id: qwen3.6:27b
+base_url: http://localhost:11434/v1
+category: general
+card_depth: full
+vram_class: 24gb
+mlx_tag: qwen3.6:27b-mlx
+rankings:
+  - { category: general, vram_class: 24gb, rank: 1 }
+  - { category: coding, vram_class: 24gb, rank: 1 }
+  - { category: reasoning, vram_class: 24gb, rank: 1 }
+context_window: 262144
+max_output_tokens: 32768
+pricing: { input_per_mtok_usd: 0, output_per_mtok_usd: 0 }
+params: { effort: false, verbosity: false, temperature: true, logprobs: false }
+sampling: { default_temperature: 0.7, notes: "17GB download (Q4), 256K ctx, text+image. The Feb->June 2026 successor line to Qwen3.5 (27b/35b only — no small sizes, so 8GB/4GB verdicts unchanged). From 24GB up this, not Qwen3.5, is the community default. CAUTION: qwen3.6:35b is a 24GB DOWNLOAD — it does not fit a 24GB card with KV; it's a 32GB-Mac/48GB-GPU model." }
+reasoning:
+  kind: adaptive
+  cot_prompting: neutral
+  notes: "Qwen3.5-style runtime thinking toggle (no in-prompt soft switch); adds 'thinking preservation' across turns — keep reasoning blocks in multi-turn agent loops."
+formatting_idiom: "Same family idiom as qwen3.5-9b: strong structured JSON, multilingual, agentic-coding tuned. Prompts written for 3.5 port directly."
+structured_output: "Reliable JSON via runtime json mode; validate + retry."
+strengths: [top open coding + multilingual pick at 24GB, 256K context, text+image, thinking preservation for agent loops]
+failure_modes:
+  - no small variants — nothing to distill prompts down to below 24GB in-family except Qwen3.5
+  - thinking output budget: same latency cost profile as Qwen3.5 when thinking is on
+prompting_notes: |
+  - The 24GB-tier default for general, coding, and reasoning; pair with qwen3-vl:30b for vision.
+last_reviewed: 2026-07-17
+sources: ["https://ollama.com/library/qwen3.6"]

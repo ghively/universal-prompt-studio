@@ -14,7 +14,7 @@ sampling:
     LEAVE SAMPLING ALONE: official warning that temperature below 1.0 can cause
     looping/degraded reasoning; migration guidance says remove temperature/top_p/
     top_k entirely. logprobs unsupported on the 3.x family. PRICING TRAP: Google
-    charges a >200k-token tier ($4/$18 vs $2/$12) that OpenRouter's headline hides.
+    charges a >200k-token tier ($4/$18 vs $2/$12) that the catalog headline hides (the live API carries it in pricing.overrides; our snapshot drops the field).
 reasoning:
   kind: always-on
   cot_prompting: harmful

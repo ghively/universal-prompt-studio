@@ -6,7 +6,7 @@ category: reasoning
 card_depth: full
 context_window: 1048576
 max_output_tokens: 65536
-pricing: { input_per_mtok_usd: 0.44, output_per_mtok_usd: 0.87 }
+pricing: { input_per_mtok_usd: 0.435, output_per_mtok_usd: 0.87 }
 params: { effort: true, verbosity: false, temperature: true, logprobs: true }
 sampling: { default_temperature: 0.6, notes: "" }
 reasoning: { kind: adaptive, cot_prompting: harmful, notes: "1.6T MoE (49B active); visible reasoning traces make it a great instruments-panel target." }
