@@ -135,6 +135,6 @@ on those providers return `provider_error` with message `no API key configured f
 ## 6. Workspace bootstrap
 
 On startup, ensure these directories exist (create if missing):
-`artifacts/`, `models/`, `knowledge/techniques/`, `runs/`, `runs/cache/`,
+`artifacts/`, `models/`, `models/catalog/`, `knowledge/techniques/`, `knowledge/harnesses/`, `knowledge/probes/`, `runs/`, `runs/cache/`,
 `runs/observed/`, `verdicts/`, `journal/`, `queue/`, `evals/`.
 Never overwrite existing files during bootstrap.

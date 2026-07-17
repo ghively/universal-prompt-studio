@@ -32,5 +32,10 @@ From the live catalog, sorted by `created` descending, card:
 4. `measured.json` (probe battery) is the only source that may contradict a card —
    measurement beats curation.
 
+**Local models** are part of the rule, not an afterthought: niche coverage (rule 3)
+includes at least one local card per hardware class (8GB / 16-24GB / 48GB+), with
+`ollama.com/library` and Hugging Face as their canonical sources (see LOCAL.md).
+Local cards mark runtime tags `(verify with ollama list)` — tags drift.
+
 Every card carries `last_reviewed`; the UI flags cards older than 120 days. The
-2026-07-17 set: 23 cards against a 344-model catalog.
+2026-07-17 set: 27 cards (23 hosted + 4 local) against a 344-model catalog.

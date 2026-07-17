@@ -1,0 +1,19 @@
+id: gpt-oss-20b-local
+label: gpt-oss-20b (local / Ollama)
+provider: local
+api_model_id: gpt-oss:20b   # verify with `ollama list`
+base_url: http://localhost:11434/v1
+context_window: 131072
+max_output_tokens: 16384
+pricing: { input_per_mtok_usd: 0, output_per_mtok_usd: 0 }
+params: { effort: true, verbosity: false, temperature: true, logprobs: false }
+sampling: { default_temperature: 1.0, notes: "Supports reasoning-effort levels via its harmony format." }
+reasoning: { kind: adaptive, cot_prompting: neutral, notes: "The strongest small local reasoner; MoE (3.6B active) so it runs on ~16GB." }
+formatting_idiom: "Markdown; lean prompts; explicit output contracts."
+structured_output: "JSON mode via runtime; validate + retry."
+strengths: [best capability-per-GB in the seed set, reasoning at zero cost, private]
+failure_modes: [128k context ceiling, below hosted frontier on hard tasks]
+prompting_notes: |
+  - The default local target: capable enough that frontier prompting mostly transfers.
+last_reviewed: 2026-07-17
+sources: ["https://ollama.com/library/gpt-oss"]

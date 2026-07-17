@@ -80,8 +80,9 @@ Seeded files exist; the app must treat cards as data. Shape:
 ```yaml
 id: claude-sonnet-5             # filename must equal id + ".yaml"
 label: Claude Sonnet 5
-provider: anthropic             # anthropic | openrouter | openai
+provider: anthropic             # anthropic | openrouter | openai | local
 api_model_id: claude-sonnet-5   # what goes in the API request
+# base_url: http://localhost:11434/v1   # REQUIRED when provider is local; else absent
 context_window: 1000000
 max_output_tokens: 64000
 pricing: { input_per_mtok_usd: 2.0, output_per_mtok_usd: 10.0 }

@@ -123,6 +123,14 @@ send `"reasoning_effort": effort`. Send `temperature` only if `card.params.tempe
 
 ### 3.3 provider = openai — same wire shape as 3.2 against `https://api.openai.com/v1/chat/completions` with `$OPENAI_API_KEY`.
 
+### 3.4 provider = local — same wire shape as 3.2 against `card.base_url + "/chat/completions"`.
+No auth header. Covers Ollama (`http://localhost:11434/v1`), llama.cpp server, LM
+Studio, vLLM — all OpenAI-compatible. Cost is always 0 (record usd_micro 0; token
+usage still logged). `available` is always true for local cards; connection refusal
+surfaces at call time as `provider_error` with message
+`local runtime not reachable at <base_url> — is it running?`. Retries: single retry
+after 1s (local failures are binary, not transient).
+
 Retries: on network error or HTTP 429/5xx, retry up to 3 times with 1s/4s/10s waits;
 then throw `provider_error` including status + first 200 chars of response body.
 

@@ -37,6 +37,9 @@ Rules for questions:
 - Prefer questions about: what consumes the output (a person? a program?), what a
   failure looks like, scope boundaries, audience, and whether this runs once or
   repeatedly.
+- If the task is agentic or will live inside an agent runtime, ask which harness it
+  runs in (Claude Code, an AGENTS.md tool like Codex/Cursor, a framework like
+  LangGraph, or a bare API call) — the answer changes where instructions belong.
 - For each question, state which check type the answer will likely produce:
   json_schema (output is consumed by software), contains (a required element),
   quote_support (facts must be grounded in provided source text), max_length (brevity
@@ -112,11 +115,16 @@ CLARIFYING ANSWERS:
 {{ANSWERS_BLOCK}}          <!-- one "Q: ...\nA: ..." pair per line group -->
 TARGET MODEL CARD:
 {{MODEL_CARD}}
+{{HARNESS_BLOCK}}
 TECHNIQUE LIBRARY (index):
 {{TECHNIQUE_INDEX}}
 HOUSE PRACTICES:
 {{PRACTICES}}
 ```
+
+`{{HARNESS_BLOCK}}` is empty unless the interrogation identified a harness; then it
+is `TARGET HARNESS CARD:\n` + the matching `knowledge/harnesses/<slug>.md` contents
+(match by keyword against harness card names; no match → empty).
 
 emit schema (abbreviated; full zod in schemas.ts must match):
 `{ title: string, body: string, variables: string[], annotations: [{excerpt, technique, note, model_reason?}], checks: [{id, type, config, source}] }`

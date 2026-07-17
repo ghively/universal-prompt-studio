@@ -1,6 +1,6 @@
 # Technique library — taxonomy and coverage
 
-44 cards, organized by **lever** (what the technique actually pulls on), not by
+51 cards, organized by **lever** (what the technique actually pulls on), not by
 acronym. Acronyms rot; levers don't. Frontmatter per card: `slug`, `name`, `lever`,
 `helps`, `hurts` — the compiler receives this index; card bodies load on demand.
 
@@ -16,16 +16,25 @@ acronym. Acronyms rot; levers don't. Frontmatter per card: `slug`, `name`, `leve
 | **orchestration** | self-correction-chain · meta-prompting |
 | **agentic** | agentic-persistence · state-and-compaction · parallel-tool-steering · scope-discipline · tool-description-quality · subagent-delegation |
 | **skill-authoring** | skill-anatomy · skill-description-triggering · skill-progressive-disclosure · skill-degrees-of-freedom · skill-scripts-and-loops · skill-eval-driven-development · claude-md-authoring |
+| **harness-artifacts** | command-authoring · hook-vs-prompt · mcp-server-design · subagent-definition-authoring |
+| **model-fit** | small-model-prompting |
+| **modality** | image-gen-prompting · vision-input-prompting |
+
+Harness-specific knowledge (Claude Code, AGENTS.md tools, Cursor, frameworks,
+bare API) lives in `../harnesses/` — one card per runtime, because the harness is
+part of the prompt.
 
 ## Known gaps (not yet carded — honesty over coverage theater)
 
-- **Modality-specific prompting**: image generation, audio/music, video, vision-input
-  strategies (crop-tool zooming). Card when the studio grows a non-text mode.
+- **Audio/music and video *generation* prompting** — image-gen and vision-input are
+  carded; audio/video generation waits for owner need.
 - **Automated prompt optimization internals** (DSPy/GEPA-style search loops) —
   meta-prompting covers the manual form; the automated loop is a product feature
   before it's a technique card.
 - **Fine-tuning vs prompting decision guidance** — out of the studio's lane for now.
 - **Multilingual prompting** — no owner need yet.
+- **Voice/realtime agent prompting** (interruption handling, latency budgets) — no
+  owner need yet.
 
 Update discipline: cards change when official guidance changes (cite sources), when
 the ablation prober or bake-off evidence contradicts a card on the owner's tasks, or
