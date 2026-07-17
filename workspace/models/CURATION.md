@@ -1,0 +1,36 @@
+# How the curated model cards are selected (reproducible method)
+
+The catalog (`catalog/`) is complete and mechanical — every model on the two canonical
+sources. Curated cards exist only where curation adds something a catalog row can't:
+prompting idiom, reasoning-control semantics, failure modes, official guidance links.
+Writing a hand-card for all 344 OpenRouter models would be fabrication at scale; a
+thin card pretending to be knowledge is worse than an honest catalog row.
+
+## Selection rule (apply on every refresh)
+
+From the live catalog, sorted by `created` descending, card:
+1. **The current flagship of every major family** present on either source
+   (Anthropic, OpenAI, Google, Meta, xAI, DeepSeek, Moonshot, Z.ai, Qwen, Mistral,
+   NVIDIA, MiniMax, Amazon).
+2. **The price/performance pick** of any family whose flagship isn't the sensible
+   default (e.g. GPT-5.6 Terra beside Sol; Gemini 3.5 Flash beside 3.1 Pro).
+3. **Niche coverage** — at least one card each for: cheapest capable utility model,
+   cheapest reasoning model, open-weights option, coding specialist,
+   logprobs-exposing model (for the token-confidence instrument), Bedrock-native
+   anchor.
+4. **Retirement**: a card whose same-family successor is carded gets deleted once no
+   library artifact targets it (check `target_model` across artifacts first).
+
+## Where card facts come from (provenance, in trust order)
+
+1. `context_window`, pricing, `params` (effort/verbosity/temperature/logprobs):
+   **verbatim from the catalog snapshot** — never from memory.
+2. Reasoning semantics, idiom, migration warnings: **official provider prompting
+   docs**, linked in `sources`.
+3. Strengths/failure modes: provider descriptions + official docs; anything beyond
+   that is marked `(Card thin — verify.)` inside the card rather than invented.
+4. `measured.json` (probe battery) is the only source that may contradict a card —
+   measurement beats curation.
+
+Every card carries `last_reviewed`; the UI flags cards older than 120 days. The
+2026-07-17 set: 23 cards against a 344-model catalog.

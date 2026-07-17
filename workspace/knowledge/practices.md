@@ -62,3 +62,12 @@ OpenAI current-generation guidance.
 - Keyword walls ("high quality, professional, masterpiece") — noise on every modern model.
 - Anti-laziness padding ("do not stop early", "if in doubt use the tool") ported from
   2024-era prompts — now causes overwork and overtriggering.
+
+## Skills and agent artifacts
+
+Authoring guidance for SKILL.md files, CLAUDE.md, and agent definitions lives in the
+technique cards under the `skill-authoring` lever (see `techniques/README.md`). The
+two rules that outrank the rest: the description line decides whether a skill ever
+loads (write it as what + when, third person, with trigger terms), and evals come
+before documentation — build the three failure scenarios first, then write the
+minimum skill that fixes them.
