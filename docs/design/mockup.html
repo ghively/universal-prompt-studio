@@ -1,0 +1,682 @@
+<title>Prompt Studio — Design Direction</title>
+<style>
+  :root {
+    --paper: #F3F5F7;
+    --surface: #FCFDFE;
+    --sunken: #EBEEF1;
+    --line: #D7DDE3;
+    --line-soft: #E4E8EC;
+    --ink: #1B2430;
+    --ink-soft: #536070;
+    --ink-faint: #8A96A4;
+    --accent: #2B50C4;
+    --accent-ink: #23409C;
+    --accent-soft: rgba(43, 80, 196, 0.08);
+    --accent-line: rgba(43, 80, 196, 0.28);
+    --pass: #2E7D4F;
+    --pass-soft: rgba(46, 125, 79, 0.10);
+    --warn: #A87708;
+    --warn-soft: rgba(168, 119, 8, 0.12);
+    --fail: #B3383E;
+    --fail-soft: rgba(179, 56, 62, 0.10);
+    --grid-line: rgba(43, 80, 196, 0.055);
+    --shadow: 0 1px 2px rgba(27, 36, 48, 0.05), 0 8px 24px rgba(27, 36, 48, 0.06);
+    --serif: "Iowan Old Style", "Palatino Linotype", Palatino, "Book Antiqua", Georgia, serif;
+    --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, system-ui, sans-serif;
+    --mono: ui-monospace, "SF Mono", "Cascadia Code", Menlo, Consolas, monospace;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root {
+      --paper: #12161D;
+      --surface: #1A202A;
+      --sunken: #151A22;
+      --line: #2B3543;
+      --line-soft: #232C38;
+      --ink: #E5EAF2;
+      --ink-soft: #9BA8B9;
+      --ink-faint: #6B7889;
+      --accent: #8FA7FF;
+      --accent-ink: #AEBFFF;
+      --accent-soft: rgba(143, 167, 255, 0.10);
+      --accent-line: rgba(143, 167, 255, 0.32);
+      --pass: #5CBA8C;
+      --pass-soft: rgba(92, 186, 140, 0.12);
+      --warn: #D9A83F;
+      --warn-soft: rgba(217, 168, 63, 0.13);
+      --fail: #E0707A;
+      --fail-soft: rgba(224, 112, 122, 0.12);
+      --grid-line: rgba(143, 167, 255, 0.05);
+      --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px rgba(0, 0, 0, 0.35);
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper: #12161D;
+    --surface: #1A202A;
+    --sunken: #151A22;
+    --line: #2B3543;
+    --line-soft: #232C38;
+    --ink: #E5EAF2;
+    --ink-soft: #9BA8B9;
+    --ink-faint: #6B7889;
+    --accent: #8FA7FF;
+    --accent-ink: #AEBFFF;
+    --accent-soft: rgba(143, 167, 255, 0.10);
+    --accent-line: rgba(143, 167, 255, 0.32);
+    --pass: #5CBA8C;
+    --pass-soft: rgba(92, 186, 140, 0.12);
+    --warn: #D9A83F;
+    --warn-soft: rgba(217, 168, 63, 0.13);
+    --fail: #E0707A;
+    --fail-soft: rgba(224, 112, 122, 0.12);
+    --grid-line: rgba(143, 167, 255, 0.05);
+    --shadow: 0 1px 2px rgba(0, 0, 0, 0.3), 0 8px 24px rgba(0, 0, 0, 0.35);
+  }
+  :root[data-theme="light"] {
+    --paper: #F3F5F7;
+    --surface: #FCFDFE;
+    --sunken: #EBEEF1;
+    --line: #D7DDE3;
+    --line-soft: #E4E8EC;
+    --ink: #1B2430;
+    --ink-soft: #536070;
+    --ink-faint: #8A96A4;
+    --accent: #2B50C4;
+    --accent-ink: #23409C;
+    --accent-soft: rgba(43, 80, 196, 0.08);
+    --accent-line: rgba(43, 80, 196, 0.28);
+    --pass: #2E7D4F;
+    --pass-soft: rgba(46, 125, 79, 0.10);
+    --warn: #A87708;
+    --warn-soft: rgba(168, 119, 8, 0.12);
+    --fail: #B3383E;
+    --fail-soft: rgba(179, 56, 62, 0.10);
+    --grid-line: rgba(43, 80, 196, 0.055);
+    --shadow: 0 1px 2px rgba(27, 36, 48, 0.05), 0 8px 24px rgba(27, 36, 48, 0.06);
+  }
+
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    background: var(--paper);
+    color: var(--ink);
+    font-family: var(--sans);
+    font-size: 15px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  .wrap { max-width: 1060px; margin: 0 auto; padding: 0 28px 96px; }
+
+  /* ---------- masthead ---------- */
+  .masthead {
+    background-image:
+      linear-gradient(var(--grid-line) 1px, transparent 1px),
+      linear-gradient(90deg, var(--grid-line) 1px, transparent 1px);
+    background-size: 28px 28px;
+    border-bottom: 1px solid var(--line);
+    padding: 72px 0 56px;
+    margin-bottom: 64px;
+  }
+  .masthead-inner { max-width: 1060px; margin: 0 auto; padding: 0 28px; }
+  .eyebrow {
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin: 0 0 14px;
+  }
+  h1 {
+    font-family: var(--serif);
+    font-size: clamp(34px, 5vw, 52px);
+    font-weight: 500;
+    line-height: 1.1;
+    margin: 0 0 18px;
+    text-wrap: balance;
+    max-width: 18ch;
+  }
+  .masthead p.lede {
+    max-width: 58ch;
+    font-size: 17px;
+    color: var(--ink-soft);
+    margin: 0;
+  }
+  .lede em { font-family: var(--serif); font-style: italic; color: var(--ink); }
+
+  /* ---------- section scaffolding ---------- */
+  section { margin-bottom: 88px; }
+  .sec-head { margin-bottom: 28px; max-width: 62ch; }
+  .sec-head h2 {
+    font-family: var(--serif);
+    font-weight: 500;
+    font-size: 27px;
+    margin: 6px 0 10px;
+    text-wrap: balance;
+  }
+  .sec-head p { color: var(--ink-soft); margin: 0; }
+
+  /* ---------- token strip ---------- */
+  .tokens { display: grid; grid-template-columns: repeat(auto-fit, minmax(140px, 1fr)); gap: 12px; }
+  .swatch {
+    border: 1px solid var(--line);
+    border-radius: 6px;
+    overflow: hidden;
+    background: var(--surface);
+  }
+  .swatch .chip { height: 52px; }
+  .swatch .meta { padding: 8px 10px; }
+  .swatch .meta b { display: block; font-size: 12.5px; font-weight: 600; }
+  .swatch .meta span { font-family: var(--mono); font-size: 11px; color: var(--ink-faint); }
+  .type-specimens { margin-top: 20px; border: 1px solid var(--line); border-radius: 6px; background: var(--surface); }
+  .type-row { display: flex; align-items: baseline; gap: 20px; padding: 14px 18px; border-bottom: 1px solid var(--line-soft); }
+  .type-row:last-child { border-bottom: 0; }
+  .type-row .role { flex: 0 0 150px; font-family: var(--mono); font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-faint); }
+  .type-row .sample-serif { font-family: var(--serif); font-size: 21px; }
+  .type-row .sample-sans { font-family: var(--sans); font-size: 15px; }
+  .type-row .sample-mono { font-family: var(--mono); font-size: 13.5px; }
+
+  /* ---------- app frame ---------- */
+  .frame {
+    display: flex;
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    background: var(--surface);
+    box-shadow: var(--shadow);
+    overflow: hidden;
+  }
+  .rail {
+    flex: 0 0 64px;
+    background: var(--sunken);
+    border-right: 1px solid var(--line);
+    padding: 16px 0;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 6px;
+  }
+  .rail .mark {
+    font-family: var(--serif);
+    font-size: 20px;
+    color: var(--accent);
+    margin-bottom: 14px;
+  }
+  .rail a {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    width: 48px;
+    padding: 8px 0;
+    border-radius: 6px;
+    text-decoration: none;
+    color: var(--ink-faint);
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+  }
+  .rail a .dot { width: 5px; height: 5px; border-radius: 50%; background: currentColor; }
+  .rail a.active { color: var(--accent); background: var(--accent-soft); }
+  .rail a:hover { color: var(--ink-soft); }
+  .rail a.active:hover { color: var(--accent); }
+  .rail a:focus-visible, .note:focus-visible, .btn:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+  .stage { flex: 1; padding: 28px 32px 36px; min-width: 0; }
+
+  /* ---------- ask flow ---------- */
+  .askbar {
+    border: 1px solid var(--line);
+    background: var(--paper);
+    border-radius: 8px;
+    padding: 14px 16px;
+    font-family: var(--serif);
+    font-size: 17px;
+    color: var(--ink);
+  }
+  .askbar .caret { color: var(--accent); }
+  .qa { margin: 22px 0 26px; display: flex; flex-direction: column; gap: 10px; }
+  .qa-row { display: flex; gap: 14px; align-items: baseline; flex-wrap: wrap; }
+  .qa-row .q {
+    flex: 1 1 300px;
+    font-family: var(--serif);
+    font-style: italic;
+    color: var(--ink-soft);
+  }
+  .qa-row .a {
+    background: var(--accent-soft);
+    color: var(--accent-ink);
+    border-radius: 5px;
+    padding: 3px 10px;
+    font-size: 13.5px;
+  }
+  .qa-row .derived {
+    font-family: var(--mono);
+    font-size: 11px;
+    color: var(--ink-faint);
+    white-space: nowrap;
+  }
+  .qa-row .derived b { color: var(--pass); font-weight: 600; }
+
+  .chips { display: flex; flex-wrap: wrap; gap: 8px; margin-bottom: 18px; }
+  .chip-pill {
+    font-family: var(--mono);
+    font-size: 11.5px;
+    padding: 4px 10px;
+    border: 1px solid var(--line);
+    border-radius: 999px;
+    color: var(--ink-soft);
+    background: var(--surface);
+  }
+  .chip-pill.ok { color: var(--pass); border-color: var(--pass); background: var(--pass-soft); }
+
+  /* ---------- specimen + margin ---------- */
+  .specimen-grid {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 280px;
+    gap: 24px;
+    align-items: start;
+  }
+  .specimen {
+    background: var(--paper);
+    border: 1px solid var(--line);
+    border-radius: 8px;
+    padding: 20px 22px;
+    font-family: var(--mono);
+    font-size: 13px;
+    line-height: 1.75;
+    overflow-x: auto;
+  }
+  .specimen .tag { color: var(--accent); }
+  .seg { display: block; border-left: 2px solid transparent; margin-left: -12px; padding-left: 10px; border-radius: 2px; }
+  .seg sup {
+    font-family: var(--mono);
+    font-size: 9.5px;
+    color: var(--accent);
+    background: var(--accent-soft);
+    border-radius: 3px;
+    padding: 1px 4px;
+    margin-left: 6px;
+    vertical-align: super;
+  }
+  .seg.lit { background: var(--accent-soft); border-left-color: var(--accent); }
+  .margin { display: flex; flex-direction: column; gap: 12px; }
+  .note {
+    border: 1px solid var(--line);
+    border-left: 3px solid var(--accent-line);
+    background: var(--surface);
+    border-radius: 6px;
+    padding: 12px 14px;
+    cursor: default;
+    transition: border-color 120ms ease, background 120ms ease;
+  }
+  .note.lit { border-left-color: var(--accent); background: var(--accent-soft); }
+  .note .n-tag {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 4px;
+    display: flex;
+    justify-content: space-between;
+  }
+  .note h4 { font-family: var(--serif); font-weight: 600; font-size: 15px; margin: 0 0 4px; }
+  .note p { margin: 0; font-size: 13px; color: var(--ink-soft); line-height: 1.5; }
+  .note .card-link { font-size: 12px; color: var(--accent); text-decoration: none; }
+  .note .model-why {
+    margin-top: 8px;
+    padding-top: 8px;
+    border-top: 1px dashed var(--line);
+    font-size: 12px;
+    color: var(--ink-faint);
+  }
+  .note .model-why b { color: var(--ink-soft); font-weight: 600; }
+
+  /* ---------- receipt ---------- */
+  .receipt { display: grid; grid-template-columns: 1fr 1fr; gap: 0; border: 1px solid var(--line); border-radius: 8px; overflow: hidden; background: var(--surface); }
+  .receipt .col { padding: 18px 20px; min-width: 0; }
+  .receipt .col + .col { border-left: 1px solid var(--line); }
+  .receipt h4 { font-family: var(--serif); font-size: 16px; font-weight: 600; margin: 0 0 4px; }
+  .receipt .sub { font-family: var(--mono); font-size: 11px; color: var(--ink-faint); margin-bottom: 12px; }
+  .out {
+    background: var(--paper);
+    border: 1px solid var(--line-soft);
+    border-radius: 6px;
+    padding: 12px 14px;
+    font-family: var(--mono);
+    font-size: 12px;
+    line-height: 1.6;
+    color: var(--ink-soft);
+    overflow-x: auto;
+    margin-bottom: 12px;
+  }
+  .checks { list-style: none; margin: 0; padding: 0; display: flex; flex-direction: column; gap: 5px; }
+  .checks li { display: flex; gap: 8px; align-items: baseline; font-size: 13px; }
+  .checks .mk { font-family: var(--mono); font-size: 12px; width: 16px; text-align: center; border-radius: 3px; }
+  .checks .mk.p { color: var(--pass); background: var(--pass-soft); }
+  .checks .mk.f { color: var(--fail); background: var(--fail-soft); }
+  .checks .cname { font-family: var(--mono); font-size: 12px; color: var(--ink-soft); }
+  .verdict {
+    grid-column: 1 / -1;
+    border-top: 1px solid var(--line);
+    background: var(--pass-soft);
+    color: var(--pass);
+    padding: 10px 20px;
+    font-family: var(--mono);
+    font-size: 12.5px;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  /* ---------- library / coach / model trio ---------- */
+  .trio { display: grid; grid-template-columns: 1.2fr 1fr; gap: 20px; align-items: start; }
+  .panel { border: 1px solid var(--line); border-radius: 8px; background: var(--surface); overflow: hidden; }
+  .panel-h {
+    padding: 12px 16px;
+    border-bottom: 1px solid var(--line);
+    font-family: var(--mono);
+    font-size: 11px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    display: flex;
+    justify-content: space-between;
+  }
+  .lib-row { display: flex; align-items: center; gap: 12px; padding: 12px 16px; border-bottom: 1px solid var(--line-soft); }
+  .lib-row:last-child { border-bottom: 0; }
+  .status { width: 8px; height: 8px; border-radius: 50%; flex: 0 0 auto; }
+  .status.g { background: var(--pass); }
+  .status.a { background: var(--warn); }
+  .status.r { background: var(--fail); }
+  .lib-row .lname { font-weight: 600; font-size: 14px; flex: 1; min-width: 0; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .kind {
+    font-family: var(--mono);
+    font-size: 10px;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    border: 1px solid var(--line);
+    border-radius: 4px;
+    padding: 1px 6px;
+    color: var(--ink-faint);
+  }
+  .lib-row .stat { font-family: var(--mono); font-size: 11.5px; color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+  .lib-row .stat.bad { color: var(--fail); }
+
+  .digest { padding: 16px; display: flex; flex-direction: column; gap: 14px; }
+  .finding { display: flex; flex-direction: column; gap: 6px; }
+  .finding p { margin: 0; font-size: 13.5px; }
+  .finding p b { font-family: var(--serif); font-size: 14.5px; }
+  .finding .ev { font-family: var(--mono); font-size: 11px; color: var(--ink-faint); }
+  .btn {
+    align-self: flex-start;
+    font-family: var(--sans);
+    font-size: 12.5px;
+    font-weight: 600;
+    color: var(--accent);
+    background: var(--accent-soft);
+    border: 1px solid var(--accent-line);
+    border-radius: 6px;
+    padding: 5px 12px;
+    cursor: pointer;
+  }
+  .btn:hover { background: var(--accent); color: var(--surface); }
+
+  .meter { display: flex; align-items: center; gap: 10px; padding: 7px 16px; }
+  .meter .m-label { font-family: var(--mono); font-size: 11px; color: var(--ink-soft); flex: 0 0 170px; }
+  .meter .bar { flex: 1; height: 5px; background: var(--sunken); border-radius: 3px; overflow: hidden; }
+  .meter .fill { height: 100%; background: var(--accent); border-radius: 3px; }
+  .meter .val { font-family: var(--mono); font-size: 11px; color: var(--ink); font-variant-numeric: tabular-nums; width: 34px; text-align: right; }
+  .m-foot { padding: 10px 16px 14px; font-family: var(--mono); font-size: 11px; color: var(--ink-faint); border-top: 1px solid var(--line-soft); }
+
+  /* ---------- principles footer ---------- */
+  .principles { display: grid; grid-template-columns: repeat(auto-fit, minmax(230px, 1fr)); gap: 18px; }
+  .principle { border-top: 2px solid var(--accent-line); padding-top: 12px; }
+  .principle h4 { font-family: var(--serif); font-size: 16px; font-weight: 600; margin: 0 0 6px; }
+  .principle p { margin: 0; font-size: 13.5px; color: var(--ink-soft); }
+
+  @media (max-width: 860px) {
+    .specimen-grid { grid-template-columns: 1fr; }
+    .receipt { grid-template-columns: 1fr; }
+    .receipt .col + .col { border-left: 0; border-top: 1px solid var(--line); }
+    .trio { grid-template-columns: 1fr; }
+    .rail { display: none; }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    * { transition: none !important; animation: none !important; }
+  }
+</style>
+
+<div class="masthead">
+  <div class="masthead-inner">
+    <p class="eyebrow">Prompt Studio · Design direction</p>
+    <h1>Specimen &amp; margin</h1>
+    <p class="lede">The prompt is a <em>specimen</em> — an exact payload bound for a machine, set in monospace on cool paper. Everything human — explanation, coaching, questions — lives in the margins in editorial type. Cobalt is the single accent; green, amber, and red speak only when evidence does.</p>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <section>
+    <div class="sec-head">
+      <p class="eyebrow">Tokens</p>
+      <h2>Palette and type, chosen not defaulted</h2>
+      <p>Cool paper with a blue bias toward the accent. Three type voices: a bookish serif for narrative, a quiet sans for UI, and mono for anything that is data — payloads, costs, checks, model IDs.</p>
+    </div>
+    <div class="tokens">
+      <div class="swatch"><div class="chip" style="background:#F3F5F7; border-bottom:1px solid var(--line);"></div><div class="meta"><b>Paper</b><span>#F3F5F7 / #12161D</span></div></div>
+      <div class="swatch"><div class="chip" style="background:#1B2430;"></div><div class="meta"><b>Ink</b><span>#1B2430 / #E5EAF2</span></div></div>
+      <div class="swatch"><div class="chip" style="background:#2B50C4;"></div><div class="meta"><b>Cobalt (accent)</b><span>#2B50C4 / #8FA7FF</span></div></div>
+      <div class="swatch"><div class="chip" style="background:#2E7D4F;"></div><div class="meta"><b>Pass</b><span>#2E7D4F — semantic only</span></div></div>
+      <div class="swatch"><div class="chip" style="background:#A87708;"></div><div class="meta"><b>Stale</b><span>#A87708 — semantic only</span></div></div>
+      <div class="swatch"><div class="chip" style="background:#B3383E;"></div><div class="meta"><b>Regressed</b><span>#B3383E — semantic only</span></div></div>
+    </div>
+    <div class="type-specimens">
+      <div class="type-row"><span class="role">Serif · narrative</span><span class="sample-serif">Why this prompt is built the way it is</span></div>
+      <div class="type-row"><span class="role">Sans · interface</span><span class="sample-sans">Save to library · Run receipt · Promote candidate</span></div>
+      <div class="type-row"><span class="role">Mono · evidence</span><span class="sample-mono">claude-sonnet-5 · 5/5 checks · $0.31 · v14</span></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <p class="eyebrow">The hero screen</p>
+      <h2>Ask mode — the annotated answer</h2>
+      <p>The signature interaction: hover a numbered section of the specimen and its margin note lights up (and vice versa). Every note names its technique, says why it's there, and ends with what <em>this model</em> had to do with the choice.</p>
+    </div>
+
+    <div class="frame">
+      <nav class="rail" aria-label="Primary">
+        <div class="mark">Ps</div>
+        <a class="active" href="#"><span class="dot"></span>ASK</a>
+        <a href="#"><span class="dot"></span>LIB</a>
+        <a href="#"><span class="dot"></span>COACH</a>
+        <a href="#"><span class="dot"></span>MODELS</a>
+        <a href="#"><span class="dot"></span>LAB</a>
+        <a href="#"><span class="dot"></span>QUEUE</a>
+      </nav>
+      <div class="stage">
+        <div class="askbar">I need consistent structured summaries of customer support calls<span class="caret">▏</span></div>
+
+        <div class="qa">
+          <div class="qa-row">
+            <span class="q">What happens to a summary after it's written?</span>
+            <span class="a">It's inserted into our CRM by a script</span>
+            <span class="derived">→ derived check: <b>json_schema</b></span>
+          </div>
+          <div class="qa-row">
+            <span class="q">What does a bad summary look like?</span>
+            <span class="a">Made-up details, or missing the customer's actual request</span>
+            <span class="derived">→ derived check: <b>quote_support</b></span>
+          </div>
+          <div class="qa-row">
+            <span class="q">Which model will run this?</span>
+            <span class="a">claude-sonnet-5, recurring daily</span>
+            <span class="derived">→ compiled against its card</span>
+          </div>
+        </div>
+
+        <div class="chips">
+          <span class="chip-pill">claude-sonnet-5</span>
+          <span class="chip-pill">prompt · v1</span>
+          <span class="chip-pill">generation $0.04</span>
+          <span class="chip-pill ok">receipt 5/5 checks</span>
+        </div>
+
+        <div class="specimen-grid">
+          <div class="specimen">
+<span class="seg" data-note="n1"><span class="tag">&lt;role&gt;</span><sup>1</sup>
+You are a customer-operations analyst who writes
+summaries that a CRM import script consumes.
+<span class="tag">&lt;/role&gt;</span></span>
+<span class="seg" data-note="n2"><span class="tag">&lt;instructions&gt;</span><sup>2</sup>
+1. Read the full transcript before writing anything.
+2. For every fact you extract, quote the exact
+   sentence from the transcript that supports it.
+3. If the customer's request is unclear, set
+   "request" to "UNCLEAR" — never guess.
+<span class="tag">&lt;/instructions&gt;</span></span>
+<span class="seg" data-note="n3"><span class="tag">&lt;output_format&gt;</span><sup>3</sup>
+Return only JSON matching:
+{ "customer_request": string,
+  "resolution_status": "resolved"|"escalated"|"open",
+  "supporting_quotes": string[],
+  "followup_needed": boolean }
+<span class="tag">&lt;/output_format&gt;</span></span>
+<span class="seg" data-note="n4"><span class="tag">&lt;transcript&gt;</span><sup>4</sup>
+{{call_transcript}}
+<span class="tag">&lt;/transcript&gt;</span></span>
+          </div>
+          <div class="margin">
+            <div class="note" data-note="n1" tabindex="0">
+              <div class="n-tag"><span>¹ role framing</span><a class="card-link" href="#">card ›</a></div>
+              <h4>A role scoped to the consumer</h4>
+              <p>Not "you are a helpful assistant" — the role names who reads the output, which stabilizes tone and detail level across runs.</p>
+              <div class="model-why"><b>Why for this model:</b> Claude treats XML-tag sections as strong structure; this is its card's preferred idiom.</div>
+            </div>
+            <div class="note" data-note="n2" tabindex="0">
+              <div class="n-tag"><span>² quote-then-answer</span><a class="card-link" href="#">card ›</a></div>
+              <h4>Quotes before claims</h4>
+              <p>Requiring a supporting quote per fact measurably cuts invented details on long transcripts — your stated failure mode.</p>
+              <div class="model-why"><b>Derived from:</b> your answer to "what does a bad summary look like."</div>
+            </div>
+            <div class="note" data-note="n3" tabindex="0">
+              <div class="n-tag"><span>³ output contract</span><a class="card-link" href="#">card ›</a></div>
+              <h4>A schema, not a request for JSON</h4>
+              <p>Your CRM script is the consumer, so the format is a contract — and it compiles directly into this prompt's smoke check.</p>
+            </div>
+            <div class="note" data-note="n4" tabindex="0">
+              <div class="n-tag"><span>⁴ content placement</span><a class="card-link" href="#">card ›</a></div>
+              <h4>Long content last</h4>
+              <p>Instructions precede the transcript; variable content sits at the end, keeping the stable prefix cacheable on recurring runs.</p>
+              <div class="model-why"><b>Why for this model:</b> its card notes position sensitivity on 10k+ token inputs.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <p class="eyebrow">Proof over vibes</p>
+      <h2>The receipt</h2>
+      <p>"Better" is demonstrated, never asserted. Your original ask and the compiled prompt run on the same generated inputs; checks decide, and the whole strip links to raw transcripts.</p>
+    </div>
+    <div class="receipt">
+      <div class="col">
+        <h4>Your ask, as written</h4>
+        <p class="sub">"summarize this customer call" · input 2 of 3</p>
+        <div class="out">The customer called about some billing issues and the agent helped them sort it out. They seemed satisfied by the end of the call, though a few things may need follow-up…</div>
+        <ul class="checks">
+          <li><span class="mk f">✕</span><span class="cname">json_schema</span> — returned prose, not JSON</li>
+          <li><span class="mk f">✕</span><span class="cname">quote_support</span> — no supporting quotes</li>
+          <li><span class="mk p">✓</span><span class="cname">mentions_resolution</span></li>
+        </ul>
+      </div>
+      <div class="col">
+        <h4>The compiled prompt</h4>
+        <p class="sub">v1 · claude-sonnet-5 · input 2 of 3</p>
+        <div class="out">{ "customer_request": "refund for duplicate March charge", "resolution_status": "escalated", "supporting_quotes": ["I was charged twice on the 14th…"], "followup_needed": true }</div>
+        <ul class="checks">
+          <li><span class="mk p">✓</span><span class="cname">json_schema</span></li>
+          <li><span class="mk p">✓</span><span class="cname">quote_support</span> — 3 quotes, all verbatim</li>
+          <li><span class="mk p">✓</span><span class="cname">mentions_resolution</span></li>
+        </ul>
+      </div>
+      <div class="verdict"><span>compiled prompt 5/5 · original 2/5 · 3 inputs</span><span>total $0.31 · transcripts ›</span></div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <p class="eyebrow">The quiet screens</p>
+      <h2>Library, coach, and the measured model</h2>
+      <p>State reads at a glance: a dot is health, mono is measurement, and nothing animates unless it changed. The coach speaks in findings with evidence attached — never in tips.</p>
+    </div>
+    <div class="trio">
+      <div class="panel">
+        <div class="panel-h"><span>Library</span><span>23 artifacts</span></div>
+        <div class="lib-row"><span class="status g"></span><span class="lname">call-summary-crm</span><span class="kind">prompt</span><span class="stat">5/5 · 2d ago</span></div>
+        <div class="lib-row"><span class="status g"></span><span class="lname">pdf-report-skill</span><span class="kind">skill</span><span class="stat">9/9 · 6d ago</span></div>
+        <div class="lib-row"><span class="status a"></span><span class="lname">weekly-digest-writer</span><span class="kind">prompt</span><span class="stat">untested 34d</span></div>
+        <div class="lib-row"><span class="status r"></span><span class="lname">contract-extractor</span><span class="kind">prompt</span><span class="stat bad">3/5 on sonnet-5 · fix drafted</span></div>
+      </div>
+      <div class="panel">
+        <div class="panel-h"><span>Coach · week 29</span><span>from 41 observed sessions</span></div>
+        <div class="digest">
+          <div class="finding">
+            <p><b>You re-explained output format in 6 sessions.</b> Same instruction, five phrasings, one agent.</p>
+            <p class="ev">evidence: sessions 12, 14, 19, 22, 26, 31 ›</p>
+            <button class="btn">Draft a CLAUDE.md fix</button>
+          </div>
+          <div class="finding">
+            <p><b>First asks missing audience 71% of the time</b> — your most common retry trigger.</p>
+            <p class="ev">evidence: 17 retry loops ›</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="panel" style="margin-top: 20px;">
+      <div class="panel-h"><span>claude-sonnet-5 · measured fingerprint</span><span>battery v3 · 2026-07-12</span></div>
+      <div style="padding: 10px 0 4px;">
+        <div class="meter"><span class="m-label">format adherence</span><div class="bar"><div class="fill" style="width:94%"></div></div><span class="val">.94</span></div>
+        <div class="meter"><span class="m-label">instr. following w/ distractors</span><div class="bar"><div class="fill" style="width:89%"></div></div><span class="val">.89</span></div>
+        <div class="meter"><span class="m-label">position sensitivity (lower = better)</span><div class="bar"><div class="fill" style="width:22%"></div></div><span class="val">.22</span></div>
+        <div class="meter"><span class="m-label">hedging rate</span><div class="bar"><div class="fill" style="width:31%"></div></div><span class="val">.31</span></div>
+      </div>
+      <div class="m-foot">measured, not asserted — curated notes live beside this, never mixed with it</div>
+    </div>
+  </section>
+
+  <section>
+    <div class="sec-head">
+      <p class="eyebrow">Rules</p>
+      <h2>Four principles the UI never breaks</h2>
+    </div>
+    <div class="principles">
+      <div class="principle"><h4>Mono means measured</h4><p>Monospace is reserved for payloads and evidence — costs, checks, model IDs, versions. If it's mono, you can trust it was counted, not written.</p></div>
+      <div class="principle"><h4>Semantic color is earned</h4><p>Green, amber, and red appear only as verdicts from real runs. Decoration never borrows them; the accent never judges.</p></div>
+      <div class="principle"><h4>Margins teach</h4><p>Explanation sits beside the artifact, not in a modal or a tooltip graveyard. The annotated specimen is the curriculum.</p></div>
+      <div class="principle"><h4>Calm by default</h4><p>Nothing pulses, spins, or slides unless state actually changed. Motion is a reporting tool, honored only when the viewer allows it.</p></div>
+    </div>
+  </section>
+
+</div>
+
+<script>
+  document.querySelectorAll('[data-note]').forEach(function (el) {
+    var key = el.getAttribute('data-note');
+    function set(on) {
+      document.querySelectorAll('[data-note="' + key + '"]').forEach(function (m) {
+        m.classList.toggle('lit', on);
+      });
+    }
+    el.addEventListener('mouseenter', function () { set(true); });
+    el.addEventListener('mouseleave', function () { set(false); });
+    el.addEventListener('focus', function () { set(true); });
+    el.addEventListener('blur', function () { set(false); });
+  });
+</script>
