@@ -12,3 +12,10 @@ same instinct into assumptions: "state any assumptions you made at the end."
 **Mechanism**: models default to guessing because asking feels like failure to them;
 explicit permission flips the default on exactly the inputs where guessing is most
 expensive.
+
+**Agent-era gating**: license asking on expected information gain and action
+IRREVERSIBILITY — ask before destructive/irreversible tool actions, proceed with
+stated assumptions otherwise. Question QUALITY is the real bottleneck: licensed
+models still ask low-value questions because they can't assess their own
+knowledge boundaries — constrain to "up to 2 questions, only where the answer
+changes your approach."

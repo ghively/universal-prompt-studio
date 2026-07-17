@@ -2,7 +2,7 @@
 slug: video-gen-prompting
 name: Video generation prompting
 lever: modality
-helps: Veo 3.1, Kling 3.0, Runway Gen-4.5, Seedance 2.0 and current leaders
+helps: Veo 3.1, HappyHorse-1.0 (Alibaba — arena leader, open-weights, native multi-shot audio-video), Kling 3.0, Runway Gen-4.5, Seedance 2.0 (30s 4K, up to 50 reference images)
 hurts: n/a — but note Sora 2 is DISCONTINUED (app dead 2026-04, API dies 2026-09); don't build on it
 ---
 Write in **professional film grammar** — models adhere to camera vocabulary far
