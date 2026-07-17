@@ -32,10 +32,19 @@ From the live catalog, sorted by `created` descending, card:
 4. `measured.json` (probe battery) is the only source that may contradict a card —
    measurement beats curation.
 
-**Local models** are part of the rule, not an afterthought: niche coverage (rule 3)
-includes at least one local card per hardware class (8GB / 16-24GB / 48GB+), with
-`ollama.com/library` and Hugging Face as their canonical sources (see LOCAL.md).
-Local cards mark runtime tags `(verify with ollama list)` — tags drift.
+**Local models — the top-3 rule.** Local coverage is category-first, not
+size-first: for each VRAM tier the owner cares about (currently **8 GB** and
+**4 GB**), card the **top 3 models per category** (general, coding, reasoning,
+vision) as ranked by current community consensus + the studio's own probe results,
+with `vram_class` and `local_rank` fields. Rankings are re-verified on refresh —
+local leaderboards churn faster than hosted ones. Canonical sources:
+`ollama.com/library` + Hugging Face (see LOCAL.md). Local cards mark runtime tags
+`(verify with ollama list)` — tags drift.
+
+**Card depth is a schema field, not prose.** `card_depth: thin` means catalog facts
++ provider description only; the UI badges it, the compiler is told, and every
+refresh's first job is promoting thin cards to full by researching official docs.
+A thin card that stays thin across two refreshes gets demoted to catalog-only.
 
 Every card carries `last_reviewed`; the UI flags cards older than 120 days. The
 2026-07-17 set: 27 cards (23 hosted + 4 local) against a 344-model catalog.

@@ -83,6 +83,11 @@ label: Claude Sonnet 5
 provider: anthropic             # anthropic | openrouter | openai | local
 api_model_id: claude-sonnet-5   # what goes in the API request
 # base_url: http://localhost:11434/v1   # REQUIRED when provider is local; else absent
+category: general               # general | coding | reasoning | vision | utility
+card_depth: full                # full | thin — thin = catalog facts + provider description
+                                #   only; UI badges it and the compiler is told
+# vram_class: 8gb               # local cards only: 4gb | 8gb | 16gb | 24gb+
+# local_rank: 1                 # local cards only: rank within (category, vram_class), 1-3
 context_window: 1000000
 max_output_tokens: 64000
 pricing: { input_per_mtok_usd: 2.0, output_per_mtok_usd: 10.0 }
