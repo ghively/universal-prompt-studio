@@ -40,8 +40,14 @@ Pass = `output.length <= chars`. Detail: `"<len>/<chars> chars"`.
 ### 3.1 quote_support `{ source_var }`
 Source text = `vars[config.source_var]`; if the var is missing/empty → fail with detail
 `"source variable <name> not provided"`. Run QUOTE_SUPPORT_JUDGE (04-PROMPTS §5.1).
-Pass = `emit.pass`. Detail: `"<grounded>/<total> claims grounded"`, plus the first
-ungrounded claim if failing.
+Then apply the **containment post-check** (the judge's quotes are themselves
+generated text and can be invented): normalize whitespace on both sides (collapse
+runs of whitespace to single spaces, trim; no other normalization) and require each
+claim's `quote` to appear as a substring of the normalized source. A claim whose
+quote fails containment is counted UNGROUNDED regardless of the judge's verdict.
+Pass = every claim grounded after the post-check. Detail:
+`"<grounded>/<total> claims grounded"`, plus `" (<n> invented quotes)"` when any
+failed containment, plus the first ungrounded claim if failing.
 
 ### 3.2 rubric `{ criterion, min }`
 Run RUBRIC_JUDGE (§5.2). Pass = `score >= min`. Detail: `"<score> — <reason>"`.

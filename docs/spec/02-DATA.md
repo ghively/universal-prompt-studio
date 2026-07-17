@@ -126,7 +126,10 @@ sources: ["https://..."]
 ```
 
 `workspace/models/<id>.measured.json` (P8): written only by the probe battery —
-`{ battery_version: string, measured_at: iso, metrics: { [probe_dimension]: number } }`.
+`{ battery_version: string, measured_at: iso, metrics: { [probe_dimension]: number },
+params_verified?: { [param]: { result: "accepted" | "rejected", detail: string, checked_at: iso } } }`
+— `params_verified` is written by the param probe (10-CURRENCY §3.1) and settles
+card-vs-catalog contradictions empirically; measurement beats both sources.
 
 ### 3.1 Catalog — `workspace/models/catalog/`
 The two canonical, always-current sources of what exists (curated cards cover only the

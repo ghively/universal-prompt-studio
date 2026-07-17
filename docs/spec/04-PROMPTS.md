@@ -35,11 +35,13 @@ Rules for questions:
 - Never ask about model choice, temperature, or other technical settings.
 - Each question must be answerable in one short sentence by a non-expert.
 - Prefer questions about: what consumes the output (a person? a program?), what a
-  failure looks like, scope boundaries, audience, and whether this runs once or
-  repeatedly.
+  failure looks like and what it costs (a wrong answer that looks right is the
+  expensive kind), scope boundaries, audience, whether the task depends on facts
+  that change over time, and whether this runs once or repeatedly.
 - If the task is agentic or will live inside an agent runtime, ask which harness it
-  runs in (Claude Code, an AGENTS.md tool like Codex/Cursor, a framework like
-  LangGraph, or a bare API call) — the answer changes where instructions belong.
+  runs in (Claude Code, an AGENTS.md tool like Codex/Cursor/Cline, a framework like
+  LangGraph, an automation platform like n8n, or a bare API call) — the answer
+  changes where instructions belong.
 - For each question, state which check type the answer will likely produce:
   json_schema (output is consumed by software), contains (a required element),
   quote_support (facts must be grounded in provided source text), max_length (brevity
@@ -87,7 +89,10 @@ Requirements:
    does the job beats a long one demonstrating technique knowledge.
 4. Convert the user's answers into enforceable expectations inside the prompt (schemas,
    grounding rules, explicit failure behavior like writing "UNCLEAR" instead of
-   guessing) — and mirror each one as a machine check.
+   guessing). Whenever you add a failure sentinel, pair it with counter-pressure in
+   the same breath ("if the answer is derivable from the input, answer") so the
+   escape hatch does not cause false abstentions on answerable inputs. Mirror each
+   expectation as a machine check.
 5. Position long or variable content last; keep stable instructions first.
 6. For every meaningful section of the prompt, produce an annotation: the exact excerpt
    (copy characters verbatim from your prompt body, keep it under 60 characters, use the

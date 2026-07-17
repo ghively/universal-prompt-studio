@@ -7,6 +7,15 @@ stdio JSON-RPC (initialize, tools/list, tools/call) — no SDK dependency; the s
 ~120 lines. It calls the same workspace/llm functions as the HTTP server (import, not
 HTTP).
 
+The initialize result declares server `instructions` (this is the server's
+discovery surface — see `workspace/knowledge/techniques/mcp-server-design.md`):
+`"Prompt Studio holds the user's tested, versioned prompt library. Search artifacts
+when the user mentions a task they have prompted before; render_prompt to reuse a
+library prompt; model_brief before targeting an unfamiliar model; log_outcome after
+a library prompt is used in the field."` Tool descriptions follow
+tool-description-quality: what + when to use + when not, third person, every
+parameter documented with an example value.
+
 Tools:
 1. `search_artifacts { query: string, kind?: string }` → up to 10 of
    `{ slug, title, kind, status, target_model }`; match = case-insensitive substring of

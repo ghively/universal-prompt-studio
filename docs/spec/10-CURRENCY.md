@@ -16,6 +16,17 @@
 For each new OpenRouter/Anthropic id: file a queue proposal `kind: card_update`, title
 `New model available: <id>`, body listing id, provider, context, pricing, and
 supported_parameters from the catalog entry, `action.type: "none"`.
+
+**Card-drift check (same scan, after the snapshot refresh).** For every curated card
+with `provider: openrouter`, diff these card fields against the fresh snapshot row:
+base pricing, `pricing.tiers` (vs `pricing_overrides`), `context_window`,
+`context_window_effective` (vs `served_context_length`), `max_output_tokens`, and the
+four `params` flags (vs `supported_parameters`). Any mismatch → ONE proposal per
+card, `kind: card_update`, title `Card fact drift: <id>`, `body_md` listing each
+field as `card: <x> / catalog: <y>`, `action.type: "none"` — never auto-apply (a
+card may knowingly contradict the catalog pending a param probe; the proposal is
+how the owner notices). This check exists because the 2026-07 audit found three
+cards with stale prices feeding the budget guard.
 Card drafting stays user-initiated: `POST /api/models/draft { model_id, provider, sources_text }`
 runs CARD_DRAFT (04-PROMPTS §10) with `claude-sonnet-5.yaml` as the example card and
 returns `card_yaml` for review; `POST /api/models { card_yaml }` validates and writes
@@ -40,6 +51,19 @@ probes:
     score: { type: json_schema, config: { schema: { type: object, required: [status, number], properties: { status: { enum: [ok] }, number: { type: number } } } } }
   # dimensions used: format_adherence, instruction_following, position_sensitivity, hedging
 ```
+
+**3.1 Param probes — settling card-vs-catalog contradictions.**
+`POST /api/models/:id/param-probe` body `{ "params": ["temperature", ...] }` (default:
+every param where the card and catalog disagree). Per param: send a minimal chat call
+(`user: "Reply OK"`, `max_tokens: 8`, purpose `probe`, cache bypass) with that single
+param set to a benign non-default (`temperature: 0.5`, `top_p: 0.9`,
+`logprobs: true`, each card-listed effort level). Provider 4xx → `rejected` (detail =
+provider error message); 2xx → `accepted`. Write results into `measured.json` →
+`params_verified` (02-DATA §3). UI: contested params on the card get a `probed`
+chip with the empirical verdict; `params_verified` outranks both card prose and
+catalog. First targets: the standing verification queue in
+`workspace/knowledge/techniques/README.md` (claude-opus-4-8 temperature,
+kimi-k2.7-code sampling params, gpt-5.6 verbosity pass-through).
 
 `POST /api/models/:id/battery`: run every probe on the model (purpose `probe`, cache
 bypass, temperature 0), score with the probe's check, aggregate per dimension =

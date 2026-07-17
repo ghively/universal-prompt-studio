@@ -124,6 +124,26 @@ send `"reasoning_effort": effort`. Send `temperature` only if `card.params.tempe
 ### 3.3 provider = openai — same wire shape as 3.2 against `https://api.openai.com/v1/chat/completions` with `$OPENAI_API_KEY`.
 
 ### 3.4 provider = local — same wire shape as 3.2 against `card.base_url + "/chat/completions"`.
+
+### 3.5 Card-driven request rules (apply in providerCall, all providers)
+- **temperature**: include only when `card.params.temperature` is true; otherwise
+  silently drop it from the request (04-PROMPTS relies on this).
+- **effort**: include only when `card.params.effort` is true. When the card carries
+  `params.effort_levels`, clamp the requested level to the highest listed level ≤
+  the request (level order: none < low < medium < high < xhigh < max); if none is ≤,
+  send the lowest listed level. Never send a level the card doesn't list — that is
+  a 400 on several providers.
+- **reasoning round-trip**: when `card.reasoning.preserve_in_history` is
+  `required` or `recommended`, any multi-turn request (including the §0 structured-
+  output validation retry in 04-PROMPTS) must echo the prior assistant turn's
+  content **verbatim from the raw provider response** — thinking/reasoning blocks
+  included, never stripped. If `required` and the runner cannot reconstruct the
+  blocks, fail the call with `provider_error`
+  `"model requires reasoning history preservation"` rather than degrade silently.
+- **embedding cards** (`kind: embedding`): never callable through the chat path —
+  `llmCall` and every run/receipt/suite endpoint reject them with `bad_request`
+  `"embedding models cannot run prompts"`. `GET /api/models` still lists them
+  (with `kind`) for the Models page.
 No auth header. Covers Ollama (`http://localhost:11434/v1`), llama.cpp server, LM
 Studio, vLLM — all OpenAI-compatible. Cost is always 0 (record usd_micro 0; token
 usage still logged). `available` is always true for local cards; connection refusal

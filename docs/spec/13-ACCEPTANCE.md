@@ -17,8 +17,8 @@ gate done without keys.
 ## P1 — Ask core (03-API §1, 04-PROMPTS §2–3, 05-UI §3 states 1–5)
 - [ ] zod schemas for config, model card, run record, artifact frontmatter (02-DATA) + unit tests with one valid/one invalid fixture each
 - [ ] `providers.ts` with all three providers; unit test the request-body builders (no network)
-- [ ] `llmCall()` with budget guard, cache, ledger, run records; unit tests: cache hit returns usd 0; guard throws over cap
-- [ ] GET /api/models returns the 5 seed cards with `available` flags
+- [ ] `llmCall()` with budget guard, cache, ledger, run records; unit tests: cache hit returns usd 0; guard throws over cap; tier-aware estimate (synthetic card with `pricing.tiers` — long prompt uses tier prices); negative catalog pricing → `bad_request`; effort clamped to `params.effort_levels` (03-API §3.5)
+- [ ] GET /api/models returns every seeded card (55 at spec time: 31 hosted + 24 local) with `available` flags; `kind: embedding` cards are listed but excluded from the Ask model select
 - [ ] POST /api/ask/profile returns 2–4 questions for the ask `"I need consistent structured summaries of customer support calls"` (live test)
 - [ ] POST /api/ask/compile returns a draft whose body contains at least one `{{variable}}`, ≥ 2 annotations with verbatim excerpts, ≥ 2 checks (live test)
 - [ ] Ask page states idle→drafted work end to end in the browser; annotations cross-highlight on hover and focus
@@ -26,7 +26,7 @@ gate done without keys.
 
 ## P2 — Receipt, save, library (03-API §1, 06-CHECKS, 05-UI §3 states 6–8, §5–6)
 - [ ] `checks.ts`: all deterministic types + unit tests (incl. restricted json_schema validator: 6 cases)
-- [ ] LLM-judged checks quote_support and rubric (live test each once)
+- [ ] LLM-judged checks quote_support and rubric (live test each once) + quote containment post-check (unit test: a fabricated quote is counted ungrounded even when the judge passes it)
 - [ ] POST /api/ask/receipt returns rows + totals for a 2-input run (live)
 - [ ] Receipt UI: compare grid, per-input selector, tally, verbatim budget-exceeded error rendering (force by setting cap to 0.000001)
 - [ ] POST /api/artifacts writes a valid artifact.md; GET list/detail; PUT snapshots history and bumps version (unit-test the snapshot logic on a tmp workspace)
@@ -71,9 +71,10 @@ gate done without keys.
 **Gate:** from a Claude Code session, `render_prompt` returns a library prompt via MCP; `cli eval --all` exits 0 on a green library.
 
 ## P8 — Currency (10-CURRENCY)
-- [ ] Watcher diffs live model lists into queue proposals (live; also unit-test the diff)
+- [ ] Watcher diffs live model lists into queue proposals (live; also unit-test the diff); card-drift check files `Card fact drift` proposals on pricing/context/params mismatch (unit-test with a synthetic stale card)
 - [ ] CARD_DRAFT flow: paste sources → reviewed YAML → new card file
 - [ ] Battery v1 runs and writes measured.json; gauges appear on /models with battery version + date (live)
+- [ ] Param probe endpoint writes `params_verified`; run it against `claude-opus-4-8` temperature to settle the card-vs-catalog contradiction (live), and the card's contested param shows the `probed` chip
 - [ ] Sentinel job: stale-suite re-verification + fix-candidate proposal (simulate by editing a check to force failure); nightly budget stop
 **Gate:** force a regression, wait for (or trigger) the sentinel, approve the fix proposal from the queue, artifact returns to green.
 

@@ -35,7 +35,11 @@ with health tracked over time. Later phases add: instruments that expose the mod
 reaction; observation of the user's real AI usage with weekly coaching; a lab for
 curated test suites and bake-offs; self-updating model knowledge; a harness for testing
 agent skills; and MCP/CLI surfaces. The full product definition is `../PRODUCT.md`;
-this spec is its mechanical translation.
+this spec is its mechanical translation. The knowledge the app reads is already
+authored under `workspace/` — 123 technique cards across 13 levers, 13 harness
+cards, 55 model cards (31 hosted + 24 local, incl. an embeddings category) plus
+live catalogs, and `practices.md` — the app treats all of it strictly as data:
+render it, index it, cite it, never regenerate it.
 
 ## Global conventions (apply everywhere)
 
