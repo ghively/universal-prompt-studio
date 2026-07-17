@@ -17,3 +17,6 @@ layers (global → project → nested; always in context), skill name+descriptio
 - Permission modes gate tools — write instructions assuming confirmation friction on
   destructive actions rather than instructing around it.
 - The transcript is observable (JSONL on disk) — this studio's coach reads it.
+- Multi-tool repos: Claude Code doesn't read AGENTS.md natively — put an
+  `@AGENTS.md` import in CLAUDE.md (or symlink) and keep tool-specific deltas only
+  in CLAUDE.md itself.

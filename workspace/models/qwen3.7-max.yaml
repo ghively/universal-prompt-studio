@@ -2,17 +2,28 @@ id: qwen3.7-max
 label: Qwen3.7 Max
 provider: openrouter
 api_model_id: qwen/qwen3.7-max
+category: general
+card_depth: full
 context_window: 1000000
 max_output_tokens: 65536
 pricing: { input_per_mtok_usd: 1.48, output_per_mtok_usd: 4.43 }
 params: { effort: false, verbosity: false, temperature: true, logprobs: true }
-sampling: { default_temperature: 0.7, notes: "" }
-reasoning: { kind: adaptive, cot_prompting: neutral, notes: "Agent-centric flagship; reasoning exposed via include_reasoning." }
-formatting_idiom: "Direct instructions; strong tool-use conventions. (Card thin — verify.)"
-structured_output: "structured_outputs supported."
-strengths: [agent workloads, coding, office/productivity tasks, price]
-failure_modes: [verify long-context behavior on your own suites]
+sampling:
+  default_temperature: 1.0
+  notes: "No official temp/top_p recommendation for Max (unlike Qwen open models — do NOT assume 0.6/0.95 applies); Alibaba's own eval config used 1.0/0.95. Proprietary API-only (>1T params), NOT open-weight. Pricing varies by channel: Alibaba list $2.50/$7.50 (currently 50% off), OpenRouter $1.48/$4.43. Cache hits bill at 10% of input."
+reasoning:
+  kind: adaptive
+  cot_prompting: neutral
+  notes: "enable_thinking default true; thinking_budget caps reasoning tokens (hits cap -> answers immediately) — bound cost with the budget rather than disabling. preserve_thinking officially recommended for agentic tasks (raises input billing). Also speaks the Anthropic-compatible API."
+formatting_idiom: "No published prompt guide; positioned for agent scaffolds (MCP, multi-agent) with consistent behavior across Claude Code/Qwen Code harnesses."
+structured_output: "response_format json_object ONLY (no strict schema) — the request must contain the word 'JSON' or the API errors, and DO NOT set max_tokens with it (truncation risk). Validate + retry."
+strengths: [AA Intelligence Index 56.6 — highest-ever Chinese model (ahead of Gemini 3.5 Flash), SWE-Pro 60.6, GPQA-D 92.4, WMT24++ 85.8 (translation strength), 35-hour autonomous run with 1000+ tool calls (vendor), coding/agentic-focused gains]
+failure_modes:
+  - factual-recall regression vs predecessor: abstains more (hallucination down 21pp) but raw accuracy DOWN 7.6pp — it knows less, refuses better; pair with retrieval
+  - notably verbose; gains concentrated in coding/agentic, flat elsewhere
+  - intl docs pages intermittently 503 — operational annoyance
 prompting_notes: |
-  - Qwen3 Coder Next is the Bedrock-available coding sibling.
+  - Use thinking_budget as the cost lever; preserve_thinking on for agent loops.
+  - json_object rules: say "JSON", skip max_tokens, validate output.
 last_reviewed: 2026-07-17
-sources: ["https://openrouter.ai/qwen/qwen3.7-max"]
+sources: ["https://www.alibabacloud.com/blog/qwen3-7-the-agent-frontier_603154", "https://help.aliyun.com/zh/model-studio/deep-thinking", "https://openrouter.ai/qwen/qwen3.7-max"]

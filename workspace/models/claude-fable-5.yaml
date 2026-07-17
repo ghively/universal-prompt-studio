@@ -2,24 +2,53 @@ id: claude-fable-5
 label: Claude Fable 5
 provider: anthropic
 api_model_id: claude-fable-5
+category: general
+card_depth: full
 context_window: 1000000
-max_output_tokens: 64000
+max_output_tokens: 128000
 pricing: { input_per_mtok_usd: 10.0, output_per_mtok_usd: 50.0 }
 params: { effort: true, verbosity: true, temperature: false, logprobs: false }
 sampling:
   default_temperature: null
-  notes: "Thinking is ALWAYS on; adaptive is the only mode. Control depth with effort (low|medium|high|max), not temperature. budget_tokens returns a 400 error."
+  notes: "temperature/top_p/top_k set to ANY non-default value -> 400 error. For variety, prompt for it ('propose N distinct options') instead of sampling."
 reasoning:
   kind: always-on
   cot_prompting: harmful
-  notes: "Mythos-class. Do not add 'think step by step' or hand-written reasoning plans — general instructions ('consider the tradeoffs') outperform prescriptive steps."
-formatting_idiom: "XML tags for sectioning; <example>/<examples> tags for few-shot; documents at top wrapped in <documents>/<document index>. Prefilled assistant turns are NOT supported (400 error)."
-structured_output: "Native Structured Outputs (schema-constrained) or forced tool-use. Do not use prefill tricks — removed."
-strengths: [autonomous long-horizon work, coding, instruction fidelity, multi-context-window persistence, subagent orchestration]
-failure_modes: [may over-explore at high effort, concise to the point of skipping summaries unless asked, premium price]
+  notes: >-
+    Adaptive thinking is the only mode and cannot be disabled. Effort levels
+    low|medium|high|xhigh|max, default high — official guidance: stay at high for
+    most tasks, xhigh only for capability-sensitive work; lower efforts still beat
+    prior models. Raw CoT is never returned (thinking.display: omitted|summarized).
+    CRITICAL QUIRK: prompts that tell it to echo/transcribe its internal reasoning
+    trigger the reasoning_extraction refusal category — read thinking blocks instead.
+formatting_idiom: >-
+  Plain-prose system-prompt instructions; brief steering beats enumeration ("you can
+  steer most behaviors with a brief instruction"). De-prescribe: skills/prompts
+  written for prior models are often too prescriptive and degrade output. Explain
+  intent: "I'm working on [larger task] for [who]. They need [what]. With that in
+  mind: [request]."
+structured_output: "GA structured outputs: output_config.format json_schema (constrained decoding) or strict: true tool use. Prefill is not a mechanism. On refusal, output may not match schema."
+strengths: [multiday long-horizon autonomy, first-shot correctness, code review/bug-finding recall, dense technical vision (bash+crop tools), parallel subagent orchestration, navigating ambiguity]
+failure_modes:
+  - overplans/overdeliberates on routine work at high effort ("When you have enough information to act, act")
+  - over-engineers at higher effort (unrequested tidying/refactors/abstractions)
+  - elaborates when unsteered (surveys options it won't pursue, narrating comments)
+  - occasional unrequested actions (drafting emails, defensive git backups)
+  - rare early stop ("I'll now run X" without the tool call) or permission-asking
+  - context-budget anxiety when the harness shows token countdowns — reassure "You have ample context remaining"
+  - dense arrow-chain shorthand in long-run outputs; safety classifiers can false-positive on benign security/bio work (configure Opus 4.8 fallback)
 prompting_notes: |
-  - Has dedicated prompting page (see sources): effort calibration, long-run progress claims, memory systems.
-  - Calm imperatives: aggressive "CRITICAL/MUST" language causes overtriggering on current Claude.
-  - For visibility after tool use, ask: "After tool-based work, summarize what you did."
+  - Progress-claim grounding (near-verbatim from docs, nearly eliminates fabricated
+    status reports): "Before reporting progress, audit each claim against a tool
+    result from this session. Only report work you can point to evidence for."
+  - Subagents: use frequently; prefer async orchestrator<->subagent; long-lived
+    subagents save cost via cache reads. Fresh-context verifier subagents beat
+    self-critique.
+  - Memory: give it a place to write lessons (markdown files, one lesson per file,
+    one-line summary on top; delete wrong notes).
+  - Optionally define a send_to_user tool for verbatim mid-turn messages (it rarely
+    calls it without a system-prompt instruction).
+  - Start at the top of your difficulty range; expect minutes-long turns at high
+    effort — raise client timeouts.
 last_reviewed: 2026-07-17
-sources: ["https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-fable-5", "https://openrouter.ai/anthropic/claude-fable-5"]
+sources: ["https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-fable-5", "https://platform.claude.com/docs/en/about-claude/models/introducing-claude-fable-5-and-claude-mythos-5", "https://platform.claude.com/docs/en/build-with-claude/effort"]

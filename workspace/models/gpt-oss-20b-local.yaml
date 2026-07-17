@@ -2,6 +2,9 @@ id: gpt-oss-20b-local
 label: gpt-oss-20b (local / Ollama)
 provider: local
 api_model_id: gpt-oss:20b   # verify with `ollama list`
+category: general
+vram_class: 16gb
+card_depth: full
 base_url: http://localhost:11434/v1
 context_window: 131072
 max_output_tokens: 16384

@@ -5,9 +5,12 @@ memory_files: [AGENTS.md (nested, nearest-file-wins), .github/copilot-instructio
 artifact_kinds: [AGENTS.md files]
 ---
 **The convention**: one markdown file at repo root (plus optional nested ones —
-nearest file wins) read natively by the whole non-Anthropic coding-agent ecosystem.
-Linux Foundation open standard, 60k+ repos. No schema: plain markdown sections
-(setup commands, conventions, boundaries).
+nearest file wins) read natively by Codex, Cursor, GitHub Copilot coding agent,
+Windsurf, Amp, Aider, Gemini CLI, Zed, Jules, Devin, and Junie. Stewarded by the
+Agentic AI Foundation under the Linux Foundation (since Dec 2025); 60k+ repos. No
+schema: plain markdown sections (setup commands, conventions, style, gotchas,
+do-not-touch list). NOTE: **Claude Code does NOT read AGENTS.md natively** — bridge
+with an `@AGENTS.md` import line in CLAUDE.md or a symlink.
 
 **Prompting implications**:
 - Write AGENTS.md tool-agnostically: any of several different models may read it —

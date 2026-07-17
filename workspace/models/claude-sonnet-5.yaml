@@ -2,24 +2,43 @@ id: claude-sonnet-5
 label: Claude Sonnet 5
 provider: anthropic
 api_model_id: claude-sonnet-5
+category: general
+card_depth: full
 context_window: 1000000
-max_output_tokens: 64000
+max_output_tokens: 128000
 pricing: { input_per_mtok_usd: 2.0, output_per_mtok_usd: 10.0 }
 params: { effort: true, verbosity: true, temperature: false, logprobs: false }
 sampling:
   default_temperature: null
-  notes: "Adaptive thinking ON BY DEFAULT — no thinking config needed. Control with effort (low|medium|high|max); temperature not exposed on OpenRouter."
+  notes: "temperature/top_p/top_k non-default -> 400 (new constraint for Sonnet class). Intro pricing $2/$10 through 2026-08-31, then $3/$15. NEW TOKENIZER: ~30% more tokens for the same text than Sonnet 4.6 — recount prompts, raise max_tokens."
 reasoning:
   kind: adaptive
   cot_prompting: harmful
-  notes: "Effort is the recommended control. Context awareness: tracks its remaining token budget — useful in agent harnesses."
-formatting_idiom: "XML sectioning; documents at top, query at end; <example> tags for few-shot. NO prefills — use Structured Outputs instead."
-structured_output: "Native Structured Outputs; very reliable at complex schemas when told to conform, especially with retries."
-strengths: [frontier coding and agents at mid price, literal instruction following, professional writing, 1M context]
-failure_modes: [more literal than 4.5-era models (vague prompts underperform), concise by default (ask for summaries/detail explicitly)]
+  notes: >-
+    Adaptive thinking ON BY DEFAULT (no thinking field needed); disable with
+    thinking:{type:"disabled"}; budget_tokens -> 400. Effort low|medium|high|xhigh|max,
+    default high; xhigh for hardest coding/agentic. Cross-model mapping: Sonnet 5 @
+    medium ~= Sonnet 4.6 @ high. Respects effort strictly at the low end — if
+    reasoning is shallow, RAISE EFFORT rather than prompting around it. Per-message
+    steering works both ways ("Think hard before responding" / "Answer directly").
+formatting_idiom: >-
+  Plain-text system instructions. Interprets prompts LITERALLY and does not silently
+  generalize — state scope explicitly ("Apply this to every section, not just the
+  first"). Positive examples of desired concision beat negative instructions. With
+  thinking disabled it under-reaches for tools — nudge tool use explicitly.
+structured_output: "GA structured outputs (output_config.format json_schema / strict tools) — the official replacement for prefills, which return 400."
+strengths: [best speed/intelligence combination, coding and agentic tasks (largest gains vs 4.6), self-verification loops, quality progress updates on long traces, 1M context at Sonnet price]
+failure_modes:
+  - under-thinking risk at low effort on moderately complex tasks
+  - over-literal conservatism: review-harness filter instructions can suppress findings (recall drops though ability improved) — ask for "every issue, including uncertain/low-severity"
+  - design monoculture on open-ended briefs; generic "don't use X" shifts to another fixed palette rather than variety
+  - truncation risk at high+ effort: mostly-thinking responses hitting max_tokens (compounded by new tokenizer)
 prompting_notes: |
   - The studio's default target and utility model.
-  - Be explicit about action vs suggestion ("change this" vs "can you suggest").
-  - Has a dedicated prompting page covering response length, effort calibration, tool triggering.
+  - Remove forced-progress scaffolding ("summarize every 3 tool calls") — native
+    updates are now better.
+  - Interactive coding: xhigh/high effort, specify task+intent+constraints upfront,
+    minimize human round-trips.
+  - Computer use: images at 1080p are the cost/performance sweet spot (max 2576px).
 last_reviewed: 2026-07-17
-sources: ["https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-sonnet-5", "https://openrouter.ai/anthropic/claude-sonnet-5"]
+sources: ["https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-sonnet-5", "https://platform.claude.com/docs/en/about-claude/models/whats-new-sonnet-5"]

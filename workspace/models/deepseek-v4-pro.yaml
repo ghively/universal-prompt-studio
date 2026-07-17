@@ -2,6 +2,8 @@ id: deepseek-v4-pro
 label: DeepSeek V4 Pro
 provider: openrouter
 api_model_id: deepseek/deepseek-v4-pro
+category: reasoning
+card_depth: full
 context_window: 1048576
 max_output_tokens: 65536
 pricing: { input_per_mtok_usd: 0.44, output_per_mtok_usd: 0.87 }

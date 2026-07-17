@@ -86,8 +86,10 @@ api_model_id: claude-sonnet-5   # what goes in the API request
 category: general               # general | coding | reasoning | vision | utility
 card_depth: full                # full | thin — thin = catalog facts + provider description
                                 #   only; UI badges it and the compiler is told
-# vram_class: 8gb               # local cards only: 4gb | 8gb | 16gb | 24gb+
-# local_rank: 1                 # local cards only: rank within (category, vram_class), 1-3
+# vram_class: 8gb               # local cards only: primary tier: 4gb | 8gb | 16gb | 24gb+
+# rankings:                     # local cards only: a model may rank in several categories
+#   - { category: general, vram_class: 8gb, rank: 1 }
+#   - { category: coding,  vram_class: 8gb, rank: 1 }
 context_window: 1000000
 max_output_tokens: 64000
 pricing: { input_per_mtok_usd: 2.0, output_per_mtok_usd: 10.0 }

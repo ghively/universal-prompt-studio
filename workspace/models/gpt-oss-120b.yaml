@@ -2,6 +2,8 @@ id: gpt-oss-120b
 label: gpt-oss-120b (open weights)
 provider: openrouter
 api_model_id: openai/gpt-oss-120b
+category: general
+card_depth: full
 context_window: 131072
 max_output_tokens: 32768
 pricing: { input_per_mtok_usd: 0.037, output_per_mtok_usd: 0.17 }

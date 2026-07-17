@@ -1,18 +1,29 @@
 id: kimi-k2.7-code
-label: Kimi K2.7 Code
+label: Kimi K2.7 Code (open weights)
 provider: openrouter
 api_model_id: moonshotai/kimi-k2.7-code
+category: coding
+card_depth: full
 context_window: 262144
 max_output_tokens: 32768
-pricing: { input_per_mtok_usd: 0.75, output_per_mtok_usd: 3.5 }
-params: { effort: false, verbosity: false, temperature: true, logprobs: true }
-sampling: { default_temperature: 0.6, notes: "" }
-reasoning: { kind: none, cot_prompting: neutral, notes: "Coding-specialist; end-to-end programming tasks over long contexts." }
-formatting_idiom: "Code-task idiom: file paths, diffs, tests. (Card thin — verify.)"
-structured_output: "response_format supported."
-strengths: [dedicated coding model, cost, long-context repo work]
-failure_modes: [general knowledge work — use a generalist instead]
+pricing: { input_per_mtok_usd: 0.72, output_per_mtok_usd: 3.5 }
+params: { effort: false, verbosity: false, temperature: false, logprobs: false }
+sampling:
+  default_temperature: null
+  notes: "Sampling FIXED server-side (1.0/0.95); manually setting these params ERRORS. OpenRouter ($0.72/$3.50, third-party hosts) is cheaper than Moonshot first-party cache-miss ($0.95/$4.00; cache-hit $0.19). 1T MoE / 32B active, Modified MIT, text+image input."
+reasoning:
+  kind: always-on
+  cot_prompting: neutral
+  notes: "Thinking is MANDATORY — disabling it throws an error. reasoning_content from each assistant tool-call turn MUST be returned verbatim next turn or the API errors. ~30% less thinking-token spend than K2.6 (vendor claim, third-party questioned). tool_choice accepts only auto|none."
+formatting_idiom: "Coding-only specialist: give it repo-scale context (262k is its design point), explicit engineering standards, and tests. Moonshot says use K2.6 for general writing/analysis — don't route non-code here."
+structured_output: "No response_format documented on this endpoint — tool-call-based extraction is the reliable path; validate + retry."
+strengths: [long-horizon coding agents, MCP Mark Verified 81.1 (beats Opus 4.8's 76.4 there), instruction reliability over extended contexts, open weights, highspeed variant (~180-260 tok/s) available]
+failure_modes:
+  - headline benchmarks are Moonshot-proprietary; not submitted to independent DeepSWE — verify on your own suite
+  - no non-thinking mode = unavoidable reasoning cost on trivial calls
+  - strict reasoning_content preservation is an integration footgun
 prompting_notes: |
-  - Candidate for code-gen bake-offs against Claude/GPT coding tiers.
+  - The budget coding-agent candidate for bake-offs against Claude/GPT coding tiers.
+  - Wire your agent loop to preserve reasoning_content before anything else.
 last_reviewed: 2026-07-17
-sources: ["https://openrouter.ai/moonshotai/kimi-k2.7-code"]
+sources: ["https://platform.kimi.ai/docs/guide/kimi-k2-7-code-quickstart", "https://huggingface.co/moonshotai/Kimi-K2.7-Code"]

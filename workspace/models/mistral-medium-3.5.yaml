@@ -2,17 +2,33 @@ id: mistral-medium-3.5
 label: Mistral Medium 3.5
 provider: openrouter
 api_model_id: mistralai/mistral-medium-3-5
+category: general
+card_depth: full
 context_window: 262144
 max_output_tokens: 32768
 pricing: { input_per_mtok_usd: 1.5, output_per_mtok_usd: 7.5 }
 params: { effort: true, verbosity: false, temperature: true, logprobs: false }
-sampling: { default_temperature: 0.7, notes: "" }
-reasoning: { kind: adaptive, cot_prompting: neutral, notes: "Dense 128B; agentic + coding focus, text+image in." }
-formatting_idiom: "Markdown; concise European-lab house style. (Card thin — verify.)"
-structured_output: "structured_outputs supported."
-strengths: [EU provider option, coding, agents, predictable dense-model behavior]
-failure_modes: [context ceiling (256k) vs 1M peers]
+sampling:
+  default_temperature: 0.7
+  notes: "Official: temp 0.7 / top_p 0.95 with reasoning_effort high; drop toward 0.0 with effort none for deterministic extraction. Dense 128B, open weights (Modified MIT), self-hostable on 4 GPUs. Prompt caching cuts effective cost 60-80%."
+reasoning:
+  kind: adaptive
+  cot_prompting: harmful
+  notes: >-
+    reasoning_effort param: "high" (full ThinkChunk before answer — official rec
+    for agentic/code) or "none" (minimal, chunk omitted; hallucination rates rise
+    on hard tasks). MULTI-TURN RULE from docs: always replay the full assistant
+    message INCLUDING the ThinkChunk into history, or quality degrades across turns.
+formatting_idiom: "Model card explicitly highlights strong system-prompt adherence — put behavior there. No mandated sectioning idiom."
+structured_output: "Custom Structured Outputs (your JSON schema via response_format) officially 'more reliable and recommended'; JSON Mode requires also demanding JSON in the prompt. Function calling supported."
+strengths: [SWE-bench Verified 77.6% (~2pts off Claude Sonnet 4.6 at half the input price), tau3-Telecom 91.4%, supersedes Devstral/Magistral lines across all benchmarks, EU provider, multimodal input]
+failure_modes:
+  - verbose (91M tokens on AA index vs 53M average)
+  - effort "none" trades away reliability on anything non-trivial
+  - local-deployment YaRN bug (apparent memory loss) — fix mscale_all_dim 1->0
 prompting_notes: |
-  - Mistral Large 3 / Devstral 2 are the Bedrock siblings.
+  - reasoning_effort high for agentic/code; none only for extraction/simple chat.
+  - Replay ThinkChunks in history on every multi-turn call.
+  - Prefer schema-based structured outputs over JSON mode.
 last_reviewed: 2026-07-17
-sources: ["https://openrouter.ai/mistralai/mistral-medium-3-5"]
+sources: ["https://docs.mistral.ai/models/model-cards/mistral-medium-3-5-26-04", "https://docs.mistral.ai/capabilities/reasoning/", "https://artificialanalysis.ai/models/mistral-medium-3-5"]

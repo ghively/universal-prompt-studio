@@ -2,17 +2,34 @@ id: nemotron-3-ultra
 label: NVIDIA Nemotron 3 Ultra (open)
 provider: openrouter
 api_model_id: nvidia/nemotron-3-ultra-550b-a55b
-context_window: 1000000
+category: general
+card_depth: full
+context_window: 262144
 max_output_tokens: 65536
-pricing: { input_per_mtok_usd: 0.6, output_per_mtok_usd: 3.6 }
+pricing: { input_per_mtok_usd: 0.5, output_per_mtok_usd: 2.2 }
 params: { effort: true, verbosity: false, temperature: true, logprobs: false }
-sampling: { default_temperature: 1.0, notes: "" }
-reasoning: { kind: adaptive, cot_prompting: harmful, notes: "550B MoE / 55B active, hybrid Transformer-Mamba; positioned as an orchestration model." }
-formatting_idiom: "Direct instructions. (Card thin — verify.)"
-structured_output: "structured_outputs supported."
-strengths: [open frontier reasoning, orchestration/multi-agent focus, free tier exists on OpenRouter]
-failure_modes: [young; verify format discipline on your suites]
+sampling:
+  default_temperature: 1.0
+  notes: "Official baseline in every doc example: temperature 1.0, top_p 0.95, max_tokens 16000. CONTEXT TRAP: 1M is the architectural max but 262k is the default serving config — routed providers may serve only 262k despite OpenRouter's 1M headline. A :free variant exists."
+reasoning:
+  kind: adaptive
+  cot_prompting: neutral
+  notes: >-
+    Native control is chat-template kwargs, not a prompt toggle:
+    chat_template_kwargs {enable_thinking: true|false} (default true), plus
+    {medium_effort: true} as a budget-lite mode that sharply cuts reasoning
+    tokens. OpenRouter maps reasoning_effort onto this. QUIRK: tool calling with
+    reasoning on requires {force_nonempty_content: true} or calls break.
+formatting_idiom: "Standard chat template, system role respected; no published sectioning idiom. Reasoning control lives in API kwargs, not prompt text."
+structured_output: "No documented native JSON-schema mode on the model card — depends on serving stack (vLLM/NIM guided decoding). Validate + retry."
+strengths: [SWE-bench Verified 70.7%, LiveCodeBench 89.0%, RULER@1M 95%, 185 tok/s (top-3 speed among open peers), agent-orchestration positioning, open weights (OpenMDW), 550B MoE / 55B active]
+failure_modes:
+  - verbose (110M output tokens on AA Intelligence Index vs 92M peer average) — budget max_tokens generously
+  - tool-calling breaks without force_nonempty_content when thinking is on
+  - per-provider context variance (262k vs 1M) — verify before long-context work
 prompting_notes: |
-  - Nemotron 3 Super 120B is the Bedrock sibling.
+  - Pass reasoning mode explicitly; use medium_effort for routine tasks.
+  - Keep temp 1.0 / top_p 0.95 (documented baseline).
+  - Post-training cutoff May 2026 — unusually fresh knowledge for an open model.
 last_reviewed: 2026-07-17
-sources: ["https://openrouter.ai/nvidia/nemotron-3-ultra-550b-a55b"]
+sources: ["https://huggingface.co/nvidia/NVIDIA-Nemotron-3-Ultra-550B-A55B-BF16", "https://docs.api.nvidia.com/nim/reference/nvidia-nemotron-3-ultra-550b-a55b", "https://artificialanalysis.ai/models/nvidia-nemotron-3-ultra-550b-a55b"]

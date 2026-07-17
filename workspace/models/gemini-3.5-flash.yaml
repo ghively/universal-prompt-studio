@@ -2,17 +2,36 @@ id: gemini-3.5-flash
 label: Gemini 3.5 Flash
 provider: openrouter
 api_model_id: google/gemini-3.5-flash
+category: general
+card_depth: full
 context_window: 1048576
 max_output_tokens: 65536
 pricing: { input_per_mtok_usd: 1.5, output_per_mtok_usd: 9.0 }
 params: { effort: true, verbosity: false, temperature: true, logprobs: false }
-sampling: { default_temperature: 1.0, notes: "temperature + reasoning_effort both exposed." }
-reasoning: { kind: adaptive, cot_prompting: harmful, notes: "Near-Pro coding/reasoning at Flash cost; optimized for parallel agentic execution." }
-formatting_idiom: "Markdown; explicit format examples; restate instruction after very long inputs."
-structured_output: "JSON schema via API."
-strengths: [price/perf, coding, parallel agent fleets, multimodal, 1M context]
-failure_modes: [ceiling on the hardest reasoning vs Pro tier]
+sampling:
+  default_temperature: 1.0
+  notes: "Same family rule: don't touch temperature/top_p/top_k (looping risk). Flat pricing (no >200k tier), matches OpenRouter exactly. GA/stable, not preview."
+reasoning:
+  kind: always-on
+  cot_prompting: harmful
+  notes: >-
+    thinking_level minimal|low|medium|high — DEFAULT IS MEDIUM (changed from 3
+    Flash's high; re-test migrated prompts). minimal is the floor; thinking never
+    fully off. Same thought-signature round-tripping requirement as 3.1 Pro;
+    function responses must carry matching id and name fields.
+formatting_idiom: "Family conventions: concise instructions, data first / ask last. Per-part media_resolution (low/medium/high/ultra_high): images high, PDFs medium (quality saturates), video low/medium — watch context blowup."
+structured_output: "JSON-schema structured output combinable with built-in tools; multimodal function responses (images/audio in tool results) are a 3.5 feature."
+strengths: [beats 3.1 Pro on agentic benchmarks (Terminal-Bench 2.1 76.2%, MCP Atlas 83.6%, SWE-Bench Pro 55.1%), ARC-AGI-2 72.1%, ~203 tok/s sustained, near-Pro capability at Flash price, GA stability]
+failure_modes:
+  - REAL-WORLD COST EXPLOSION despite flat price — token-hungry (third-party full-suite eval cost 5.5x the prior Flash gen); "Flash-tier cost" is contested
+  - high measured hallucination rate (61% on AA-Omniscience, third-party)
+  - weak extreme-long-context retrieval (MRCR 1M: 26.6%) — 1M window ≠ 1M usable recall
+  - ~19s time-to-first-token with thinking on — bad fit for latency-sensitive chat at high levels
+  - launch-window looping bug (fixed server-side) and ecosystem param-mapping bugs
 prompting_notes: |
-  - Strong default for high-volume agentic pipelines outside the Claude family.
+  - Explicitly set thinking_level: high for hard reasoning (default medium
+    undershoots); minimal/low for routing/classification.
+  - Budget by measured tokens, not sticker price — this model spends output freely.
+  - Knowledge cutoff Jan 2025; pair with search for recency.
 last_reviewed: 2026-07-17
-sources: ["https://openrouter.ai/google/gemini-3.5-flash"]
+sources: ["https://ai.google.dev/gemini-api/docs/interactions/whats-new-gemini-3.5", "https://deepmind.google/models/gemini/flash/", "https://ai.google.dev/gemini-api/docs/thinking"]

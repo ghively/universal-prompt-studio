@@ -2,17 +2,45 @@ id: gemini-3.1-pro
 label: Gemini 3.1 Pro (preview)
 provider: openrouter
 api_model_id: google/gemini-3.1-pro-preview
+category: general
+card_depth: full
 context_window: 1048576
 max_output_tokens: 65536
 pricing: { input_per_mtok_usd: 2.0, output_per_mtok_usd: 12.0 }
 params: { effort: true, verbosity: false, temperature: true, logprobs: false }
-sampling: { default_temperature: 1.0, notes: "Supports both temperature and reasoning_effort." }
-reasoning: { kind: adaptive, cot_prompting: harmful, notes: "Built-in thinking; don't stack in-prompt CoT." }
-formatting_idiom: "Markdown structure with numbered rules; one worked example helps format fidelity more than with Claude. Restate the core instruction after 100k+ token inputs."
-structured_output: "JSON schema via API is reliable; in-prompt JSON asks sometimes gain preamble."
-strengths: [frontier reasoning, software engineering, agentic reliability, multimodal, 1M context]
-failure_modes: [preview-status churn — pin and re-verify, instruction dilution in huge contexts without end-restatement]
+sampling:
+  default_temperature: 1.0
+  notes: >-
+    LEAVE SAMPLING ALONE: official warning that temperature below 1.0 can cause
+    looping/degraded reasoning; migration guidance says remove temperature/top_p/
+    top_k entirely. logprobs unsupported on the 3.x family. PRICING TRAP: Google
+    charges a >200k-token tier ($4/$18 vs $2/$12) that OpenRouter's headline hides.
+reasoning:
+  kind: always-on
+  cot_prompting: harmful
+  notes: >-
+    thinking_level low|medium|high, default high (dynamic); no minimal tier and
+    thinking cannot be disabled. Legacy thinking_budget is mutually exclusive with
+    thinking_level. CRITICAL in stateless multi-turn tool use: round-trip all
+    thought blocks/signatures verbatim or reasoning continuity (and sometimes the
+    function call itself) is silently lost. Don't port Gemini-2.5-era CoT
+    scaffolding — causes over-analysis.
+formatting_idiom: "Concise direct instructions; data first, instructions/question at the END. Terse by default — explicitly request verbosity/persona for long-form output."
+structured_output: "JSON-schema constrained output (subset: types/enum/required/additionalProperties/prefixItems); combinable with built-in tools. Very deep schemas may be rejected."
+strengths:
+  - "GPQA Diamond 94.3%, SWE-bench Verified 80.6%, ARC-AGI-2 77.1%"
+  - "LiveCodeBench Pro 2887 Elo; ~top-3 LMArena overall and #1 coding arena (June 2026)"
+  - "improved token efficiency vs 3 Pro"
+failure_modes:
+  - loop-prone (official temp warning + community reports of thought-block leaks/infinite loops)
+  - truncation mid-code-block with finishReason STOP (reported)
+  - dropped thought signatures via third-party adapters -> empty responses with silently lost function calls
+  - default terseness surprises chat use cases
+  - preview status: Google has forced migrations off prior previews with ~3 weeks notice — pin and watch
 prompting_notes: |
-  - Google's frontier tier; still marked preview on OpenRouter — treat behavior as movable.
+  - Be concise; direct clear instructions outperform elaborate prompts.
+  - thinking_level medium trades depth for cost/latency; high for hard reasoning.
+  - Knowledge cutoff Jan 2025 — a year older than Claude 5-gen; pair with search
+    tools for recency-sensitive work.
 last_reviewed: 2026-07-17
-sources: ["https://openrouter.ai/google/gemini-3.1-pro-preview"]
+sources: ["https://ai.google.dev/gemini-api/docs/models/gemini-3.1-pro-preview", "https://ai.google.dev/gemini-api/docs/thinking", "https://deepmind.google/models/gemini/pro/"]

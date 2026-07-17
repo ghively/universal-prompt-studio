@@ -19,5 +19,8 @@ Much frontier prompting advice **inverts** below ~30B params:
 
 Local caveat: before judging a local model's quality, verify the chat template
 (llama.cpp especially) — most "this model is bad" verdicts are template bugs.
+**Toggle lore is generation-specific**: Qwen3 honors in-prompt `/think`
+`/no_think`; Qwen3.5 REMOVED the soft switch (runtime params only); R1-distills
+take no system prompt at all. Check the model card, not folklore.
 This card is why the compiler needs the model card: the same task compiles
 differently for gpt-oss-20b than for Sonnet 5.

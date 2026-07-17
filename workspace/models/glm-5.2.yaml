@@ -1,18 +1,33 @@
 id: glm-5.2
-label: GLM 5.2
+label: GLM 5.2 (open weights)
 provider: openrouter
 api_model_id: z-ai/glm-5.2
+category: general
+card_depth: full
 context_window: 1048576
-max_output_tokens: 65536
-pricing: { input_per_mtok_usd: 0.93, output_per_mtok_usd: 2.93 }
+max_output_tokens: 131072
+pricing: { input_per_mtok_usd: 0.93, output_per_mtok_usd: 3.0 }
 params: { effort: true, verbosity: false, temperature: true, logprobs: true }
-sampling: { default_temperature: 1.0, notes: "Widest sampling-parameter surface in the curated set (top_k, min_p, repetition_penalty, logit_bias...)." }
-reasoning: { kind: adaptive, cot_prompting: harmful, notes: "Large-scale reasoner; long-horizon agent + project-level software engineering focus." }
-formatting_idiom: "Direct instructions. (Card thin — verify.)"
-structured_output: "structured_outputs + parallel tool calls supported."
-strengths: [price/perf at 1M context, agent workflows, logprobs access]
-failure_modes: [less English-language ecosystem guidance than US labs]
+sampling:
+  default_temperature: 1.0
+  notes: "Official: temp 1.0 default (range 0-1); for stable/technical work drop top_p to 0.8 — ADJUST ONE KNOB ONLY, never both. OpenRouter ($0.93/$3.00) is cheaper than Z.ai first-party ($1.40/$4.40, cache $0.26). ~750B MoE / 40B active, MIT license, no long-context surcharge on 1M."
+reasoning:
+  kind: adaptive
+  cot_prompting: neutral
+  notes: >-
+    thinking enabled by default (auto-decides); CAN be fully disabled — rare among
+    2026 frontier reasoners. Native reasoning_effort has SEVEN levels
+    (none|minimal|low|medium|high|xhigh|max, default max) but OpenRouter maps only
+    high|xhigh — use the native API for full range. clear_thinking:false preserves
+    reasoning across turns; preserved blocks must match byte-exact (footgun).
+formatting_idiom: "Docs want complete project context: full codebases for architecture work, explicit refactor boundaries + success criteria, team standards (lint/build/test commands), logs/screenshots for debugging. For coding agents: stream=true + tool_stream=true."
+structured_output: "response_format json_object only (no json_schema in the API ref) — also demand JSON in the prompt. Tool calling up to 128 functions."
+strengths: ["#1 open-weights on AA Intelligence Index v4.1 (51)", SWE-bench Pro 62.1, Terminal-Bench 2.1 81.0 (Opus 4.8: 85), within ~1% of Opus 4.8 on FrontierSWE, on the intelligence-vs-cost Pareto frontier, 1M ctx + 128K out]
+failure_modes:
+  - MOST VERBOSE leading model: ~141M tokens (95% reasoning) on AA index, 1.8x average, ~43k output tokens/task — per-task cost far above per-token sticker
+  - byte-exact reasoning preservation requirement when clear_thinking=false
 prompting_notes: |
-  - GLM 5 / GLM 4.7 are the Bedrock-available siblings.
+  - The open-weights flagship pick; budget by tokens-per-task, not price-per-token.
+  - Use effort medium/low via native API for routine work to tame verbosity.
 last_reviewed: 2026-07-17
-sources: ["https://openrouter.ai/z-ai/glm-5.2"]
+sources: ["https://docs.z.ai/guides/llm/glm-5.2", "https://docs.z.ai/api-reference/llm/chat-completion", "https://huggingface.co/zai-org/GLM-5.2"]

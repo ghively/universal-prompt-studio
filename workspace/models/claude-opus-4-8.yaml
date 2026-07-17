@@ -2,24 +2,44 @@ id: claude-opus-4-8
 label: Claude Opus 4.8
 provider: anthropic
 api_model_id: claude-opus-4-8
+category: general
+card_depth: full
 context_window: 1000000
-max_output_tokens: 64000
+max_output_tokens: 128000
 pricing: { input_per_mtok_usd: 5.0, output_per_mtok_usd: 25.0 }
-params: { effort: true, verbosity: true, temperature: true, logprobs: false }
+params: { effort: true, verbosity: true, temperature: false, logprobs: false }
 sampling:
-  default_temperature: 1.0
-  notes: "Adaptive thinking via thinking:{type:adaptive} + output_config:{effort}. budget_tokens returns 400 on 4.7+."
+  default_temperature: null
+  notes: "temperature/top_p/top_k non-default -> 400 on every request (correction: earlier card wrongly said temperature supported). 1M context by default, no beta header, no long-context premium. Min cacheable prompt 1024 tokens."
 reasoning:
   kind: adaptive
   cot_prompting: harmful
-  notes: "Effort low|medium|high(default)|max. At high/max it almost always thinks; lower effort skips thinking on easy queries. Prefer lowering effort over prompting it to think less."
-formatting_idiom: "XML sectioning; <documents> at top, query at end (up to ~30% better on long inputs). No prefills (removed in 4.6+)."
-structured_output: "Native Structured Outputs feature; tools with enum fields for classification."
-strengths: [hardest coding/agentic tasks, subagent orchestration, vision, long-horizon state tracking]
-failure_modes: [upfront over-exploration at high effort, overengineering (extra files/abstractions) without scope guidance, strong subagent predilection where grep would do]
+  notes: >-
+    Adaptive is the only mode but OFF BY DEFAULT — you must send
+    thinking:{type:"adaptive"} (key difference from Sonnet 5/Fable 5). Effort
+    low|medium|high|xhigh|max; API default high but official recommendation is
+    START AT XHIGH for coding/agentic ("effort is likely more important for this
+    model than any prior Opus"); max can overthink. At xhigh/max set max_tokens
+    ~64k and tune. Favors reasoning over tool calls — nudge tool use for
+    tool-heavy work.
+formatting_idiom: >-
+  Plain-text system instructions; literal scope rule applies. Accepts
+  MID-CONVERSATION system messages (role:"system" after user turns) preserving
+  cache hits — use for re-anchoring instead of user-turn injection.
+structured_output: "GA structured outputs (output_config.format json_schema / strict tools)."
+strengths: [complex agentic coding and enterprise work, long-context handling with fewer compactions and better recovery, bug-finding recall AND precision (internal evals), memory tasks, strong design instincts, fast mode preview (2.5x TPS at premium)]
+failure_modes:
+  - spawns FEWER subagents by default (opposite of Fable 5) — prompt explicit delegation when wanted
+  - persistent design house style (warm cream #F4F1EA, serif display, terracotta accents); "don't use cream" just picks another fixed palette
+  - uses more tokens in interactive settings (reasons more after user turns)
+  - under-thinking at low effort; overthinking at max on some structured tasks
+  - direct, opinionated tone with minimal validation phrasing (feature or bug depending on product)
 prompting_notes: |
-  - Dial back anti-laziness prompting from older models; it now overtriggers.
-  - Add explicit scope discipline for coding ("only changes directly requested").
-  - Very responsive to system prompt; normal language beats shouting.
+  - "Do not spawn a subagent for work you can complete directly in a single
+    response... Spawn multiple subagents in the same turn when fanning out."
+  - Requires less anti-slop frontend prompting than prior models — the short
+    frontend_aesthetics block suffices.
+  - Remove forced progress-update scaffolding; native updates improved.
+  - Same review-recall caveat as Sonnet 5: ask for every issue, filter later.
 last_reviewed: 2026-07-17
-sources: ["https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-opus-4-8", "https://openrouter.ai/anthropic/claude-opus-4.8"]
+sources: ["https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-opus-4-8", "https://platform.claude.com/docs/en/about-claude/models/whats-new-claude-4-8"]

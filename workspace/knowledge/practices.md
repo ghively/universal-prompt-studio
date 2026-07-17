@@ -23,6 +23,12 @@ OpenAI current-generation guidance.
 - **Agentic behavior is promptable surface area now**: action-vs-suggest defaults,
   parallel tool calling, persistence, subagent appetite, scope discipline, and
   context-window awareness all respond to one-block standing instructions.
+- **Context rot is measured**: performance degrades with input length on every
+  model tested, well before window limits — focused ~300-token prompts beat 113k
+  dumps. Budget effective context to a fraction of advertised; retrieve-then-focus;
+  compaction and memory files are now first-class API features, not DIY.
+- **Judge panels demoted**: correlated judge errors mean one strong calibrated
+  judge at temp 0 with position-swapping beats a naive majority panel.
 
 ## The order of operations for any prompt
 1. **Say what you want** in one plain sentence before any structure. If you can't,

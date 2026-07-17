@@ -1,18 +1,30 @@
 id: kimi-k3
-label: Kimi K3 (open weights)
+label: Kimi K3
 provider: openrouter
 api_model_id: moonshotai/kimi-k3
+category: general
+card_depth: full
 context_window: 1048576
-max_output_tokens: 65536
+max_output_tokens: 131072
 pricing: { input_per_mtok_usd: 3.0, output_per_mtok_usd: 15.0 }
 params: { effort: true, verbosity: false, temperature: false, logprobs: false }
-sampling: { default_temperature: null, notes: "Control via reasoning_effort." }
-reasoning: { kind: adaptive, cot_prompting: harmful, notes: "Ultra-large open-weight multimodal reasoner; long-horizon agentic focus." }
-formatting_idiom: "Direct instructions; strong at navigating large codebases/documents. (Card thin — verify.)"
-structured_output: "structured_outputs supported via OpenRouter."
-strengths: [open weights at frontier scale, complex coding, long-horizon agents, 1M context]
-failure_modes: [frontier pricing despite open weights via hosted inference]
+sampling:
+  default_temperature: null
+  notes: "Sampling is FIXED server-side (temp 1.0, top_p 0.95, penalties 0) — OMIT these params entirely. Moonshot's $0.30/M cache-hit input tier isn't surfaced by OpenRouter ($3 cache-miss/$15). 2.8T MoE (~50B active), native text+image+video input; weights release gated until 2026-07-27."
+reasoning:
+  kind: always-on
+  cot_prompting: neutral
+  notes: "Always-on thinking; reasoning_effort currently accepts ONLY 'max' (also default; lower levels promised later). Do NOT use the K2.x thinking param. Return the complete assistant message (reasoning fields included) unchanged in tool loops. Streaming separates reasoning_content from content."
+formatting_idiom: "Moonshot house guide: delimiters (triple quotes/XML/headers), role in system message, explicit step lists, few-shot for hard formats, length in paragraphs/bullets not word counts. Vision: base64 or ms:// refs only — public image URLs rejected."
+structured_output: "json_schema with strict:true — constrains message.content only, never reasoning_content; parse content only. tool_choice='required' can force calls."
+strengths: ["#1 debut on LMArena Frontend Code Arena (past Fable 5)", AA Intelligence Index 57.1 / Coding 76.2, GDPval-AA 3rd behind Fable 5 Max and GPT-5.6 Sol Max, Terminal Bench 2.1 88.3 (self-reported), deep-reasoning + coding-agent positioning]
+failure_modes:
+  - extremely verbose (~130M tokens for AA index, >2x average) and slow — max-only effort makes simple asks expensive (~13k reasoning tokens for a trivial SVG)
+  - third-party eval base is days old — recheck rankings within weeks
+  - suspected small hidden system prompt (community finding)
 prompting_notes: |
-  - Kimi K2.5 / K2 Thinking are the Bedrock-available siblings.
+  - Omit all sampling params; requests that set them misbehave.
+  - Until lower effort levels ship, route quick tasks elsewhere — this is a
+    deep-work model billed like one.
 last_reviewed: 2026-07-17
-sources: ["https://openrouter.ai/moonshotai/kimi-k3"]
+sources: ["https://platform.kimi.ai/docs/guide/kimi-k3", "https://kimi.com/blog/kimi-k3", "https://simonwillison.net/2026/Jul/16/kimi-k3/"]

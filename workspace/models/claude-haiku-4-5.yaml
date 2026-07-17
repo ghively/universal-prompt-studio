@@ -2,6 +2,8 @@ id: claude-haiku-4-5
 label: Claude Haiku 4.5
 provider: anthropic
 api_model_id: claude-haiku-4-5-20251001
+category: utility
+card_depth: thin
 context_window: 200000
 max_output_tokens: 64000
 pricing: { input_per_mtok_usd: 1.0, output_per_mtok_usd: 5.0 }

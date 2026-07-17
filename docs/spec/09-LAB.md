@@ -36,7 +36,12 @@ For every case × candidate: run output (cached). Deterministic checks score fir
 candidate ranking metric = mean pass rate. Then pairwise: for each case and each
 candidate pair, run PAIRWISE_JUDGE (04-PROMPTS §5.4) `samples` times, **alternating
 output order each sample** (position swap); `TASK` = artifact original_ask, `CRITERIA`
-= concatenated check labels. A pair's winner = majority (ties count half to each).
+= concatenated check labels. **Count only position-consistent verdicts** (a verdict
+pair that flips with order is recorded as `tie`); a pair's winner = majority of
+consistent verdicts. Judges always run at temperature 0 on a model family different
+from the one that generated the outputs when possible (self-preference bias); a
+single strong calibrated judge is the default — never add panel voting without
+measured error decorrelation.
 Response: `{ "table": [ { label, check_pass_rate, pairwise_wins, cost_usd } ], "winner": label }`
 — winner = highest check_pass_rate; pairwise_wins breaks ties. Append verdict record
 (02-DATA §10) including each candidate's annotation technique slugs.

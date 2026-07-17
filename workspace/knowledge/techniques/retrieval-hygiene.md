@@ -16,3 +16,8 @@ Retrieved context is only as good as its packaging:
   citation are declared invalid (pairs with quote-then-answer).
 - **Don't paraphrase snippets before insertion** — the model grounds better on
   original text, and paraphrase launders retrieval errors into "context."
+- **Contextual retrieval is now standard**: prepend a 50-100-token LLM-generated
+  context line to each chunk before embedding (5-15% retrieval-precision gains in
+  production); hybrid BM25+vector with reranking is the baseline stack.
+- **Retrieve-then-focus beats dump-everything**: the measured case for RAG even
+  with 1M windows — see context-compaction for the rot data.

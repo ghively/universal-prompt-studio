@@ -1,18 +1,44 @@
 id: nova-premier
-label: Amazon Nova Premier
+label: Amazon Nova Premier (v1)
 provider: openrouter
 api_model_id: amazon/nova-premier-v1
+category: general
+card_depth: full
 context_window: 1000000
-max_output_tokens: 32768
+max_output_tokens: 10000
 pricing: { input_per_mtok_usd: 2.5, output_per_mtok_usd: 12.5 }
 params: { effort: false, verbosity: false, temperature: true, logprobs: false }
-sampling: { default_temperature: 0.7, notes: "" }
-reasoning: { kind: none, cot_prompting: helpful, notes: "Not a reasoning-line model; brief structured-reasoning requests help on multi-step tasks." }
-formatting_idiom: "Explicit sectioning and examples; AWS's own prompt guidance is unusually detailed. (Card thin — verify.)"
-structured_output: "Tool/function calling via Bedrock Converse; JSON mode."
-strengths: [Bedrock-native flagship (governance/VPC stories), multimodal, distillation teacher]
-failure_modes: [behind frontier on hardest reasoning; Nova 2 line is where Amazon's newest work lands]
+sampling:
+  default_temperature: 0.7
+  notes: "Defaults temp 0.7 / topP 0.9; official rule: alter temperature OR topP, never both. For structured output use GREEDY decoding (temperature=0). Max output: AWS docs conflict (10K spec table vs 5K schema page) — assume 5K for safety-critical budgets. Bedrock id amazon.nova-premier-v1:0."
+reasoning:
+  kind: none
+  cot_prompting: helpful
+  notes: >-
+    NO reasoning parameter — Bedrock's reasoningConfig is Nova Pro/Lite only, NOT
+    Premier. Reasoning is elicited purely in-prompt, and AWS officially recommends
+    it: "think step-by-step", or the <thinking></thinking> + <output></output>
+    system template for hard tasks. THE INVERSE of frontier-Claude/GPT etiquette —
+    a textbook case of why cards drive the compiler.
+formatting_idiom: >-
+  AWS's own idiom, verbatim from their guide: markdown ## section headers (## Task
+  Summary / ## Context Information / ## Model Instructions / ## Response style and
+  format requirements), ##Section Name## cross-references, and — explicitly
+  recommended — CAPS emphasis ("Use capitalization and strong wordings such as DO,
+  DO NOT, MUST"). Calm-imperatives does NOT apply here; follow the vendor.
+structured_output: "No native schema mode on v1. Three documented mechanisms: schema-in-prompt under ## Response Schema + 'You MUST answer in JSON format only'; assistant prefill with ```json + stop sequence ``` (prefill LIVES here, unlike Claude); forced tool use with toolChoice. Always temperature=0; output 'might vary from the output schema' per docs — validate."
+strengths: [1M context, text+image+video+document input, 200+ languages, distillation teacher for Nova Pro/Lite/Micro, Bedrock-native governance, knowledge retrieval and visual tasks]
+failure_modes:
+  - excessive explanations under CoT (official; mitigate "Keep your thinking brief... in <thinking> tags")
+  - repetition loop on escaped Unicode (official; instruct "do not include sequences such as \\u3492")
+  - weak reasoning/coding for its class (AA Intelligence Index 13 vs 18 average)
+  - slow (~34 tok/s); no fine-tuning or provisioned throughput; US-region-only
 prompting_notes: |
-  - Included as the Bedrock-native anchor; Nova 2 Lite/Sonic are newer but lighter.
+  - Structure with the four ## sections; short, specific, atomic instructions;
+    decompose complex jobs into prompt chains (official guidance).
+  - Vision: describe-then-answer ("thoroughly describe all that it observes...
+    before answering").
+  - Nova 2 is AWS's newer generation with its own guide — this card is v1, which
+    is what the OpenRouter slug maps to.
 last_reviewed: 2026-07-17
-sources: ["https://openrouter.ai/amazon/nova-premier-v1", "https://docs.aws.amazon.com/bedrock/latest/userguide/model-cards.html"]
+sources: ["https://docs.aws.amazon.com/nova/latest/userguide/prompting.html", "https://docs.aws.amazon.com/nova/latest/userguide/complete-request-schema.html", "https://artificialanalysis.ai/models/nova-premier"]
