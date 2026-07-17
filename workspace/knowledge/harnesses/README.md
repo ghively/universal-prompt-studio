@@ -21,9 +21,7 @@ AGENTS.md as source of truth, per-tool overrides only where needed.
 
 Cards: claude-code · claude-agent-sdk · agents-md-tools · cursor · langgraph ·
 openai-agents-sdk · framework-orchestrators · bare-api · openclaw ·
-consumer-chat-apps · automation-platforms.
-
-Known gap (deliberate): browser-use / Claude in Chrome / agent-mode browsers — the
-category moves too fast to card honestly; revisit next refresh.
+consumer-chat-apps · automation-platforms · browser-agents (the volatile one —
+its card carries a re-verify-quarterly warning instead of pretending stability).
 
 Frontmatter per card: `slug`, `name`, `memory_files`, `artifact_kinds`.

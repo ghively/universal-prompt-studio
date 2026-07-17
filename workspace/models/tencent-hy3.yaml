@@ -1,0 +1,26 @@
+id: tencent-hy3
+label: Tencent Hunyuan 3
+provider: openrouter
+api_model_id: tencent/hy3
+category: general
+card_depth: thin
+context_window: 262144
+max_output_tokens: 131072
+pricing: { input_per_mtok_usd: 0.2, output_per_mtok_usd: 0.8 }
+params: { effort: true, verbosity: false, temperature: true, logprobs: false }
+sampling:
+  default_temperature: null
+  notes: "Catalog facts verbatim from live API 2026-07-17 (released 2026-07-06; card thin — verify on refresh). Supports reasoning_effort, structured_outputs, tools. Cache-read $0.05/M. A :free variant exists."
+reasoning:
+  kind: adaptive
+  cot_prompting: neutral
+  notes: "(Card thin — reasoning_effort accepted per catalog; official prompting docs not yet reviewed.)"
+formatting_idiom: "(Card thin — verify.)"
+structured_output: "structured_outputs listed as supported; validate + retry until probed."
+strengths: [fresh major-lab flagship at budget pricing, 131k max output, full sampling surface, free variant for zero-cost bake-offs]
+failure_modes:
+  - brand-new and unverified — bake off before trusting; capability claims are all vendor-side
+prompting_notes: |
+  - Carded to close the major-family gap; run the probe battery + a bake-off before production use, then promote to full.
+last_reviewed: 2026-07-17
+sources: ["https://openrouter.ai/tencent/hy3"]

@@ -53,22 +53,19 @@ A thin card that stays thin across two refreshes gets demoted to catalog-only.
 
 ## Boundary decisions (2026-07-17 audit — record, don't relitigate)
 
-- **Cohere** (`cohere/command-a`, also Bedrock R+/R): present on both canonical
-  sources but NOT carded — aging flagship (2025-03), enterprise-RAG niche the
-  carded set already covers. Re-evaluate if a new Cohere flagship lands.
-- **Tencent** (`tencent/hy3`, 2026-07-06): fresh major-lab flagship, NOT carded —
-  capability unverified this refresh. Queued for a bake-off probe next refresh;
-  card it if it clears the cheap-generalist bar.
+- **Cohere** (`cohere-command-a`), **Tencent** (`tencent-hy3`), the
+  **ultra-cheap utility pair** (`ling-2.6-flash`, `nex-n2-mini`), and
+  **`gpt-5.4-nano`** are now carded THIN — catalog facts verbatim from the live
+  API, capability unverified. Rule: thin cards are candidates, not defaults;
+  each needs a probe battery + bake-off to displace an incumbent (Flash
+  Lite/Haiku keep the utility niche until then), and a thin card that stays
+  thin across two refreshes is demoted to catalog-only.
 - **Claude Mythos 5**: listed on Bedrock, NOT carded — restricted to approved
-  organizations, not routable through this studio's providers. Skip until
-  reachable.
-- **Ultra-cheap utility tier** (`inclusionai/ling-2.6-flash` at $0.01/$0.03,
-  `nex-agi/nex-n2-mini` at $0.025/$0.10): 10-50x cheaper than the carded Flash
-  Lite, capability unverified — evaluate with a probe battery before any card;
-  until then Flash Lite/Haiku hold the utility niche.
+  organizations, not routable through this studio's providers. This is a closed
+  decision, not a gap; revisit only if it becomes reachable.
 - **Router meta-models** (`openrouter/auto|fusion|pareto-code`) carry sentinel
   pricing (-1) in the catalog: excluded from the picker — a naive estimator
   computes negative cost and bypasses the budget cap (03-API guard).
 
 Every card carries `last_reviewed`; the UI flags cards older than 120 days. The
-2026-07-17 set: 49 cards (26 hosted + 23 local) against a 344-model catalog.
+2026-07-17 set: 55 cards (31 hosted + 24 local) against a 344-model catalog.
