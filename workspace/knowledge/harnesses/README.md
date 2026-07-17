@@ -12,10 +12,18 @@ The profiler asks which harness a recurring/agentic task runs in; the compiler
 receives the matching card.
 
 The 2026 landscape in one line: every coding agent converged on repo-root markdown
-memory files — **AGENTS.md is the cross-tool open standard** (nested,
-nearest-file-wins; read by Codex, Cursor, Copilot, Gemini CLI, Aider, Windsurf,
-Zed), **CLAUDE.md** is Claude Code's richer variant, **.cursor/rules/*.mdc** adds
-glob-scoped activation. If you run multiple tools: AGENTS.md as source of truth,
-per-tool overrides only where needed.
+memory files — **AGENTS.md is the cross-tool open standard** (Linux Foundation
+AAIF-stewarded; nested, nearest-file-wins; native in Codex, Cursor, Copilot,
+Windsurf, Zed, Cline, Devin, Junie — but Gemini CLI needs config and Aider needs
+explicit loading), **CLAUDE.md** is Claude Code's richer variant,
+**.cursor/rules/*.mdc** adds glob-scoped activation. If you run multiple tools:
+AGENTS.md as source of truth, per-tool overrides only where needed.
+
+Cards: claude-code · claude-agent-sdk · agents-md-tools · cursor · langgraph ·
+openai-agents-sdk · framework-orchestrators · bare-api · openclaw ·
+consumer-chat-apps · automation-platforms.
+
+Known gap (deliberate): browser-use / Claude in Chrome / agent-mode browsers — the
+category moves too fast to card honestly; revisit next refresh.
 
 Frontmatter per card: `slug`, `name`, `memory_files`, `artifact_kinds`.
