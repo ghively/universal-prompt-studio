@@ -34,6 +34,14 @@ OpenAI current-generation guidance.
   calibrated judge at temp 0 with position-swapping beats a NAIVE majority panel
   of similar judges; heterogeneous aspect-verifier ensembles remain a live,
   distinct pattern.
+- **Grounding moved into the API layer, and abstention got theory.** Provider
+  citation features (Anthropic Citations, Gemini grounding, OpenAI annotations)
+  now beat prompt-side quoting where available — but on Anthropic, citations and
+  structured outputs are mutually exclusive. Hallucination's root cause is
+  formalized (0/1 eval grading makes guessing dominate "I don't know"); sentinels
+  need counter-weighting (abstention inflation), and reasoning fine-tuning
+  *degrades* abstention ~24% — raising effort can worsen
+  hallucination-by-non-abstention. See the grounding cards.
 
 ## The order of operations for any prompt
 1. **Say what you want** in one plain sentence before any structure. If you can't,

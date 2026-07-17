@@ -26,7 +26,9 @@ part of the prompt.
 
 ## Known gaps (not yet carded — honesty over coverage theater)
 
-- **Fine-tuning vs prompting decision guidance** — out of the studio's lane for now.
+- **Fine-tuning vs prompting *decision* guidance** (when to tune instead of
+  prompt) — out of the studio's lane for now. Prompting a model that is
+  *already* fine-tuned IS covered: fine-tuned-model-prompting.
 - **Harness-specific probe batteries** (does instruction-following change *inside*
   Claude Code vs bare API?) — a product feature (P8) before it's a card.
 - **3D/CAD and world-model generation prompting** — no owner need yet.
