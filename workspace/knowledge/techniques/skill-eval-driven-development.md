@@ -11,6 +11,14 @@ turn those failures into ~3 scenarios; (3) baseline; (4) write the *minimum*
 skill content that fixes them; (5) iterate against the scenarios. This kills the
 main failure mode — documenting imagined problems in beautiful detail.
 
+Measure on two axes, separately: **trigger accuracy** (invokes on should-trigger
+prompts, stays quiet on should-not) and **output quality** — each against a
+fresh-session baseline, because leftover context from authoring the skill masks
+gaps. Benchmark the cost side too: pass-rate improvement vs token/time overhead.
+This loop now has an official reference implementation — the skill-creator
+plugin automates eval cases, isolated with/without-skill runs, blind A/B between
+skill versions, and description tuning with should/should-not trigger sets.
+
 Iterate with two instances: an author-model helps write and reorganize the skill;
 a fresh agent-instance runs real tasks with it loaded. Watch how the agent
 *navigates*: unexpected reading order means unintuitive structure; a bundled file

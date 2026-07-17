@@ -42,6 +42,12 @@ OpenAI current-generation guidance.
   need counter-weighting (abstention inflation), and reasoning fine-tuning
   *degrades* abstention ~24% — raising effort can worsen
   hallucination-by-non-abstention. See the grounding cards.
+- **The harness became a prompt surface with its own release notes.** Commands
+  merged into skills (invocation control is frontmatter now, not artifact
+  choice); MCP tool search defers schemas by default (the server `instructions`
+  field is the discovery surface, 2KB cap); hooks grew LLM handler types and
+  deterministic context injection; subagents inherit memory files and all tools
+  by default. See the harness-artifacts cards.
 
 ## The order of operations for any prompt
 1. **Say what you want** in one plain sentence before any structure. If you can't,
@@ -86,9 +92,11 @@ OpenAI current-generation guidance.
 
 ## Skills and agent artifacts
 
-Authoring guidance for SKILL.md files, CLAUDE.md, and agent definitions lives in the
-technique cards under the `skill-authoring` lever (see `techniques/README.md`). The
-two rules that outrank the rest: the description line decides whether a skill ever
-loads (write it as what + when, third person, with trigger terms), and evals come
-before documentation — build the three failure scenarios first, then write the
-minimum skill that fixes them.
+Authoring guidance for SKILL.md files, CLAUDE.md, commands, hooks, MCP servers,
+and agent definitions lives in the technique cards under the `skill-authoring` and
+`harness-artifacts` levers (see `techniques/README.md`). The rules that outrank
+the rest: the listing entry decides whether a skill ever loads (what + when,
+third person, key use case first — it competes inside a budgeted, truncated
+listing); invocation control is frontmatter, not artifact choice (commands merged
+into skills); and evals come before documentation — build the three failure
+scenarios first, then write the minimum skill that fixes them.

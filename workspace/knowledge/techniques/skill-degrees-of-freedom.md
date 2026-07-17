@@ -16,3 +16,9 @@ The analogy from the official guidance: a narrow bridge with cliffs needs exact
 guardrails; an open field needs a direction. Most bad skills err prescriptive-
 everywhere (brittle, verbose) or vague-everywhere (unreliable exactly where it
 mattered). Walk each section and ask: what happens if the model improvises here?
+
+The dial now has enforcement-grade settings beyond wording: pin `model`/`effort`
+per skill (tier the execution, not just the prose), remove freedom mechanically
+with `disallowed-tools`, and bind skill-scoped hooks for the narrow-bridge end —
+the lowest freedom setting is no longer "exact script + stern prose" (see
+skill-invocation-control, hook-recipes).

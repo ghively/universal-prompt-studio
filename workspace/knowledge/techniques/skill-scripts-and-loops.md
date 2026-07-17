@@ -21,3 +21,10 @@ Two structural patterns that carry most of the quality:
   caught while the plan is still reversible.
 For multistep workflows, include a copyable checklist the agent checks off —
 it prevents skipped validation steps.
+
+Runtime notes: reference bundled scripts via `${CLAUDE_SKILL_DIR}` (bare relative
+paths break at personal/plugin install locations); live state the task always
+needs can be spliced in before the model even reads the skill (see
+skill-arguments-and-dynamic-context); and the API skill sandbox has no network
+and no runtime package installs — declare dependencies in the instructions and
+the spec's `compatibility` field.

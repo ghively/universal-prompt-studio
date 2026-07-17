@@ -20,3 +20,13 @@ Rules that make it work:
 - Descriptive filenames (`form_validation_rules.md`, never `doc2.md`).
 - Assume the model is already smart: cut every sentence explaining what it knows.
   Concise SKILL.md bodies measurably outperform verbose ones.
+
+Two lifecycle facts change the economics after invocation:
+- **Invoked content persists** for the rest of the session (the harness does not
+  re-read the file per turn) — write standing instructions, not one-time steps.
+  On auto-compaction only the first ~5,000 tokens of each skill survive, inside a
+  ~25,000-token shared budget filled most-recent-first: put the load-bearing
+  rules first in the body.
+- **Subagent preloading inverts the tiers**: skills listed in a subagent's
+  `skills:` field are injected in full at startup — on-demand disclosure doesn't
+  apply there; keep preloaded skills short.
