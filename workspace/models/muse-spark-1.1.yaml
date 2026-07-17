@@ -1,0 +1,18 @@
+id: muse-spark-1.1
+label: Meta Muse Spark 1.1
+provider: openrouter
+api_model_id: meta/muse-spark-1.1
+context_window: 1048576
+max_output_tokens: 65536
+pricing: { input_per_mtok_usd: 1.25, output_per_mtok_usd: 4.25 }
+params: { effort: true, verbosity: false, temperature: true, logprobs: false }
+sampling: { default_temperature: 1.0, notes: "" }
+reasoning: { kind: adaptive, cot_prompting: harmful, notes: "Meta's post-Llama multimodal reasoning line, agentic focus." }
+formatting_idiom: "Direct instructions. (Card thin — verify; new line, guidance still emerging.)"
+structured_output: "structured_outputs supported."
+strengths: [text+image+video+audio+PDF input, agentic tasks, 1M context, mid price]
+failure_modes: [young model line — behavior less characterized than incumbents]
+prompting_notes: |
+  - Llama 4 Maverick/Scout remain the open-weight Bedrock siblings.
+last_reviewed: 2026-07-17
+sources: ["https://openrouter.ai/meta/muse-spark-1.1"]

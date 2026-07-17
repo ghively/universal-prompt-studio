@@ -1,0 +1,18 @@
+id: mistral-medium-3.5
+label: Mistral Medium 3.5
+provider: openrouter
+api_model_id: mistralai/mistral-medium-3-5
+context_window: 262144
+max_output_tokens: 32768
+pricing: { input_per_mtok_usd: 1.5, output_per_mtok_usd: 7.5 }
+params: { effort: true, verbosity: false, temperature: true, logprobs: false }
+sampling: { default_temperature: 0.7, notes: "" }
+reasoning: { kind: adaptive, cot_prompting: neutral, notes: "Dense 128B; agentic + coding focus, text+image in." }
+formatting_idiom: "Markdown; concise European-lab house style. (Card thin — verify.)"
+structured_output: "structured_outputs supported."
+strengths: [EU provider option, coding, agents, predictable dense-model behavior]
+failure_modes: [context ceiling (256k) vs 1M peers]
+prompting_notes: |
+  - Mistral Large 3 / Devstral 2 are the Bedrock siblings.
+last_reviewed: 2026-07-17
+sources: ["https://openrouter.ai/mistralai/mistral-medium-3-5"]

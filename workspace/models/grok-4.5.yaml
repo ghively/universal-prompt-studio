@@ -1,0 +1,18 @@
+id: grok-4.5
+label: Grok 4.5
+provider: openrouter
+api_model_id: x-ai/grok-4.5
+context_window: 500000
+max_output_tokens: 65536
+pricing: { input_per_mtok_usd: 2.0, output_per_mtok_usd: 6.0 }
+params: { effort: true, verbosity: false, temperature: true, logprobs: true }
+sampling: { default_temperature: 1.0, notes: "Exposes logprobs + top_logprobs — one of the few frontier models where the studio's token-confidence instrument works." }
+reasoning: { kind: adaptive, cot_prompting: harmful, notes: "reasoning_effort supported." }
+formatting_idiom: "Markdown; direct instructions. (Card thin — verify against xAI docs before heavy use.)"
+structured_output: "structured_outputs / json_schema supported."
+strengths: [coding, STEM, knowledge work, logprobs access, cheap output tokens for a frontier model]
+failure_modes: [thin public prompting guidance — calibrate with the studio's own receipts]
+prompting_notes: |
+  - Grok 4.3 is the Bedrock-available sibling.
+last_reviewed: 2026-07-17
+sources: ["https://openrouter.ai/x-ai/grok-4.5"]

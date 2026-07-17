@@ -2,23 +2,24 @@ id: claude-sonnet-5
 label: Claude Sonnet 5
 provider: anthropic
 api_model_id: claude-sonnet-5
-context_window: 200000
+context_window: 1000000
 max_output_tokens: 64000
-pricing: { input_per_mtok_usd: 3.0, output_per_mtok_usd: 15.0 }
+pricing: { input_per_mtok_usd: 2.0, output_per_mtok_usd: 10.0 }
+params: { effort: true, verbosity: true, temperature: false, logprobs: false }
 sampling:
-  default_temperature: 1.0
-  notes: "temperature and top_p are mutually exclusive on the Anthropic API — set one, never both. Thinking mode forces temperature 1."
+  default_temperature: null
+  notes: "Adaptive thinking ON BY DEFAULT — no thinking config needed. Control with effort (low|medium|high|max); temperature not exposed on OpenRouter."
 reasoning:
-  kind: hybrid-thinking
+  kind: adaptive
   cot_prompting: harmful
-  notes: "Has native extended thinking with a token budget. Do NOT write 'think step by step' into prompts — request a thinking budget via the API instead. In-prompt CoT instructions waste tokens and can degrade output."
-formatting_idiom: "XML tags are its strongest sectioning signal (<role>, <instructions>, <context>). System prompt for persona. Prefill the assistant turn to force an output format."
-structured_output: "Tool-use with a JSON schema and tool_choice forcing the tool is the reliable path; 'return only JSON' in-prompt works but is weaker."
-strengths: [instruction fidelity, long-context synthesis, code, honest uncertainty when asked for it]
-failure_modes: [over-hedging when confidence is not explicitly requested, occasional preamble before JSON unless told 'return only JSON', verbosity on open-ended asks]
+  notes: "Effort is the recommended control. Context awareness: tracks its remaining token budget — useful in agent harnesses."
+formatting_idiom: "XML sectioning; documents at top, query at end; <example> tags for few-shot. NO prefills — use Structured Outputs instead."
+structured_output: "Native Structured Outputs; very reliable at complex schemas when told to conform, especially with retries."
+strengths: [frontier coding and agents at mid price, literal instruction following, professional writing, 1M context]
+failure_modes: [more literal than 4.5-era models (vague prompts underperform), concise by default (ask for summaries/detail explicitly)]
 prompting_notes: |
-  - Put documents/long content first or last but keep instructions adjacent to the end; ask it to quote before answering for grounding.
-  - Explicit failure behavior works well: "if unclear, output UNCLEAR" is respected.
-  - Keep the stable part of the prompt as a fixed prefix for cache hits.
+  - The studio's default target and utility model.
+  - Be explicit about action vs suggestion ("change this" vs "can you suggest").
+  - Has a dedicated prompting page covering response length, effort calibration, tool triggering.
 last_reviewed: 2026-07-17
-sources: ["https://docs.anthropic.com/en/docs/about-claude/models"]
+sources: ["https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-sonnet-5", "https://openrouter.ai/anthropic/claude-sonnet-5"]

@@ -1,0 +1,25 @@
+id: claude-opus-4-8
+label: Claude Opus 4.8
+provider: anthropic
+api_model_id: claude-opus-4-8
+context_window: 1000000
+max_output_tokens: 64000
+pricing: { input_per_mtok_usd: 5.0, output_per_mtok_usd: 25.0 }
+params: { effort: true, verbosity: true, temperature: true, logprobs: false }
+sampling:
+  default_temperature: 1.0
+  notes: "Adaptive thinking via thinking:{type:adaptive} + output_config:{effort}. budget_tokens returns 400 on 4.7+."
+reasoning:
+  kind: adaptive
+  cot_prompting: harmful
+  notes: "Effort low|medium|high(default)|max. At high/max it almost always thinks; lower effort skips thinking on easy queries. Prefer lowering effort over prompting it to think less."
+formatting_idiom: "XML sectioning; <documents> at top, query at end (up to ~30% better on long inputs). No prefills (removed in 4.6+)."
+structured_output: "Native Structured Outputs feature; tools with enum fields for classification."
+strengths: [hardest coding/agentic tasks, subagent orchestration, vision, long-horizon state tracking]
+failure_modes: [upfront over-exploration at high effort, overengineering (extra files/abstractions) without scope guidance, strong subagent predilection where grep would do]
+prompting_notes: |
+  - Dial back anti-laziness prompting from older models; it now overtriggers.
+  - Add explicit scope discipline for coding ("only changes directly requested").
+  - Very responsive to system prompt; normal language beats shouting.
+last_reviewed: 2026-07-17
+sources: ["https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-opus-4-8", "https://openrouter.ai/anthropic/claude-opus-4.8"]

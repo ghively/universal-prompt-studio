@@ -84,7 +84,7 @@ One exported function:
 ```ts
 type LlmRequest = { model: ModelCard; system?: string; messages: {role:'user'|'assistant', content:string}[];
                     max_tokens: number; temperature?: number; tool?: {name:string, description:string, input_schema:object};
-                    thinking_budget?: number };
+                    effort?: 'low'|'medium'|'high'|'max'; want_thinking?: boolean };
 type LlmResult  = { text: string; tool_input?: object; thinking?: string;
                     usage: { input_tokens: number; output_tokens: number }; raw: object };
 async function providerCall(req: LlmRequest): Promise<LlmResult>
@@ -93,9 +93,19 @@ async function providerCall(req: LlmRequest): Promise<LlmResult>
 ### 3.1 provider = anthropic
 POST `https://api.anthropic.com/v1/messages`
 Headers: `x-api-key: $ANTHROPIC_API_KEY`, `anthropic-version: 2023-06-01`, `content-type: application/json`.
-Body: `{ "model": card.api_model_id, "max_tokens", "system"?, "messages", "temperature"? }`.
+Body: `{ "model": card.api_model_id, "max_tokens", "system"?, "messages" }`.
+Include `temperature` only if `card.params.temperature` is true AND the request sets it.
 If `tool` present: add `"tools": [tool]`, `"tool_choice": { "type": "tool", "name": tool.name }`.
-If `thinking_budget` present: add `"thinking": { "type": "enabled", "budget_tokens": thinking_budget }` and omit `temperature`.
+Thinking (2026 semantics — do NOT use budget_tokens, it 400s on current models):
+- `card.reasoning.kind === "adaptive"`: if `want_thinking` or `effort` set, add
+  `"thinking": { "type": "adaptive" }` and, when `effort` set,
+  `"output_config": { "effort": effort }`; omit `temperature` when thinking is on.
+- `card.reasoning.kind === "always-on"`: thinking is unconditional; send
+  `"output_config": { "effort": effort }` when set; never send `temperature`.
+- `card.reasoning.kind === "manual"`: if `want_thinking`, add
+  `"thinking": { "type": "enabled", "budget_tokens": 4096 }` and omit `temperature`.
+- `"none"`: no thinking fields.
+Prefilled trailing assistant messages are never sent (removed on current Claude models).
 Response: `text` = concat of `content[].text` where type=text; `tool_input` = first
 `content[]` item with type=tool_use → its `.input`; `thinking` = concat of type=thinking
 blocks' `.thinking`; usage from `.usage`.
@@ -108,6 +118,8 @@ Tool use: `"tools": [{ "type":"function", "function": { name, description, "para
 `"tool_choice": { "type":"function", "function": { "name": tool.name } }`;
 `tool_input` = `JSON.parse(choices[0].message.tool_calls[0].function.arguments)`.
 `thinking` = `choices[0].message.reasoning ?? null`. usage: `.usage.prompt_tokens/.completion_tokens`.
+Effort: when `effort` set and `"reasoning_effort"` ∈ card's catalog `supported_parameters`,
+send `"reasoning_effort": effort`. Send `temperature` only if `card.params.temperature`.
 
 ### 3.3 provider = openai — same wire shape as 3.2 against `https://api.openai.com/v1/chat/completions` with `$OPENAI_API_KEY`.
 

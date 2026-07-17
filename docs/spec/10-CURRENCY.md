@@ -1,12 +1,21 @@
 # 10 — Staying current: watcher, field scan, battery, sentinel (P8)
 
-## 1. New-model watcher
+## 1. New-model watcher — canonical sources: OpenRouter + Bedrock
 `POST /api/watch/scan` (and daily `setInterval`):
-- Anthropic: GET `https://api.anthropic.com/v1/models` (same auth headers) → `data[].id`.
-- OpenRouter (if key): GET `https://openrouter.ai/api/v1/models` → `data[].id`.
-Compare against existing card ids + `workspace/models/.seen.json` (array of ids already
-offered). For each new id: file a queue proposal `kind: card_update`, title
-`New model available: <id>`, body listing the id and provider, `action.type: "none"`.
+- **OpenRouter** (no key needed): GET `https://openrouter.ai/api/v1/models` → rewrite
+  `workspace/models/catalog/openrouter.json` (trimmed shape per 02-DATA §3.1, new
+  `fetched` date). Diff ids against the previous snapshot.
+- **Bedrock**: no stable machine API — fetch
+  `https://docs.aws.amazon.com/bedrock/latest/userguide/model-cards.html`, extract the
+  provider/model-name table rows, diff names against `catalog/bedrock.json.providers`.
+  On any change file ONE proposal titled `Bedrock catalog changed` with the diff in
+  `body_md` and `action: { type: "write_file", path: "models/catalog/bedrock.json",
+  content: <updated json> }` for review (HTML parsing is brittle — never auto-apply).
+- Anthropic direct (key present): GET `https://api.anthropic.com/v1/models` → ids fold
+  into the same diff.
+For each new OpenRouter/Anthropic id: file a queue proposal `kind: card_update`, title
+`New model available: <id>`, body listing id, provider, context, pricing, and
+supported_parameters from the catalog entry, `action.type: "none"`.
 Card drafting stays user-initiated: `POST /api/models/draft { model_id, provider, sources_text }`
 runs CARD_DRAFT (04-PROMPTS §10) with `claude-sonnet-5.yaml` as the example card and
 returns `card_yaml` for review; `POST /api/models { card_yaml }` validates and writes

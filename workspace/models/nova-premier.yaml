@@ -1,0 +1,18 @@
+id: nova-premier
+label: Amazon Nova Premier
+provider: openrouter
+api_model_id: amazon/nova-premier-v1
+context_window: 1000000
+max_output_tokens: 32768
+pricing: { input_per_mtok_usd: 2.5, output_per_mtok_usd: 12.5 }
+params: { effort: false, verbosity: false, temperature: true, logprobs: false }
+sampling: { default_temperature: 0.7, notes: "" }
+reasoning: { kind: none, cot_prompting: helpful, notes: "Not a reasoning-line model; brief structured-reasoning requests help on multi-step tasks." }
+formatting_idiom: "Explicit sectioning and examples; AWS's own prompt guidance is unusually detailed. (Card thin — verify.)"
+structured_output: "Tool/function calling via Bedrock Converse; JSON mode."
+strengths: [Bedrock-native flagship (governance/VPC stories), multimodal, distillation teacher]
+failure_modes: [behind frontier on hardest reasoning; Nova 2 line is where Amazon's newest work lands]
+prompting_notes: |
+  - Included as the Bedrock-native anchor; Nova 2 Lite/Sonic are newer but lighter.
+last_reviewed: 2026-07-17
+sources: ["https://openrouter.ai/amazon/nova-premier-v1", "https://docs.aws.amazon.com/bedrock/latest/userguide/model-cards.html"]

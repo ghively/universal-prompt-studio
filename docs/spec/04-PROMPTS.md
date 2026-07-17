@@ -2,7 +2,8 @@
 
 Copy these into `app/server/src/prompts.ts` exactly. `{{SLOT}}` markers are replaced by
 simple string substitution at call time. Do not edit wording. Temperature is 0.2 for
-every call in this file unless a section says otherwise.
+every call in this file unless a section says otherwise — applied only when the
+executing model's card has `params.temperature: true` (llmCall drops it otherwise).
 
 ## §0 Structured output convention
 

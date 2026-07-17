@@ -1,0 +1,18 @@
+id: gpt-5.6-luna
+label: GPT-5.6 Luna (fast)
+provider: openrouter
+api_model_id: openai/gpt-5.6-luna
+context_window: 1050000
+max_output_tokens: 128000
+pricing: { input_per_mtok_usd: 1.0, output_per_mtok_usd: 6.0 }
+params: { effort: true, verbosity: true, temperature: false, logprobs: false }
+sampling: { default_temperature: null, notes: "reasoning_effort none|low for latency-sensitive work." }
+reasoning: { kind: adaptive, cot_prompting: harmful, notes: "Capable reasoning at high volume; effort none disables it entirely for pure-speed calls." }
+formatting_idiom: "Markdown; lean prompts."
+structured_output: "structured_outputs / json_schema strict."
+strengths: [high-volume chat, classification, lightweight agents, latency]
+failure_modes: [depth on hard multi-step problems — step up to Terra/Sol]
+prompting_notes: |
+  - Good cross-check judge from a non-Anthropic family.
+last_reviewed: 2026-07-17
+sources: ["https://developers.openai.com/api/docs/guides/prompt-guidance-gpt-5p6", "https://openrouter.ai/openai/gpt-5.6-luna"]

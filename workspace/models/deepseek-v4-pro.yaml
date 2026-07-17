@@ -1,0 +1,18 @@
+id: deepseek-v4-pro
+label: DeepSeek V4 Pro
+provider: openrouter
+api_model_id: deepseek/deepseek-v4-pro
+context_window: 1048576
+max_output_tokens: 65536
+pricing: { input_per_mtok_usd: 0.44, output_per_mtok_usd: 0.87 }
+params: { effort: true, verbosity: false, temperature: true, logprobs: true }
+sampling: { default_temperature: 0.6, notes: "" }
+reasoning: { kind: adaptive, cot_prompting: harmful, notes: "1.6T MoE (49B active); visible reasoning traces make it a great instruments-panel target." }
+formatting_idiom: "Short, direct prompts; one-line output format at the end. Schema discipline improved over R1-era but still verify."
+structured_output: "structured_outputs supported; validate + retry for strict schemas."
+strengths: [reasoning per dollar (frontier-adjacent at ~1/10th cost), visible traces, 1M context, logprobs]
+failure_modes: [format discipline vs US frontier, occasional reasoning leakage into output]
+prompting_notes: |
+  - The studio's budget deep-reasoner; V3.2 is the Bedrock sibling.
+last_reviewed: 2026-07-17
+sources: ["https://openrouter.ai/deepseek/deepseek-v4-pro"]

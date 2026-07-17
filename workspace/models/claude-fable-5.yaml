@@ -1,0 +1,25 @@
+id: claude-fable-5
+label: Claude Fable 5
+provider: anthropic
+api_model_id: claude-fable-5
+context_window: 1000000
+max_output_tokens: 64000
+pricing: { input_per_mtok_usd: 10.0, output_per_mtok_usd: 50.0 }
+params: { effort: true, verbosity: true, temperature: false, logprobs: false }
+sampling:
+  default_temperature: null
+  notes: "Thinking is ALWAYS on; adaptive is the only mode. Control depth with effort (low|medium|high|max), not temperature. budget_tokens returns a 400 error."
+reasoning:
+  kind: always-on
+  cot_prompting: harmful
+  notes: "Mythos-class. Do not add 'think step by step' or hand-written reasoning plans — general instructions ('consider the tradeoffs') outperform prescriptive steps."
+formatting_idiom: "XML tags for sectioning; <example>/<examples> tags for few-shot; documents at top wrapped in <documents>/<document index>. Prefilled assistant turns are NOT supported (400 error)."
+structured_output: "Native Structured Outputs (schema-constrained) or forced tool-use. Do not use prefill tricks — removed."
+strengths: [autonomous long-horizon work, coding, instruction fidelity, multi-context-window persistence, subagent orchestration]
+failure_modes: [may over-explore at high effort, concise to the point of skipping summaries unless asked, premium price]
+prompting_notes: |
+  - Has dedicated prompting page (see sources): effort calibration, long-run progress claims, memory systems.
+  - Calm imperatives: aggressive "CRITICAL/MUST" language causes overtriggering on current Claude.
+  - For visibility after tool use, ask: "After tool-based work, summarize what you did."
+last_reviewed: 2026-07-17
+sources: ["https://platform.claude.com/docs/en/build-with-claude/prompt-engineering/prompting-claude-fable-5", "https://openrouter.ai/anthropic/claude-fable-5"]

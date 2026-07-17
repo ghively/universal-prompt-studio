@@ -1,0 +1,18 @@
+id: kimi-k3
+label: Kimi K3 (open weights)
+provider: openrouter
+api_model_id: moonshotai/kimi-k3
+context_window: 1048576
+max_output_tokens: 65536
+pricing: { input_per_mtok_usd: 3.0, output_per_mtok_usd: 15.0 }
+params: { effort: true, verbosity: false, temperature: false, logprobs: false }
+sampling: { default_temperature: null, notes: "Control via reasoning_effort." }
+reasoning: { kind: adaptive, cot_prompting: harmful, notes: "Ultra-large open-weight multimodal reasoner; long-horizon agentic focus." }
+formatting_idiom: "Direct instructions; strong at navigating large codebases/documents. (Card thin — verify.)"
+structured_output: "structured_outputs supported via OpenRouter."
+strengths: [open weights at frontier scale, complex coding, long-horizon agents, 1M context]
+failure_modes: [frontier pricing despite open weights via hosted inference]
+prompting_notes: |
+  - Kimi K2.5 / K2 Thinking are the Bedrock-available siblings.
+last_reviewed: 2026-07-17
+sources: ["https://openrouter.ai/moonshotai/kimi-k3"]

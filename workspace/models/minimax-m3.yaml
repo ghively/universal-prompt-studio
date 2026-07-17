@@ -1,0 +1,18 @@
+id: minimax-m3
+label: MiniMax M3
+provider: openrouter
+api_model_id: minimax/minimax-m3
+context_window: 1048576
+max_output_tokens: 65536
+pricing: { input_per_mtok_usd: 0.3, output_per_mtok_usd: 1.2 }
+params: { effort: false, verbosity: false, temperature: true, logprobs: true }
+sampling: { default_temperature: 1.0, notes: "" }
+reasoning: { kind: adaptive, cot_prompting: neutral, notes: "Multimodal (text+image+video in); long-horizon agentic focus." }
+formatting_idiom: "Direct instructions. (Card thin — verify.)"
+structured_output: "structured_outputs supported."
+strengths: [video input, cost, 1M context, agents]
+failure_modes: [less third-party eval coverage — rely on your own suites]
+prompting_notes: |
+  - M2.5 is the Bedrock-available sibling.
+last_reviewed: 2026-07-17
+sources: ["https://openrouter.ai/minimax/minimax-m3"]

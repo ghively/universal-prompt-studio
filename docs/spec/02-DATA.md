@@ -82,14 +82,15 @@ id: claude-sonnet-5             # filename must equal id + ".yaml"
 label: Claude Sonnet 5
 provider: anthropic             # anthropic | openrouter | openai
 api_model_id: claude-sonnet-5   # what goes in the API request
-context_window: 200000
+context_window: 1000000
 max_output_tokens: 64000
-pricing: { input_per_mtok_usd: 3.0, output_per_mtok_usd: 15.0 }
+pricing: { input_per_mtok_usd: 2.0, output_per_mtok_usd: 10.0 }
+params: { effort: true, verbosity: true, temperature: false, logprobs: false }
 sampling:
-  default_temperature: 1.0
+  default_temperature: null      # null when the model doesn't expose temperature
   notes: "..."
 reasoning:
-  kind: hybrid-thinking          # none | hybrid-thinking | always-thinking
+  kind: adaptive                 # none | adaptive | always-on | manual
   cot_prompting: harmful         # helpful | neutral | harmful
   notes: "..."
 formatting_idiom: "..."          # free text, injected into compiler prompt
@@ -103,6 +104,20 @@ sources: ["https://..."]
 
 `workspace/models/<id>.measured.json` (P8): written only by the probe battery —
 `{ battery_version: string, measured_at: iso, metrics: { [probe_dimension]: number } }`.
+
+### 3.1 Catalog — `workspace/models/catalog/`
+The two canonical, always-current sources of what exists (curated cards cover only the
+models worth prompting deliberately):
+- `openrouter.json` — trimmed snapshot of `GET https://openrouter.ai/api/v1/models`
+  (no key required): `{ source, fetched, count, models: [{ id, name, created,
+  context_length, prompt_usd_per_tok, completion_usd_per_tok, supported_parameters,
+  modality }] }`. Refreshed automatically (10-CURRENCY §1).
+- `bedrock.json` — `{ source, fetched, note, providers: { [provider]: [model names] } }`,
+  maintained against the AWS Bedrock "models at a glance" page (manual review; HTML,
+  no stable API).
+The UI model picker offers curated cards first, then a searchable "from catalog"
+section for any OpenRouter id without a card (runs with catalog pricing/params and a
+generic empty-notes card).
 
 ## 4. Run record — append one JSON line per LLM call to `workspace/runs/YYYY-MM.jsonl`
 

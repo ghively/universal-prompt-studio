@@ -1,0 +1,18 @@
+id: nemotron-3-ultra
+label: NVIDIA Nemotron 3 Ultra (open)
+provider: openrouter
+api_model_id: nvidia/nemotron-3-ultra-550b-a55b
+context_window: 1000000
+max_output_tokens: 65536
+pricing: { input_per_mtok_usd: 0.6, output_per_mtok_usd: 3.6 }
+params: { effort: true, verbosity: false, temperature: true, logprobs: false }
+sampling: { default_temperature: 1.0, notes: "" }
+reasoning: { kind: adaptive, cot_prompting: harmful, notes: "550B MoE / 55B active, hybrid Transformer-Mamba; positioned as an orchestration model." }
+formatting_idiom: "Direct instructions. (Card thin — verify.)"
+structured_output: "structured_outputs supported."
+strengths: [open frontier reasoning, orchestration/multi-agent focus, free tier exists on OpenRouter]
+failure_modes: [young; verify format discipline on your suites]
+prompting_notes: |
+  - Nemotron 3 Super 120B is the Bedrock sibling.
+last_reviewed: 2026-07-17
+sources: ["https://openrouter.ai/nvidia/nemotron-3-ultra-550b-a55b"]
