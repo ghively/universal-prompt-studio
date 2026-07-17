@@ -1,0 +1,22 @@
+id: gpt-5.6-terra
+label: GPT-5.6 Terra (balanced)
+provider: openrouter
+api_model_id: openai/gpt-5.6-terra
+category: general
+card_depth: full
+context_window: 1050000
+max_output_tokens: 128000
+pricing: { input_per_mtok_usd: 2.5, output_per_mtok_usd: 15.0 }
+params: { effort: true, verbosity: true, temperature: false, logprobs: false }
+sampling:
+  default_temperature: null
+  notes: "reasoning_effort + text.verbosity; same guidance as Sol. PRICING TIER: prompts over 272k tokens bill 2x input / 1.5x output ($5/$22.50). text.verbosity is native-OpenAI-API; unverified on the OpenRouter route."
+reasoning: { kind: adaptive, cot_prompting: harmful, notes: "Medium effort default; everyday coding/reasoning tier between Sol and Luna." }
+formatting_idiom: "Markdown; lean prompts; pin snapshots."
+structured_output: "structured_outputs / json_schema strict."
+strengths: [everyday coding, agents, best price/perf in the 5.6 line]
+failure_modes: [same conciseness shift as the rest of the 5.6 series]
+prompting_notes: |
+  - The sensible default for OpenAI-family targets in this studio.
+last_reviewed: 2026-07-17
+sources: ["https://developers.openai.com/api/docs/guides/prompt-guidance-gpt-5p6", "https://openrouter.ai/openai/gpt-5.6-terra"]

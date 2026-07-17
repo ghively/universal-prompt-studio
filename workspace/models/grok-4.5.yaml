@@ -1,0 +1,35 @@
+id: grok-4.5
+label: Grok 4.5
+provider: openrouter
+api_model_id: x-ai/grok-4.5
+category: general
+card_depth: full
+context_window: 500000
+max_output_tokens: 65536
+pricing: { input_per_mtok_usd: 2.0, output_per_mtok_usd: 6.0 }
+params: { effort: true, verbosity: false, temperature: true, logprobs: true }
+sampling:
+  default_temperature: 1.0
+  notes: "No official temp guidance. HARD ERRORS: presencePenalty/frequencyPenalty/stop are rejected on reasoning models. PRICING TRAP: >=200K-token requests bill the WHOLE request at double rate ($4/$12) — OpenRouter's flat $2/$6 is the <200K tier only. Cutoff Feb 2026."
+reasoning:
+  kind: always-on
+  cot_prompting: neutral
+  notes: "reasoning_effort low|medium|high, DEFAULT HIGH, cannot be disabled. Summarized reasoning streams; raw CoT only encrypted. reasoning_tokens exposed in usage."
+formatting_idiom: "No prescribed markup. Official emphasis is agent-loop hygiene: set prompt_cache_key (or x-grok-conv-id header) for reliable cache routing; built-in context compaction for long loops; summarize stale tool output, keep compact running task state. xAI publishes its production system prompts (github.com/xai-org/grok-prompts) — useful reference."
+structured_output: "response_format json_schema — 'guaranteed to match your schema' within limits (string len <=2048, items <=256, props <=64; errors on empty enum/anyOf, if/then/else best-effort)."
+strengths:
+  - "Terminal-Bench 2.1 83.3%, SWE Marathon 29% (best-in-class)"
+  - "AA #1 agentic tool use; trained jointly with Cursor"
+  - "exceptional token efficiency: ~16k output tokens per resolved SWE task vs Opus 4.8's 67k (4.2x)"
+  - "logprobs exposed"
+failure_modes:
+  - polished output masks numeric errors (hands-on testing found invented figures in cost comparisons and conclusions beyond the prompt) — pair with quote_support/verification checks
+  - trails Fable 5 substantially on hardest agentic coding (SWE-Bench Pro 64.7 vs 80.4)
+  - EU API availability lagging
+prompting_notes: |
+  - Default effort is high — step down for latency, never off.
+  - Keep requests under 200K tokens or accept doubled billing.
+  - Its token efficiency makes it the cheap-per-TASK agentic choice even where
+    per-token peers look similar.
+last_reviewed: 2026-07-17
+sources: ["https://docs.x.ai/developers/models/grok-4.5", "https://docs.x.ai/developers/model-capabilities/text/structured-outputs", "https://github.com/xai-org/grok-prompts"]

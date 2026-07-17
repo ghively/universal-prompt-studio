@@ -1,0 +1,27 @@
+id: embeddinggemma-local
+label: EmbeddingGemma (local)
+provider: local
+api_model_id: embeddinggemma
+base_url: http://localhost:11434/v1
+category: embedding
+kind: embedding
+card_depth: full
+vram_class: 4gb
+rankings:
+  - { category: embedding, vram_class: 4gb, rank: 3 }
+  - { category: embedding, vram_class: 8gb, rank: 3 }
+context_window: 2048
+max_output_tokens: 0
+pricing: { input_per_mtok_usd: 0, output_per_mtok_usd: 0 }
+params: { effort: false, verbosity: false, temperature: false, logprobs: false }
+sampling: { default_temperature: null, notes: "EMBEDDING model — /v1/embeddings. 622MB. Best small-model CODE-embedding score in its class (MTEB Code) — the pick when the corpus is source code." }
+reasoning: { kind: none, cot_prompting: neutral, notes: "n/a — embedding model." }
+formatting_idiom: "Plain text; no special prefixes required."
+structured_output: "n/a — returns vectors."
+strengths: [best small-model code embeddings, small footprint, Gemma-family tooling support]
+failure_modes:
+  - short context window — chunk aggressively
+prompting_notes: |
+  - The code-corpus specialist; bge-m3 (1.2GB) is the dense+sparse multilingual alternate (see LOCAL.md).
+last_reviewed: 2026-07-17
+sources: ["https://ollama.com/library/embeddinggemma"]

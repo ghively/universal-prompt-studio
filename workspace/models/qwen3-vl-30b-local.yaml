@@ -1,0 +1,25 @@
+id: qwen3-vl-30b-local
+label: Qwen3 VL 30B A3B (local)
+provider: local
+api_model_id: qwen3-vl:30b
+base_url: http://localhost:11434/v1
+category: vision
+card_depth: full
+vram_class: 24gb
+rankings:
+  - { category: vision, vram_class: 24gb, rank: 1 }
+context_window: 262144
+max_output_tokens: 32768
+pricing: { input_per_mtok_usd: 0, output_per_mtok_usd: 0 }
+params: { effort: false, verbosity: false, temperature: true, logprobs: false }
+sampling: { default_temperature: 0.7, notes: "20GB download, MoE 30B/A3B — fast decode for its class. 256K native ctx ('expandable to 1M' via YaRN — see LOCAL.md on the recall tradeoff). The dense qwen3-vl:32b (21GB) is the alternate but sits tight against 24GB with KV." }
+reasoning: { kind: none, cot_prompting: helpful, notes: "Instruct variant; ask for explicit region-by-region analysis on complex layouts." }
+formatting_idiom: "Same idiom as the carded qwen3-vl 8B/4B: task before image, name regions, grounded answers only. Capacity jump shows most on dense documents and multi-image tasks."
+structured_output: "JSON with explicit in-prompt schema; validate + retry. Keys in English."
+strengths: [best local vision at 24GB, document AI/OCR, chart and table extraction, multi-image reasoning, fast MoE decode]
+failure_modes:
+  - low-res fine text still gets confabulated — demand 'illegible' abstention
+prompting_notes: |
+  - Prompts port from the 8B card unchanged; raise task complexity, not prompt complexity.
+last_reviewed: 2026-07-17
+sources: ["https://ollama.com/library/qwen3-vl"]

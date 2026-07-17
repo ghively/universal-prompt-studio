@@ -1,0 +1,26 @@
+id: gpt-5.4-nano
+label: GPT-5.4 Nano
+provider: openrouter
+api_model_id: openai/gpt-5.4-nano
+category: utility
+card_depth: thin
+context_window: 400000
+max_output_tokens: 128000
+pricing: { input_per_mtok_usd: 0.2, output_per_mtok_usd: 1.25 }
+params: { effort: true, verbosity: false, temperature: false, logprobs: false }
+sampling:
+  default_temperature: null
+  notes: "Catalog facts verbatim from live API 2026-07-17 (card thin — family guidance applies but nano-specific docs not reviewed). No temperature (reasoning family); reasoning_effort supported; text+image+file input. Cache-read $0.02/M."
+reasoning:
+  kind: adaptive
+  cot_prompting: harmful
+  notes: "GPT-5-line adaptive reasoning at the smallest tier; in-prompt CoT hurts, same as siblings. Effort low|none for pure-speed calls."
+formatting_idiom: "GPT-line idiom (portable from the 5.6 cards): markdown sectioning, verbosity restraint, explicit output contracts."
+structured_output: "response_format json_schema / structured_outputs supported."
+strengths: [OpenAI-family utility slot (cross-family judge diversity at low cost), 400k context, multimodal input at utility pricing]
+failure_modes:
+  - nano tier caps hard reasoning — route up to Luna/Terra when checks need judgment
+prompting_notes: |
+  - Fills the OpenAI cheap-judge slot the carded set lacked (Luna at $1/$6 was the previous floor).
+last_reviewed: 2026-07-17
+sources: ["https://openrouter.ai/openai/gpt-5.4-nano"]

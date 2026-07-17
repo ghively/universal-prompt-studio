@@ -1,0 +1,26 @@
+id: ling-2.6-flash
+label: Ling 2.6 Flash
+provider: openrouter
+api_model_id: inclusionai/ling-2.6-flash
+category: utility
+card_depth: thin
+context_window: 262144
+max_output_tokens: 32768
+pricing: { input_per_mtok_usd: 0.01, output_per_mtok_usd: 0.03 }
+params: { effort: false, verbosity: false, temperature: true, logprobs: true }
+sampling:
+  default_temperature: null
+  notes: "Catalog facts verbatim from live API 2026-07-17 (released 2026-04-21; card thin — verify on refresh). The cheapest non-free model in the catalog by far (25-50x under Flash Lite); text only; exposes logprobs; no reasoning params."
+reasoning:
+  kind: none
+  cot_prompting: helpful
+  notes: "(Card thin — no reasoning surface listed; treat as a small non-reasoner: small-model-prompting discipline likely applies.)"
+formatting_idiom: "(Card thin — verify.)"
+structured_output: "structured_outputs listed as supported; validate + retry until probed."
+strengths: [extreme price floor for high-volume checks and drafts, logprobs exposure, 262k context]
+failure_modes:
+  - at this price, quality is the open question — probe before any judging/checking role
+prompting_notes: |
+  - Candidate for high-volume low-stakes calls (input generation, consistency sampling) IF it clears the probe battery.
+last_reviewed: 2026-07-17
+sources: ["https://openrouter.ai/inclusionai/ling-2.6-flash"]

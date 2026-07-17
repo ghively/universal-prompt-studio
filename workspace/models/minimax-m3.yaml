@@ -1,0 +1,36 @@
+id: minimax-m3
+label: MiniMax M3 (open weights)
+provider: openrouter
+api_model_id: minimax/minimax-m3
+category: general
+card_depth: full
+context_window: 1048576
+max_output_tokens: 65536
+pricing: { input_per_mtok_usd: 0.3, output_per_mtok_usd: 1.2 }
+params: { effort: false, verbosity: false, temperature: true, logprobs: true }
+sampling:
+  default_temperature: 1.0
+  notes: "Official card: temp 1.0, top_p 0.95. PRICING TIER: >512K-token inputs silently DOUBLE the rate ($0.60/$2.40). SERVED CONTEXT: the top provider currently serves 524,288 — half the 1M headline, which means the routable window may never legally exceed the standard tier; treat 512K as the binding number. MoE 428B/23B active with sparse attention: ~1/20 per-token compute of M2, major speedups at long context."
+reasoning:
+  kind: adaptive
+  cot_prompting: neutral
+  notes: >-
+    thinking param: enabled | adaptive (new in M3 — model decides) | disabled (the
+    rare frontier reasoner with a true OFF switch). PRESERVATION RULE: append the
+    complete assistant response (thinking blocks / reasoning_details included) back
+    into history on every multi-turn tool call, or continuity degrades / API errors.
+    MiniMax officially recommends its Anthropic-compatible endpoint for agentic work;
+    on the OpenAI endpoint use reasoning_split=true to keep <think> out of content.
+formatting_idiom: "No published prompt doctrine; reasoning arrives in <think> tags by default on the OpenAI-style endpoint."
+structured_output: "Documented reliable path is schema-conformant tool calling; a dedicated json_schema response_format is not confirmed — validate + retry."
+strengths: [SWE-Bench Verified 80.5% (vendor), text+image+video input with mixed-modality training, computer use, ~97 tok/s, 5-10% of frontier cost, open weights]
+failure_modes:
+  - vendor-benchmark gap: independent AA Intelligence Index 44 (mid-tier) vs frontier-adjacent vendor framing — trust receipts over its README
+  - breaking the thinking chain in multi-turn tool use degrades or errors
+  - custom commercial-restricted license, not permissive OSS; self-hosting needs ~8x B200
+prompting_notes: |
+  - thinking adaptive for agentic/complex, disabled for latency-sensitive chat.
+  - Keep inputs under 512K to stay on standard billing.
+  - The budget multimodal-agent play; verify hard tasks with your own suite.
+last_reviewed: 2026-07-17
+sources: ["https://www.minimax.io/blog/minimax-m3", "https://platform.minimax.io/docs/guides/text-m3-function-call", "https://huggingface.co/MiniMaxAI/MiniMax-M3"]

@@ -1,0 +1,31 @@
+id: muse-spark-1.1
+label: Meta Muse Spark 1.1
+provider: openrouter
+api_model_id: meta/muse-spark-1.1
+category: general
+card_depth: full
+context_window: 1048576
+max_output_tokens: 65536
+pricing: { input_per_mtok_usd: 1.25, output_per_mtok_usd: 4.25 }
+params: { effort: true, verbosity: false, temperature: true, logprobs: false }
+sampling:
+  default_temperature: 1.0
+  notes: "Officially tuned for defaults: temp 1.0, top_p 1.0 — leave both. NOT supported: logprobs, stop, n>1 (reasoning-model restrictions). US-only in public preview (launched 2026-07-09) — expect API churn. Cached input $0.15/M."
+reasoning:
+  kind: always-on
+  cot_prompting: neutral
+  notes: "reasoning_effort minimal|low|medium|high|xhigh — 'none' is REJECTED; reasoning cannot be disabled. Meta's first closed-weight paid API model (not Llama-family; Llama prompt-format lore does NOT apply)."
+formatting_idiom: "Use the DEVELOPER role for standing rules (persona, format, boundaries, reference data) — 'developer outranks user' in conflicts. OpenAI-compatible AND Anthropic Messages formats both accepted."
+structured_output: "response_format json_schema with strict:true — true constrained decoding ('guaranteed to conform'). Limits: nesting<=10, <=5000 props, <=1000 enum values; recursive schemas -> 400."
+strengths: [MCP Atlas 88.1 (LEADS scaled tool orchestration, above Opus 4.8), OSWorld-Verified 80.8, Terminal-Bench 2.1 80.0, HLE 62.1, zero-shot generalization to new tools/MCP/skills, computer use, text+image+video+PDF input, strong prompt-injection resistance, token-efficient]
+failure_modes:
+  - long-horizon agentic work still trails GPT-5.5 and Opus 4.8 (DeepSWE 1.1 53.3 vs 67.0)
+  - brand-new API surface (public preview) — pin and re-verify monthly
+  - US-only availability; no independent LMArena/AA scores yet
+prompting_notes: |
+  - Positioned for planning mode, goal conditioning, subagent delegation, and
+    context compaction in coding-agent workflows (Meta's own framing).
+  - The orchestrator-role candidate: best-in-class tool routing, weaker solo
+    long-horizon — pair it as dispatcher over stronger workers.
+last_reviewed: 2026-07-17
+sources: ["https://ai.meta.com/blog/introducing-muse-spark-meta-model-api/", "https://ai.developer.meta.com/docs/features/structured-output", "https://openrouter.ai/meta/muse-spark-1.1"]

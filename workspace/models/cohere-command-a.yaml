@@ -1,0 +1,27 @@
+id: cohere-command-a
+label: Cohere Command A
+provider: openrouter
+api_model_id: cohere/command-a
+category: general
+card_depth: thin
+context_window: 256000
+max_output_tokens: 8192
+pricing: { input_per_mtok_usd: 2.5, output_per_mtok_usd: 10.0 }
+params: { effort: false, verbosity: false, temperature: true, logprobs: false }
+sampling:
+  default_temperature: null
+  notes: "Catalog facts verbatim from live API 2026-07-17 (released 2025-03; card thin). The Cohere family anchor — enterprise-RAG positioning; also on Bedrock (Command R+/R). NOTE the 8192 max output — unusually low for the price class."
+reasoning:
+  kind: none
+  cot_prompting: helpful
+  notes: "(Card thin — non-reasoner per catalog; explicit step-by-step likely helps.)"
+formatting_idiom: "(Card thin — Cohere docs favor structured RAG prompting with explicit document blocks; verify current guidance on refresh.)"
+structured_output: "structured_outputs listed as supported; validate + retry until probed."
+strengths: [closes the Cohere major-family gap, RAG/tool-use enterprise positioning, dual-source presence (OpenRouter + Bedrock)]
+failure_modes:
+  - aging flagship (2025-03) at frontier-adjacent pricing — expect the carded set to beat it broadly; it exists for family coverage and RAG bake-off comparisons
+  - 8k output ceiling kills long-generation tasks
+prompting_notes: |
+  - Carded for family completeness per the selection rule; retire if a newer Cohere flagship lands.
+last_reviewed: 2026-07-17
+sources: ["https://openrouter.ai/cohere/command-a"]

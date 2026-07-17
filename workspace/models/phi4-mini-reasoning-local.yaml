@@ -1,0 +1,25 @@
+id: phi4-mini-reasoning-local
+label: Phi-4-mini-reasoning (local)
+provider: local
+api_model_id: phi4-mini-reasoning:3.8b
+base_url: http://localhost:11434/v1
+category: reasoning
+card_depth: full
+vram_class: 4gb
+rankings:
+  - { category: reasoning, vram_class: 4gb, rank: 2 }
+context_window: 131072
+max_output_tokens: 16384
+pricing: { input_per_mtok_usd: 0, output_per_mtok_usd: 0 }
+params: { effort: false, verbosity: false, temperature: true, logprobs: false }
+sampling: { default_temperature: 0.6, notes: "3.2GB at Q4; realistic 4-8K ctx on 4GB." }
+reasoning: { kind: always-on, cot_prompting: neutral, notes: "Always-on long CoT; MATH SPECIALIST (comparable to o1-mini on math per its card), narrow outside math. CAP MAX TOKENS — traces run very long." }
+formatting_idiom: "One math/logic problem per prompt."
+structured_output: "Extract after the trace; validate."
+strengths: [best 4GB math reasoning]
+failure_modes:
+  - narrow domain; trace-length blowouts without a token cap
+prompting_notes: |
+  - Math/logic only; general reasoning goes to Qwen3.5-4B.
+last_reviewed: 2026-07-17
+sources: ["https://ollama.com/library/phi4-mini-reasoning"]

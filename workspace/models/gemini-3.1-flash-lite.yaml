@@ -1,0 +1,20 @@
+id: gemini-3.1-flash-lite
+label: Gemini 3.1 Flash Lite
+provider: openrouter
+api_model_id: google/gemini-3.1-flash-lite
+category: utility
+card_depth: full
+context_window: 1048576
+max_output_tokens: 65536
+pricing: { input_per_mtok_usd: 0.25, output_per_mtok_usd: 1.5 }
+params: { effort: true, verbosity: false, temperature: true, logprobs: false }
+sampling: { default_temperature: 1.0, notes: "" }
+reasoning: { kind: adaptive, cot_prompting: neutral, notes: "Lightweight; keep tasks single-purpose." }
+formatting_idiom: "Markdown; short imperative prompts."
+structured_output: "JSON schema via API."
+strengths: [very low cost, low latency, text+image+video+audio+PDF input, high-volume classification]
+failure_modes: [reasoning depth, long multi-constraint instructions]
+prompting_notes: |
+  - Cheapest capable multimodal utility model in the curated set.
+last_reviewed: 2026-07-17
+sources: ["https://openrouter.ai/google/gemini-3.1-flash-lite"]

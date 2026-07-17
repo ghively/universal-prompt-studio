@@ -1,0 +1,28 @@
+id: gpt-5.3-codex
+label: GPT-5.3 Codex
+provider: openrouter
+api_model_id: openai/gpt-5.3-codex
+category: coding
+card_depth: full
+context_window: 400000
+max_output_tokens: 128000
+pricing: { input_per_mtok_usd: 1.75, output_per_mtok_usd: 14.0 }
+params: { effort: true, verbosity: false, temperature: false, logprobs: false }
+sampling:
+  default_temperature: null
+  notes: "Reasoning family — control via reasoning_effort, no temperature. Text+image+file input. The coding specialist of the carded GPT line (Sol/Terra/Luna are the generalists)."
+reasoning:
+  kind: adaptive
+  cot_prompting: harmful
+  notes: "Codex-line models are tuned for agentic coding loops: long tool sequences, repo-scale edits, test-run-fix cycles. Same effort semantics as the GPT-5.6 line; in-prompt CoT hurts."
+formatting_idiom: "Terse, diff-and-test oriented. Give engineering standards, repo conventions, and a checkable done-condition; avoid persona padding. AGENTS.md is this family's native memory-file convention."
+structured_output: "Native structured outputs via the Responses API path; on OpenRouter use response_format json_schema; validate + retry as fallback."
+strengths: [agentic coding, long tool-loop persistence, repo-scale refactors, test-driven fix cycles, 400k context]
+failure_modes:
+  - overthinking on trivial edits at high effort — cap effort for small tasks
+  - coding-tuned register; weaker fit for prose/general tasks than the 5.6 generalists
+prompting_notes: |
+  - The GPT-side coding anchor for bake-offs against Kimi K2.7 Code and Claude coding tiers.
+  - Scope discipline matters: this family overengineers by default; state minimalism explicitly.
+last_reviewed: 2026-07-17
+sources: ["https://openrouter.ai/openai/gpt-5.3-codex"]

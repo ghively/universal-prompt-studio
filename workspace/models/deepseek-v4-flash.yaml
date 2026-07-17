@@ -1,0 +1,20 @@
+id: deepseek-v4-flash
+label: DeepSeek V4 Flash
+provider: openrouter
+api_model_id: deepseek/deepseek-v4-flash
+category: reasoning
+card_depth: full
+context_window: 1048576
+max_output_tokens: 65536
+pricing: { input_per_mtok_usd: 0.098, output_per_mtok_usd: 0.196 }
+params: { effort: true, verbosity: false, temperature: true, logprobs: true }
+sampling: { default_temperature: 0.6, notes: "" }
+reasoning: { kind: adaptive, cot_prompting: harmful, notes: "284B MoE, 13B active; fast inference." }
+formatting_idiom: "Same as V4 Pro."
+structured_output: "structured_outputs supported; validate + retry."
+strengths: [extreme cost efficiency (~$0.10/$0.20 per mtok), high-volume reasoning, 1M context]
+failure_modes: [ceiling vs Pro on hardest tasks]
+prompting_notes: |
+  - Cheapest reasoning-capable model in the curated set — ideal for consistency probes and bulk checks.
+last_reviewed: 2026-07-17
+sources: ["https://openrouter.ai/deepseek/deepseek-v4-flash"]

@@ -1,0 +1,20 @@
+id: gpt-oss-120b
+label: gpt-oss-120b (open weights)
+provider: openrouter
+api_model_id: openai/gpt-oss-120b
+category: general
+card_depth: full
+context_window: 131072
+max_output_tokens: 32768
+pricing: { input_per_mtok_usd: 0.037, output_per_mtok_usd: 0.17 }
+params: { effort: true, verbosity: false, temperature: true, logprobs: true }
+sampling: { default_temperature: 1.0, notes: "reasoning_effort supported (harmony format)." }
+reasoning: { kind: adaptive, cot_prompting: harmful, notes: "OpenAI's open-weight MoE (117B total / 5.1B active); high-reasoning + agentic design." }
+formatting_idiom: "Markdown; lean prompts as with the GPT line."
+structured_output: "structured_outputs supported."
+strengths: [near-free pricing, open weights (self-hostable), logprobs, agent use]
+failure_modes: [128k context ceiling, below closed-frontier quality on hardest tasks]
+prompting_notes: |
+  - Also on Bedrock. Excellent for cheap high-volume smoke checks and drills.
+last_reviewed: 2026-07-17
+sources: ["https://openrouter.ai/openai/gpt-oss-120b"]

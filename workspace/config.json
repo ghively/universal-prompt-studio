@@ -1,0 +1,9 @@
+{
+  "monthly_cap_usd": 25,
+  "default_target_model": "claude-sonnet-5",
+  "utility_model": "claude-sonnet-5",
+  "cheap_model": "claude-haiku-4-5",
+  "receipt_inputs": 3,
+  "consistency_samples": 3,
+  "stale_after_days": 30
+}

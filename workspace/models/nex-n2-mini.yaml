@@ -1,0 +1,26 @@
+id: nex-n2-mini
+label: Nex-N2-Mini
+provider: openrouter
+api_model_id: nex-agi/nex-n2-mini
+category: utility
+card_depth: thin
+context_window: 262144
+max_output_tokens: 262144
+pricing: { input_per_mtok_usd: 0.025, output_per_mtok_usd: 0.1 }
+params: { effort: false, verbosity: false, temperature: true, logprobs: true }
+sampling:
+  default_temperature: null
+  notes: "Catalog facts verbatim from live API 2026-07-17 (card thin — verify on refresh). Text+IMAGE input at ~10x cheaper than Flash Lite; exposes logprobs. Reasoning via a thinking param (no reasoning_effort key). Cache-read $0.0025/M."
+reasoning:
+  kind: adaptive
+  cot_prompting: neutral
+  notes: "(Card thin — 'reasoning'/'include_reasoning' listed; semantics unprobed.)"
+formatting_idiom: "(Card thin — verify.)"
+structured_output: "structured_outputs listed as supported; validate + retry until probed."
+strengths: [cheapest vision-capable candidate in the catalog, logprobs exposure, 262k in AND out, reasoning-capable]
+failure_modes:
+  - capability unverified — must clear a probe battery before displacing Flash Lite/Haiku in the utility slot
+prompting_notes: |
+  - The challenger for the cheapest-capable-utility niche; probe before routing anything real to it.
+last_reviewed: 2026-07-17
+sources: ["https://openrouter.ai/nex-agi/nex-n2-mini"]
