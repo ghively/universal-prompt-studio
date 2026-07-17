@@ -1,437 +1,462 @@
-<title>Prompt Studio — Design Direction v2</title>
+<title>Prompt Studio — Design Direction v3</title>
 <style>
-  /* Dark-only by design: this direction commits to one visual world. */
+  /* Night Studio — dark canvas, committed single-theme. */
   :root, :root[data-theme="light"], :root[data-theme="dark"] {
-    --bg: #0C0F14;
-    --bg-raise: #12161D;
-    --hair: #232A35;
-    --hair-loud: #39424F;
-    --tx: #D8DDE6;
-    --tx-dim: #7E8899;
-    --tx-faint: #4C5666;
-    --human: #FFB454;   /* your words */
-    --machine: #5CCFE6; /* payloads, models */
-    --coach: #C792EA;   /* observation, annotation */
+    --bg: #0D1017;
+    --dot: rgba(216, 221, 230, 0.055);
+    --tx: #DCE1EA;
+    --tx-dim: #8B95A6;
+    --tx-faint: #566173;
+    --human: #FFB454;
+    --machine: #5CCFE6;
+    --coach: #C792EA;
     --pass: #86D97C;
     --fail: #FF5F6B;
-    --human-dim: rgba(255, 180, 84, 0.12);
-    --machine-dim: rgba(92, 207, 230, 0.10);
-    --coach-dim: rgba(199, 146, 234, 0.10);
-    --pass-dim: rgba(134, 217, 124, 0.10);
-    --fail-dim: rgba(255, 95, 107, 0.10);
-    --mono: ui-monospace, "SF Mono", "Cascadia Code", Menlo, Consolas, monospace;
+    --human-wash: rgba(255, 180, 84, 0.09);
+    --machine-wash: rgba(92, 207, 230, 0.07);
+    --coach-wash: rgba(199, 146, 234, 0.09);
+    --pass-wash: rgba(134, 217, 124, 0.08);
+    --fail-wash: rgba(255, 95, 107, 0.08);
+    --lift: 0 14px 40px rgba(0, 0, 0, 0.35);
+    --display: ui-rounded, "SF Pro Rounded", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, system-ui, sans-serif;
     --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, system-ui, sans-serif;
+    --mono: ui-monospace, "SF Mono", "Cascadia Code", Menlo, Consolas, monospace;
   }
   * { box-sizing: border-box; }
   body {
     margin: 0;
-    background: var(--bg);
+    background-color: var(--bg);
+    background-image: radial-gradient(circle, var(--dot) 1.2px, transparent 1.2px);
+    background-size: 26px 26px;
     color: var(--tx);
-    font-family: var(--mono);
-    font-size: 14px;
-    line-height: 1.7;
+    font-family: var(--sans);
+    font-size: 15px;
+    line-height: 1.65;
     -webkit-font-smoothing: antialiased;
   }
-  ::selection { background: var(--human-dim); }
+  ::selection { background: var(--human-wash); }
+  a { color: var(--machine); text-decoration: none; }
+  a:hover { text-decoration: underline; text-underline-offset: 3px; }
+  :focus-visible { outline: 2px solid var(--human); outline-offset: 3px; border-radius: 4px; }
 
-  .wrap { max-width: 980px; margin: 0 auto; padding: 0 32px 120px; }
-
-  /* ---------- status bar ---------- */
-  .statusbar {
-    display: flex;
-    justify-content: space-between;
-    gap: 16px;
-    padding: 9px 32px;
-    border-bottom: 1px solid var(--hair);
-    font-size: 12px;
-    color: var(--tx-dim);
-    flex-wrap: wrap;
-  }
-  .statusbar b { color: var(--tx); font-weight: 600; }
-  .statusbar .ok { color: var(--pass); }
-  .statusbar .spend { color: var(--machine); font-variant-numeric: tabular-nums; }
+  .wrap { max-width: 1020px; margin: 0 auto; padding: 0 32px 130px; }
 
   /* ---------- masthead ---------- */
-  .masthead { padding: 88px 0 64px; border-bottom: 1px solid var(--hair); }
-  .kicker { font-size: 12px; letter-spacing: 0.12em; color: var(--coach); margin: 0 0 20px; }
-  .kicker .path { color: var(--tx-faint); }
+  .masthead { padding: 100px 0 76px; position: relative; }
+  .glow {
+    position: absolute; pointer-events: none; border-radius: 50%;
+    filter: blur(90px); opacity: 0.16;
+  }
+  .glow.amber { width: 380px; height: 380px; background: var(--human); top: -60px; right: 4%; }
+  .glow.cyan { width: 300px; height: 300px; background: var(--machine); top: 180px; left: -80px; opacity: 0.10; }
+  .kicker { font-size: 13px; font-weight: 600; letter-spacing: 0.02em; color: var(--coach); margin: 0 0 22px; }
+  .kicker span { color: var(--tx-faint); font-weight: 400; }
   h1 {
-    font-family: var(--sans);
-    font-weight: 850;
-    font-size: clamp(44px, 8vw, 84px);
-    line-height: 0.98;
-    letter-spacing: -0.025em;
-    text-transform: uppercase;
-    margin: 0 0 28px;
+    font-family: var(--display);
+    font-weight: 800;
+    font-size: clamp(46px, 7.5vw, 86px);
+    line-height: 1.02;
+    letter-spacing: -0.03em;
+    margin: 0 0 30px;
     text-wrap: balance;
   }
   h1 .hu { color: var(--human); }
   h1 .ma { color: var(--machine); }
-  .lede { max-width: 62ch; color: var(--tx-dim); margin: 0; font-size: 14.5px; }
+  .lede { max-width: 60ch; color: var(--tx-dim); margin: 0; font-size: 16px; }
   .lede b { color: var(--tx); font-weight: 600; }
 
-  /* ---------- section scaffolding: rules, not boxes ---------- */
-  section { padding: 64px 0 8px; }
-  .sec-mark { font-size: 12px; color: var(--tx-faint); margin: 0 0 6px; }
-  .sec-mark .n { color: var(--coach); }
+  /* ---------- sections ---------- */
+  section { padding: 84px 0 0; }
+  .sec-kick { font-size: 13px; font-weight: 700; margin: 0 0 8px; letter-spacing: 0.06em; text-transform: uppercase; }
   h2 {
-    font-family: var(--sans);
+    font-family: var(--display);
     font-weight: 800;
-    font-size: clamp(24px, 3.4vw, 34px);
-    letter-spacing: -0.02em;
-    text-transform: uppercase;
-    margin: 0 0 12px;
+    font-size: clamp(27px, 4vw, 40px);
+    letter-spacing: -0.025em;
+    line-height: 1.08;
+    margin: 0 0 14px;
+    text-wrap: balance;
   }
-  .sec-note { max-width: 64ch; color: var(--tx-dim); margin: 0 0 40px; }
+  .sec-note { max-width: 62ch; color: var(--tx-dim); margin: 0 0 44px; }
   .sec-note b { color: var(--tx); font-weight: 600; }
-  section + section { border-top: 1px solid var(--hair); }
 
-  /* ---------- theme strip ---------- */
-  .themestrip { display: flex; height: 72px; margin: 0 0 10px; }
-  .themestrip div { flex: 1; position: relative; }
-  .themestrip span {
-    position: absolute; left: 10px; bottom: 6px;
-    font-size: 11px; color: rgba(0,0,0,0.75); font-weight: 600;
-  }
-  .themestrip .on-dark { color: rgba(255,255,255,0.85); }
-  .hue-legend { display: flex; flex-wrap: wrap; gap: 4px 28px; font-size: 12.5px; color: var(--tx-dim); padding: 8px 0 0; }
-  .hue-legend i { font-style: normal; font-weight: 600; }
+  /* ---------- palette band ---------- */
+  .band { display: flex; border-radius: 18px; overflow: hidden; height: 88px; box-shadow: var(--lift); }
+  .band div { flex: 1; position: relative; }
+  .band span { position: absolute; left: 12px; bottom: 8px; font-size: 12px; font-weight: 700; color: rgba(0,0,0,0.72); }
+  .band .lt { color: rgba(255,255,255,0.9); }
+  .legend { display: flex; flex-wrap: wrap; gap: 6px 30px; padding: 16px 4px 0; font-size: 13.5px; color: var(--tx-dim); }
+  .legend i { font-style: normal; font-weight: 700; }
 
-  /* ---------- the session (hero) ---------- */
-  .session { border-left: 1px solid var(--hair); padding-left: 28px; }
-  .ln { display: flex; gap: 18px; }
-  .ln .g {
-    flex: 0 0 34px;
-    text-align: right;
-    color: var(--tx-faint);
-    font-size: 11px;
-    user-select: none;
-    padding-top: 3px;
-  }
-  .ln .c { flex: 1; min-width: 0; }
-
-  .ask-line { padding: 6px 0 22px; }
-  .ask-line .sigil { color: var(--human); }
-  .ask-line .text {
-    font-family: var(--sans);
+  /* ---------- ask flow ---------- */
+  .ask {
+    font-family: var(--display);
     font-weight: 700;
-    font-size: clamp(19px, 2.6vw, 25px);
-    letter-spacing: -0.01em;
+    font-size: clamp(22px, 3.4vw, 32px);
+    letter-spacing: -0.02em;
+    line-height: 1.25;
     color: var(--human);
-    line-height: 1.3;
+    max-width: 24ch;
+    margin: 0 0 10px;
+    text-wrap: balance;
   }
-  .caret { display: inline-block; width: 10px; height: 1.15em; background: var(--human); vertical-align: text-bottom; margin-left: 4px; animation: blink 1.1s steps(1) infinite; }
-  @keyframes blink { 50% { opacity: 0; } }
+  .ask-hint { color: var(--tx-faint); font-size: 13px; margin: 0 0 40px; }
 
-  .dialog { padding: 0 0 26px; display: flex; flex-direction: column; gap: 3px; font-size: 13.5px; }
-  .dialog .q { color: var(--tx-dim); }
-  .dialog .q::before { content: "? "; color: var(--coach); }
-  .dialog .a { color: var(--human); padding-left: 2ch; }
-  .dialog .a::before { content: "= "; color: var(--tx-faint); }
-  .dialog .drv { color: var(--pass); padding-left: 2ch; font-size: 12px; }
-  .dialog .drv::before { content: "+ "; }
-  .dialog .drv .why { color: var(--tx-faint); }
+  .dialogue { display: flex; flex-direction: column; gap: 20px; max-width: 640px; margin-bottom: 48px; }
+  .turn .qq { color: var(--tx-dim); font-size: 15px; margin: 0 0 4px; }
+  .turn .aa {
+    color: var(--human);
+    font-weight: 600;
+    font-size: 16px;
+    margin: 0 0 4px;
+    padding-left: 18px;
+  }
+  .turn .mint { padding-left: 18px; font-size: 13px; color: var(--pass); margin: 0; }
+  .turn .mint em { color: var(--tx-faint); font-style: normal; }
+  .turn .mint::before { content: "✓ "; }
 
-  .meta-line { font-size: 12.5px; color: var(--tx-dim); padding-bottom: 18px; }
-  .meta-line .m { color: var(--machine); }
-  .meta-line .p { color: var(--pass); }
-  .meta-line .sep { color: var(--tx-faint); padding: 0 6px; }
-  .meta-line .toggle { color: var(--coach); cursor: pointer; border-bottom: 1px dashed var(--coach); }
-
-  .code { font-size: 13px; line-height: 1.8; }
-  .code .row { display: flex; gap: 18px; }
-  .code .row:hover { background: var(--bg-raise); }
-  .code .no { flex: 0 0 34px; text-align: right; color: var(--tx-faint); font-size: 11px; user-select: none; padding-top: 2px; }
-  .code .src { flex: 1; white-space: pre-wrap; min-width: 0; }
-  .code .tag { color: var(--machine); }
-  .code .var { color: var(--human); }
-  .code .anno .src { color: var(--coach); font-style: italic; }
-  .code .anno .src a { color: var(--coach); }
-  .code .anno { background: var(--coach-dim); }
-  .code .anno .no { color: var(--coach); opacity: 0.6; }
-  .session .foot { padding: 20px 0 10px; font-size: 12.5px; color: var(--tx-faint); }
-  .session .foot .act { color: var(--human); cursor: pointer; }
-  .session .foot .act::before { content: "[ "; color: var(--tx-faint); }
-  .session .foot .act::after { content: " ]"; color: var(--tx-faint); }
-  .session .foot .act:hover { background: var(--human-dim); }
-
-  /* ---------- receipt as diff ---------- */
-  .diff { font-size: 13px; line-height: 1.75; }
-  .diff .h {
-    display: flex;
-    justify-content: space-between;
+  .runmeta { display: flex; flex-wrap: wrap; gap: 10px 26px; align-items: center; font-size: 13.5px; color: var(--tx-dim); margin-bottom: 26px; }
+  .runmeta .m { color: var(--machine); font-weight: 600; }
+  .runmeta .ok { color: var(--pass); font-weight: 600; }
+  .pillbtn {
+    font-family: var(--sans);
+    font-size: 13.5px;
+    font-weight: 700;
+    color: #0D1017;
+    background: var(--human);
+    border: 0;
+    border-radius: 999px;
+    padding: 8px 18px;
+    cursor: pointer;
+    box-shadow: 0 0 22px rgba(255, 180, 84, 0.25);
+  }
+  .pillbtn:hover { filter: brightness(1.08); }
+  .pillbtn.ghost {
+    background: transparent;
     color: var(--tx-dim);
-    font-size: 12px;
-    padding: 6px 0;
-    border-bottom: 1px solid var(--hair);
-    margin-bottom: 10px;
-    flex-wrap: wrap;
-    gap: 6px;
+    box-shadow: none;
+    border: 1.5px solid rgba(139, 149, 166, 0.35);
   }
-  .diff .h b { color: var(--tx); }
-  .dl { display: flex; gap: 14px; padding: 1px 8px 1px 0; }
-  .dl .op { flex: 0 0 16px; text-align: center; user-select: none; }
-  .dl .body { flex: 1; white-space: pre-wrap; min-width: 0; }
-  .dl.minus { background: var(--fail-dim); }
-  .dl.minus .op, .dl.minus .body { color: var(--fail); }
-  .dl.plus { background: var(--pass-dim); }
-  .dl.plus .op, .dl.plus .body { color: var(--pass); }
-  .dl.ctx .op { color: var(--tx-faint); }
-  .dl.ctx .body { color: var(--tx-dim); }
-  .diff .verdict {
-    margin-top: 14px;
-    padding-top: 10px;
-    border-top: 1px solid var(--hair);
-    display: flex;
-    justify-content: space-between;
-    flex-wrap: wrap;
-    gap: 8px;
-    font-size: 12.5px;
+  .pillbtn.ghost:hover { color: var(--tx); border-color: var(--tx-dim); }
+
+  /* ---------- specimen + floating notes ---------- */
+  .board { display: grid; grid-template-columns: minmax(0, 1.5fr) minmax(230px, 1fr); gap: 34px; align-items: start; }
+  .paper {
+    background: var(--machine-wash);
+    border-radius: 20px;
+    padding: 30px 32px;
+    font-family: var(--mono);
+    font-size: 13.5px;
+    line-height: 1.85;
+    box-shadow: var(--lift);
+    overflow-x: auto;
   }
-  .diff .verdict .win { color: var(--pass); font-weight: 600; }
-  .diff .verdict .cost { color: var(--tx-dim); }
-  .diff .verdict a { color: var(--machine); }
+  .paper .t { color: var(--machine); font-weight: 600; }
+  .paper .v { color: var(--human); }
+  .hl { border-radius: 6px; padding: 1px 4px; margin: 0 -4px; transition: background 140ms ease; }
+  .hl .pin {
+    display: inline-flex; align-items: center; justify-content: center;
+    width: 17px; height: 17px; border-radius: 50%;
+    background: var(--coach); color: #0D1017;
+    font-family: var(--sans); font-size: 11px; font-weight: 800;
+    vertical-align: 2px; margin-left: 7px;
+  }
+  .hl.lit { background: var(--coach-wash); box-shadow: inset 3px 0 0 var(--coach); }
 
-  /* ---------- library as tree ---------- */
-  .tree { font-size: 13.5px; }
-  .tree .th { color: var(--tx-faint); font-size: 11.5px; border-bottom: 1px solid var(--hair); padding-bottom: 6px; margin-bottom: 6px; }
-  .trow { display: flex; gap: 16px; padding: 5px 0; align-items: baseline; }
-  .trow:hover { background: var(--bg-raise); }
-  .trow .st { flex: 0 0 12px; }
-  .trow .nm { flex: 1 1 220px; font-weight: 600; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
-  .trow .kd { flex: 0 0 78px; color: var(--tx-faint); font-size: 11.5px; }
-  .trow .rs { flex: 0 0 auto; font-variant-numeric: tabular-nums; font-size: 12.5px; color: var(--tx-dim); }
-  .trow.green .st { color: var(--pass); }
-  .trow.stale { opacity: 0.45; } /* health as luminance: untested things fade */
-  .trow.stale .st { color: var(--tx-dim); }
-  .trow.red .st, .trow.red .rs { color: var(--fail); }
+  .notes { display: flex; flex-direction: column; gap: 26px; padding-top: 8px; }
+  .notef { position: relative; padding-left: 26px; cursor: default; }
+  .notef::before {
+    content: ""; position: absolute; left: 0; top: 9px;
+    width: 12px; height: 12px; border-radius: 50%;
+    background: var(--coach);
+    box-shadow: 0 0 12px rgba(199, 146, 234, 0.5);
+  }
+  .notef h4 { font-family: var(--display); font-size: 16.5px; font-weight: 700; letter-spacing: -0.01em; margin: 0 0 4px; color: var(--coach); }
+  .notef p { margin: 0; font-size: 13.5px; color: var(--tx-dim); }
+  .notef p b { color: var(--tx); font-weight: 600; }
+  .notef .why { margin-top: 6px; font-size: 12.5px; color: var(--tx-faint); }
+  .notef .why b { color: var(--tx-dim); }
+  .notef.lit h4 { text-shadow: 0 0 18px rgba(199, 146, 234, 0.6); }
+  .notef.lit::before { transform: scale(1.25); }
 
-  /* ---------- coach as log ---------- */
-  .log { font-size: 13px; display: flex; flex-direction: column; gap: 14px; }
-  .log .entry .hd { color: var(--coach); }
-  .log .entry .hd .sev { background: var(--coach-dim); padding: 0 6px; font-weight: 600; }
-  .log .entry .bd { color: var(--tx); padding-left: 2ch; max-width: 70ch; }
-  .log .entry .ev { color: var(--tx-faint); padding-left: 2ch; font-size: 12px; }
-  .log .entry .ev a { color: var(--machine); }
-  .log .entry .act { color: var(--human); cursor: pointer; padding-left: 2ch; font-size: 12.5px; }
-  .log .entry .act::before { content: "[ "; color: var(--tx-faint); }
-  .log .entry .act::after { content: " ]"; color: var(--tx-faint); }
-  .log .entry .act:hover { background: var(--human-dim); }
+  /* ---------- receipt ---------- */
+  .compare { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; }
+  .side { border-radius: 20px; padding: 26px 28px; box-shadow: var(--lift); }
+  .side.was { background: var(--fail-wash); }
+  .side.now { background: var(--pass-wash); }
+  .side h4 { font-family: var(--display); font-weight: 700; font-size: 18px; margin: 0 0 2px; letter-spacing: -0.01em; }
+  .side.was h4 { color: var(--fail); }
+  .side.now h4 { color: var(--pass); }
+  .side .sub { font-size: 12.5px; color: var(--tx-faint); margin: 0 0 16px; }
+  .side .body { font-family: var(--mono); font-size: 12.5px; line-height: 1.7; color: var(--tx-dim); margin-bottom: 18px; overflow-x: auto; }
+  .ck { display: flex; flex-direction: column; gap: 6px; font-size: 13.5px; }
+  .ck span b { font-weight: 600; }
+  .ck .y { color: var(--pass); }
+  .ck .n { color: var(--fail); }
+  .tally { display: flex; justify-content: space-between; flex-wrap: wrap; gap: 10px; padding: 22px 6px 0; font-size: 14.5px; }
+  .tally .w { color: var(--pass); font-weight: 700; }
+  .tally .c { color: var(--tx-dim); }
 
-  /* ---------- fingerprint meters ---------- */
-  .fp { font-size: 13px; }
-  .fp .fh { color: var(--tx-dim); font-size: 12px; margin-bottom: 10px; }
-  .fp .fh b { color: var(--machine); font-weight: 600; }
-  .fp .mrow { display: flex; gap: 14px; align-items: baseline; padding: 2px 0; }
-  .fp .ml { flex: 0 0 300px; color: var(--tx-dim); }
-  .fp .mb { color: var(--machine); letter-spacing: 1px; }
-  .fp .mv { color: var(--tx); font-variant-numeric: tabular-nums; }
-  .fp .ffoot { color: var(--tx-faint); font-size: 12px; margin-top: 10px; }
+  /* ---------- library / coach / model ---------- */
+  .shelf { max-width: 760px; margin-bottom: 64px; }
+  .shelf-h { font-size: 13px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; color: var(--tx-faint); margin: 0 0 14px; }
+  .item { display: flex; align-items: baseline; gap: 16px; padding: 12px 14px; border-radius: 12px; }
+  .item:hover { background: rgba(216, 221, 230, 0.04); }
+  .item .dot { width: 9px; height: 9px; border-radius: 50%; flex: 0 0 auto; align-self: center; }
+  .item.green .dot { background: var(--pass); box-shadow: 0 0 10px rgba(134, 217, 124, 0.6); }
+  .item.red .dot { background: var(--fail); box-shadow: 0 0 10px rgba(255, 95, 107, 0.6); }
+  .item.stale { opacity: 0.42; }
+  .item.stale .dot { background: var(--tx-faint); }
+  .item .nm { font-weight: 700; font-size: 15.5px; flex: 1 1 200px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; }
+  .item .kd { font-size: 12px; color: var(--tx-faint); flex: 0 0 70px; }
+  .item .rs { font-size: 13px; color: var(--tx-dim); font-variant-numeric: tabular-nums; }
+  .item.red .rs { color: var(--fail); }
+
+  .findings { display: grid; grid-template-columns: 1fr 1fr; gap: 26px; margin-bottom: 64px; }
+  .sticky {
+    background: var(--coach-wash);
+    border-radius: 20px;
+    padding: 24px 26px;
+    box-shadow: var(--lift);
+    transform: rotate(-0.5deg);
+  }
+  .sticky:nth-child(2) { transform: rotate(0.4deg); }
+  .sticky .tag { font-size: 12px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.08em; color: var(--coach); margin: 0 0 10px; }
+  .sticky p { margin: 0 0 6px; font-size: 15px; }
+  .sticky p b { font-family: var(--display); font-weight: 700; }
+  .sticky .ev { font-size: 12.5px; color: var(--tx-faint); margin-bottom: 14px; }
+  .sticky .pillbtn { font-size: 12.5px; padding: 7px 15px; }
+
+  .gauges { max-width: 700px; }
+  .gauges .gh { font-size: 13.5px; color: var(--tx-dim); margin: 0 0 18px; }
+  .gauges .gh b { color: var(--machine); font-weight: 700; }
+  .grow { display: flex; align-items: center; gap: 16px; padding: 7px 0; }
+  .grow .gl { flex: 0 0 280px; font-size: 13.5px; color: var(--tx-dim); }
+  .grow .bar { flex: 1; height: 7px; border-radius: 4px; background: rgba(216, 221, 230, 0.08); overflow: hidden; }
+  .grow .fill { height: 100%; border-radius: 4px; background: linear-gradient(90deg, rgba(92,207,230,0.5), var(--machine)); box-shadow: 0 0 10px rgba(92, 207, 230, 0.4); }
+  .grow .gv { font-family: var(--mono); font-size: 12.5px; color: var(--tx); width: 36px; text-align: right; font-variant-numeric: tabular-nums; }
+  .gfoot { font-size: 12.5px; color: var(--tx-faint); margin-top: 14px; }
 
   /* ---------- principles ---------- */
-  .princ { display: flex; flex-direction: column; gap: 26px; max-width: 70ch; }
-  .princ .p h4 {
-    font-family: var(--sans);
-    font-weight: 800;
-    font-size: 17px;
-    text-transform: uppercase;
-    letter-spacing: 0.01em;
-    margin: 0 0 4px;
-  }
-  .princ .p h4 .idx { color: var(--tx-faint); font-family: var(--mono); font-weight: 400; font-size: 12px; margin-right: 10px; }
-  .princ .p p { margin: 0; color: var(--tx-dim); }
+  .rules { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 36px; }
+  .rule h4 { font-family: var(--display); font-weight: 800; font-size: 18px; letter-spacing: -0.015em; margin: 0 0 6px; }
+  .rule p { margin: 0; font-size: 14px; color: var(--tx-dim); }
 
-  .pagefoot { border-top: 1px solid var(--hair); padding-top: 20px; font-size: 12px; color: var(--tx-faint); max-width: 70ch; }
+  .pagefoot { margin-top: 90px; font-size: 13px; color: var(--tx-faint); max-width: 66ch; }
 
-  a { color: var(--machine); text-decoration: none; }
-  a:hover, .toggle:hover { background: var(--machine-dim); }
-  :focus-visible { outline: 1.5px solid var(--human); outline-offset: 2px; }
-
-  @media (max-width: 720px) {
-    .fp .ml { flex-basis: 170px; }
-    .ln .g, .code .no { display: none; }
-    .session { padding-left: 16px; }
+  @media (max-width: 820px) {
+    .board { grid-template-columns: 1fr; }
+    .compare { grid-template-columns: 1fr; }
+    .findings { grid-template-columns: 1fr; }
+    .grow .gl { flex-basis: 160px; }
   }
   @media (prefers-reduced-motion: reduce) {
-    .caret { animation: none; }
-    * { transition: none !important; }
+    * { transition: none !important; animation: none !important; }
+    .sticky, .sticky:nth-child(2) { transform: none; }
   }
 </style>
-
-<div class="statusbar">
-  <span><b>prompt-studio</b> <span class="ok">●</span> workspace/genehively</span>
-  <span>23 artifacts · 2 need attention</span>
-  <span class="spend">jul spend $4.12 / cap $25.00</span>
-</div>
 
 <div class="wrap">
 
   <div class="masthead">
-    <p class="kicker">// design direction v2 <span class="path">— replaces "specimen &amp; margin" · no cards were harmed because there are none</span></p>
-    <h1>Ideas,<br><span class="hu">syntax-</span><span class="ma">highlighted</span></h1>
-    <p class="lede">The whole app is <b>one continuous working session</b> — a lit terminal, not a dashboard. No cards, no panels, no rounded rectangles: structure comes from hairlines, indentation, and type. Color does semantic work like an editor theme: <b>amber is your voice, cyan is the machine's, violet is the coach's</b>, and green/red speak only as verdicts. Dark-only, by commitment.</p>
+    <div class="glow amber"></div>
+    <div class="glow cyan"></div>
+    <p class="kicker">Design direction v3 <span>— same colors, new world: canvas, not console</span></p>
+    <h1>The <span class="hu">night</span> <span class="ma">studio</span></h1>
+    <p class="lede">A dark <b>idea canvas</b> — the dot grid of a thinking tool, not the gutter of a code editor. Work floats on the canvas in soft washes of light; nothing is boxed, nothing is terminal. The five hues keep their jobs: <b>amber is you, cyan is the machine, violet is the coach</b>, green and red only ever report verdicts.</p>
   </div>
 
   <section>
-    <p class="sec-mark"><span class="n">// 00</span> the theme</p>
-    <h2>Five hues, five jobs</h2>
-    <p class="sec-note">A syntax theme for your thinking. No hue is decorative; if something is amber it came from you, if it's cyan it's bound for (or came from) a model. State also carries through <b>luminance</b>: stale artifacts literally fade until re-verified.</p>
-    <div class="themestrip">
-      <div style="background:#FFB454"><span>HUMAN #FFB454</span></div>
-      <div style="background:#5CCFE6"><span>MACHINE #5CCFE6</span></div>
-      <div style="background:#C792EA"><span>COACH #C792EA</span></div>
-      <div style="background:#86D97C"><span>PASS #86D97C</span></div>
-      <div style="background:#FF5F6B"><span class="on-dark">FAIL #FF5F6B</span></div>
-      <div style="background:#0C0F14; border:1px solid #232A35"><span class="on-dark">GROUND #0C0F14</span></div>
+    <p class="sec-kick" style="color: var(--coach);">The palette</p>
+    <h2>Same voices, warmer room</h2>
+    <p class="sec-note">The semantic color system survives from v2 untouched — it was the part that worked. What changes is everything around it: rounded display type, glow instead of grid lines, washes instead of borders.</p>
+    <div class="band">
+      <div style="background:#FFB454"><span>You</span></div>
+      <div style="background:#5CCFE6"><span>Machine</span></div>
+      <div style="background:#C792EA"><span>Coach</span></div>
+      <div style="background:#86D97C"><span>Pass</span></div>
+      <div style="background:#FF5F6B"><span class="lt">Fail</span></div>
     </div>
-    <div class="hue-legend">
+    <div class="legend">
       <span><i style="color:#FFB454">amber</i> — asks, answers, actions</span>
       <span><i style="color:#5CCFE6">cyan</i> — payloads, models, links</span>
-      <span><i style="color:#C792EA">violet</i> — annotations, coach findings</span>
-      <span><i style="color:#86D97C">green</i> / <i style="color:#FF5F6B">red</i> — verdicts from real runs only</span>
+      <span><i style="color:#C792EA">violet</i> — notes &amp; coaching</span>
+      <span><i style="color:#86D97C">green</i> / <i style="color:#FF5F6B">red</i> — verdicts only</span>
     </div>
   </section>
 
   <section>
-    <p class="sec-mark"><span class="n">// 01</span> the session — ask mode</p>
-    <h2>A scrollback, not a form</h2>
-    <p class="sec-note">You type at the top; everything unfolds beneath as one document — the interrogation as inline dialogue, each answer minting its check (<span style="color:var(--pass)">+</span> lines), and the compiled prompt as numbered source with the <b>explanation woven in as comments</b>, in the coach's voice. Toggle annotations off and it's the exact payload.</p>
+    <p class="sec-kick" style="color: var(--human);">Ask mode</p>
+    <h2>Your words, writ large</h2>
+    <p class="sec-note">The ask isn't typed into a little input box — it <b>is the headline of the workspace</b>. The interrogation reads as a conversation set in type, and each answer quietly mints a check. The compiled prompt sits on the canvas like a sheet of work, with the coach's notes floating beside it — hover either side and its partner glows.</p>
 
-    <div class="session">
-      <div class="ask-line">
-        <span class="text"><span class="sigil">&gt; </span>I need consistent structured summaries of customer support calls<span class="caret"></span></span>
+    <p class="ask">I need consistent structured summaries of customer support calls</p>
+    <p class="ask-hint">Ask anything · the studio asks back before it builds</p>
+
+    <div class="dialogue">
+      <div class="turn">
+        <p class="qq">What happens to a summary after it's written?</p>
+        <p class="aa">It's inserted into our CRM by a script</p>
+        <p class="mint">check minted: valid JSON schema <em>— from your answer</em></p>
       </div>
-
-      <div class="dialog">
-        <span class="q">what happens to a summary after it's written?</span>
-        <span class="a">it's inserted into our CRM by a script</span>
-        <span class="drv">check json_schema <span class="why">— derived from your answer</span></span>
-        <span class="q">what does a bad one look like?</span>
-        <span class="a">made-up details, or missing what the customer actually wanted</span>
-        <span class="drv">check quote_support <span class="why">— every fact must cite the transcript</span></span>
-        <span class="q">which model runs this?</span>
-        <span class="a">claude-sonnet-5, daily</span>
+      <div class="turn">
+        <p class="qq">What does a bad one look like?</p>
+        <p class="aa">Made-up details, or missing what the customer actually wanted</p>
+        <p class="mint">check minted: every fact quotes the transcript</p>
       </div>
-
-      <div class="meta-line">
-        compiled for <span class="m">claude-sonnet-5</span><span class="sep">·</span>v1<span class="sep">·</span>$0.04<span class="sep">·</span><span class="p">receipt 5/5 ✓</span><span class="sep">·</span><span class="toggle" id="anno-toggle" tabindex="0">annotations on</span>
+      <div class="turn">
+        <p class="qq">Which model runs this?</p>
+        <p class="aa">claude-sonnet-5, daily</p>
       </div>
+    </div>
 
-      <div class="code" id="specimen">
-        <div class="row"><span class="no">1</span><span class="src"><span class="tag">&lt;role&gt;</span></span></div>
-        <div class="row anno"><span class="no">·</span><span class="src"># role scoped to the consumer — names who reads the output; stabilizes tone across runs · <a href="#">card ›</a></span></div>
-        <div class="row"><span class="no">2</span><span class="src">You are a customer-operations analyst writing</span></div>
-        <div class="row"><span class="no">3</span><span class="src">summaries that a CRM import script consumes.</span></div>
-        <div class="row"><span class="no">4</span><span class="src"><span class="tag">&lt;/role&gt;</span></span></div>
-        <div class="row"><span class="no">5</span><span class="src"><span class="tag">&lt;instructions&gt;</span></span></div>
-        <div class="row anno"><span class="no">·</span><span class="src"># quote-then-answer — cuts invented details on long transcripts; from your "bad summary" answer · <a href="#">card ›</a></span></div>
-        <div class="row"><span class="no">6</span><span class="src">1. Read the full transcript before writing.</span></div>
-        <div class="row"><span class="no">7</span><span class="src">2. Quote the exact sentence that supports each fact.</span></div>
-        <div class="row"><span class="no">8</span><span class="src">3. If the request is unclear, write "UNCLEAR" — never guess.</span></div>
-        <div class="row"><span class="no">9</span><span class="src"><span class="tag">&lt;/instructions&gt;</span></span></div>
-        <div class="row"><span class="no">10</span><span class="src"><span class="tag">&lt;output_format&gt;</span></span></div>
-        <div class="row anno"><span class="no">·</span><span class="src"># output contract — a schema, not a plea for JSON; compiles into the json_schema check · <a href="#">card ›</a></span></div>
-        <div class="row"><span class="no">11</span><span class="src">Return only JSON: { "customer_request": string,</span></div>
-        <div class="row"><span class="no">12</span><span class="src">  "resolution_status": "resolved"|"escalated"|"open",</span></div>
-        <div class="row"><span class="no">13</span><span class="src">  "supporting_quotes": string[], "followup_needed": boolean }</span></div>
-        <div class="row"><span class="no">14</span><span class="src"><span class="tag">&lt;/output_format&gt;</span></span></div>
-        <div class="row"><span class="no">15</span><span class="src"><span class="tag">&lt;transcript&gt;</span> <span class="var">{{call_transcript}}</span> <span class="tag">&lt;/transcript&gt;</span></span></div>
-        <div class="row anno"><span class="no">·</span><span class="src"># content placement — variable content last keeps the prefix cacheable; sonnet-5's card flags position sensitivity past 10k tokens · <a href="#">card ›</a></span></div>
+    <div class="runmeta">
+      <span>Compiled for <span class="m">claude-sonnet-5</span></span>
+      <span>v1 · $0.04</span>
+      <span class="ok">Receipt: 5/5 checks</span>
+      <button class="pillbtn">Save to library</button>
+      <button class="pillbtn ghost">Refine</button>
+    </div>
+
+    <div class="board">
+      <div class="paper">
+<span class="hl" data-n="n1"><span class="t">&lt;role&gt;</span><span class="pin">1</span>
+You are a customer-operations analyst writing
+summaries that a CRM import script consumes.
+<span class="t">&lt;/role&gt;</span></span>
+
+<span class="hl" data-n="n2"><span class="t">&lt;instructions&gt;</span><span class="pin">2</span>
+1. Read the full transcript before writing.
+2. Quote the exact sentence that supports each fact.
+3. If the request is unclear, write "UNCLEAR" — never guess.
+<span class="t">&lt;/instructions&gt;</span></span>
+
+<span class="hl" data-n="n3"><span class="t">&lt;output_format&gt;</span><span class="pin">3</span>
+Return only JSON: { "customer_request": string,
+  "resolution_status": "resolved"|"escalated"|"open",
+  "supporting_quotes": string[], "followup_needed": boolean }
+<span class="t">&lt;/output_format&gt;</span></span>
+
+<span class="hl" data-n="n4"><span class="t">&lt;transcript&gt;</span> <span class="v">{{call_transcript}}</span> <span class="t">&lt;/transcript&gt;</span><span class="pin">4</span></span>
       </div>
-
-      <div class="foot">
-        <span class="act" tabindex="0">save to library</span> &nbsp; <span class="act" tabindex="0">run receipt</span> &nbsp; <span class="act" tabindex="0">refine</span>
+      <div class="notes">
+        <div class="notef" data-n="n1" tabindex="0">
+          <h4>A role scoped to the reader</h4>
+          <p>Not "helpful assistant" — the role names <b>who consumes the output</b>, which steadies tone and detail across daily runs.</p>
+          <p class="why"><b>Why for this model:</b> XML sections are claude-sonnet-5's preferred structure, per its card.</p>
+        </div>
+        <div class="notef" data-n="n2" tabindex="0">
+          <h4>Quotes before claims</h4>
+          <p>Requiring a supporting quote per fact sharply cuts invented details — <b>your stated failure mode</b>.</p>
+        </div>
+        <div class="notef" data-n="n3" tabindex="0">
+          <h4>A contract, not a plea</h4>
+          <p>The CRM script is the consumer, so the format is a schema — and it doubles as this prompt's smoke check.</p>
+        </div>
+        <div class="notef" data-n="n4" tabindex="0">
+          <h4>Long content goes last</h4>
+          <p>Instructions first, transcript at the end — the stable prefix stays cacheable on recurring runs.</p>
+          <p class="why"><b>Why for this model:</b> its card flags position sensitivity past 10k tokens.</p>
+        </div>
       </div>
     </div>
   </section>
 
   <section>
-    <p class="sec-mark"><span class="n">// 02</span> the receipt</p>
-    <h2>Better, shown as a diff</h2>
-    <p class="sec-note">Your raw ask and the compiled prompt run on the same generated inputs; the outputs render as a diff because that's what they are. Checks decide. The verdict line links to raw transcripts — every claim is one click from its evidence.</p>
-
-    <div class="diff">
-      <div class="h"><span><b>output diff</b> — input 2 of 3 · claude-sonnet-5</span><span>− your ask, as written &nbsp;&nbsp; + compiled v1</span></div>
-      <div class="dl minus"><span class="op">−</span><span class="body">The customer called about some billing issues and the agent helped them sort it out. They seemed satisfied by the end…</span></div>
-      <div class="dl plus"><span class="op">+</span><span class="body">{ "customer_request": "refund for duplicate March charge",</span></div>
-      <div class="dl plus"><span class="op">+</span><span class="body">  "resolution_status": "escalated",</span></div>
-      <div class="dl plus"><span class="op">+</span><span class="body">  "supporting_quotes": ["I was charged twice on the 14th…"],</span></div>
-      <div class="dl plus"><span class="op">+</span><span class="body">  "followup_needed": true }</span></div>
-      <div class="dl ctx"><span class="op">@</span><span class="body">checks — json_schema: − prose / + pass · quote_support: − none / + 3 verbatim · mentions_resolution: both pass</span></div>
-      <div class="verdict">
-        <span class="win">compiled 5/5 · original 2/5 · 3 inputs</span>
-        <span class="cost">$0.31 total · <a href="#">transcripts ›</a></span>
+    <p class="sec-kick" style="color: var(--pass);">The receipt</p>
+    <h2>Before and after, on the same input</h2>
+    <p class="sec-note">Your ask as you wrote it, and the compiled prompt, run side by side on generated inputs. The checks decide — and every number links back to the raw transcripts.</p>
+    <div class="compare">
+      <div class="side was">
+        <h4>Your ask, as written</h4>
+        <p class="sub">"summarize this customer call" · input 2 of 3</p>
+        <div class="body">The customer called about some billing issues and the agent helped them sort it out. They seemed satisfied by the end…</div>
+        <div class="ck">
+          <span class="n"><b>✕ valid JSON</b> — returned prose</span>
+          <span class="n"><b>✕ quotes transcript</b> — no quotes</span>
+          <span class="y"><b>✓ mentions resolution</b></span>
+        </div>
       </div>
+      <div class="side now">
+        <h4>The compiled prompt</h4>
+        <p class="sub">v1 · claude-sonnet-5 · input 2 of 3</p>
+        <div class="body">{ "customer_request": "refund for duplicate March charge", "resolution_status": "escalated", "supporting_quotes": ["I was charged twice on the 14th…"], "followup_needed": true }</div>
+        <div class="ck">
+          <span class="y"><b>✓ valid JSON</b></span>
+          <span class="y"><b>✓ quotes transcript</b> — 3 verbatim</span>
+          <span class="y"><b>✓ mentions resolution</b></span>
+        </div>
+      </div>
+    </div>
+    <div class="tally">
+      <span class="w">Compiled 5/5 · original 2/5 · 3 inputs</span>
+      <span class="c">$0.31 total · <a href="#">see transcripts</a></span>
     </div>
   </section>
 
   <section>
-    <p class="sec-mark"><span class="n">// 03</span> the quiet surfaces</p>
-    <h2>Tree, log, and instrument</h2>
-    <p class="sec-note">The library is a tree, not a card wall — <b>stale artifacts fade</b> until re-verified. The coach writes a log, not tips: findings with evidence refs and one amber action. The model fingerprint is a text instrument: measured, dated, versioned.</p>
+    <p class="sec-kick" style="color: var(--machine);">The quiet surfaces</p>
+    <h2>Shelf, notes, and gauges</h2>
+    <p class="sec-note">The library is a shelf where <b>stale work literally fades</b> until re-verified. The coach pins findings to the canvas — evidence attached, one amber action each. Model knowledge reads as gauges: measured, dated, versioned.</p>
 
-    <div class="tree" style="margin-bottom: 44px;">
-      <div class="th">library/ — 23 artifacts · sorted by attention</div>
-      <div class="trow red"><span class="st">●</span><span class="nm">contract-extractor</span><span class="kd">prompt</span><span class="rs">3/5 on sonnet-5 · fix drafted ›</span></div>
-      <div class="trow green"><span class="st">●</span><span class="nm">call-summary-crm</span><span class="kd">prompt</span><span class="rs">5/5 · 2d ago</span></div>
-      <div class="trow green"><span class="st">●</span><span class="nm">pdf-report-skill</span><span class="kd">skill</span><span class="rs">9/9 · 6d ago</span></div>
-      <div class="trow stale"><span class="st">●</span><span class="nm">weekly-digest-writer</span><span class="kd">prompt</span><span class="rs">untested 34d — fading</span></div>
+    <div class="shelf">
+      <p class="shelf-h">Library — 23 artifacts, sorted by attention</p>
+      <div class="item red"><span class="dot"></span><span class="nm">contract-extractor</span><span class="kd">prompt</span><span class="rs">3/5 on sonnet-5 · fix drafted ›</span></div>
+      <div class="item green"><span class="dot"></span><span class="nm">call-summary-crm</span><span class="kd">prompt</span><span class="rs">5/5 · 2 days ago</span></div>
+      <div class="item green"><span class="dot"></span><span class="nm">pdf-report-skill</span><span class="kd">skill</span><span class="rs">9/9 · 6 days ago</span></div>
+      <div class="item stale"><span class="dot"></span><span class="nm">weekly-digest-writer</span><span class="kd">prompt</span><span class="rs">untested 34 days — fading</span></div>
     </div>
 
-    <div class="log" style="margin-bottom: 44px;">
-      <div class="entry">
-        <div class="hd"><span class="sev">coach</span> week 29 · from 41 observed sessions</div>
+    <div class="findings">
+      <div class="sticky">
+        <p class="tag">Coach · week 29</p>
+        <p><b>You re-explained output format in 6 sessions.</b> Same instruction, five phrasings, one agent.</p>
+        <p class="ev">Evidence: sessions 12, 14, 19, 22, 26, 31</p>
+        <button class="pillbtn">Draft a CLAUDE.md fix</button>
       </div>
-      <div class="entry">
-        <div class="hd">finding: repeated-instruction</div>
-        <div class="bd">You re-explained output format in 6 sessions — same instruction, five phrasings, one agent.</div>
-        <div class="ev">evidence: <a href="#">sessions 12, 14, 19, 22, 26, 31</a></div>
-        <div class="act" tabindex="0">draft a CLAUDE.md fix</div>
-      </div>
-      <div class="entry">
-        <div class="hd">finding: underspecified-audience</div>
-        <div class="bd">First asks omit the audience 71% of the time — your most common retry trigger.</div>
-        <div class="ev">evidence: <a href="#">17 retry loops</a></div>
+      <div class="sticky">
+        <p class="tag">Coach · week 29</p>
+        <p><b>First asks omit the audience 71% of the time</b> — your most common retry trigger.</p>
+        <p class="ev">Evidence: 17 retry loops</p>
       </div>
     </div>
 
-    <div class="fp">
-      <div class="fh">models/<b>claude-sonnet-5</b> · measured fingerprint · battery v3 · 2026-07-12</div>
-      <div class="mrow"><span class="ml">format adherence</span><span class="mb">▮▮▮▮▮▮▮▮▮▯</span><span class="mv">.94</span></div>
-      <div class="mrow"><span class="ml">instruction following w/ distractors</span><span class="mb">▮▮▮▮▮▮▮▮▯▯</span><span class="mv">.89</span></div>
-      <div class="mrow"><span class="ml">position sensitivity (lower = better)</span><span class="mb">▮▮▯▯▯▯▯▯▯▯</span><span class="mv">.22</span></div>
-      <div class="mrow"><span class="ml">hedging rate</span><span class="mb">▮▮▮▯▯▯▯▯▯▯</span><span class="mv">.31</span></div>
-      <div class="ffoot">measured, not asserted — curated notes live beside this, never mixed with it</div>
+    <div class="gauges">
+      <p class="gh"><b>claude-sonnet-5</b> · measured fingerprint · battery v3 · 2026-07-12</p>
+      <div class="grow"><span class="gl">Format adherence</span><div class="bar"><div class="fill" style="width:94%"></div></div><span class="gv">.94</span></div>
+      <div class="grow"><span class="gl">Instruction following, with distractors</span><div class="bar"><div class="fill" style="width:89%"></div></div><span class="gv">.89</span></div>
+      <div class="grow"><span class="gl">Position sensitivity (lower is better)</span><div class="bar"><div class="fill" style="width:22%"></div></div><span class="gv">.22</span></div>
+      <div class="grow"><span class="gl">Hedging rate</span><div class="bar"><div class="fill" style="width:31%"></div></div><span class="gv">.31</span></div>
+      <p class="gfoot">Measured, not asserted — curated notes live beside these numbers, never mixed with them.</p>
     </div>
   </section>
 
   <section>
-    <p class="sec-mark"><span class="n">// 04</span> the rules</p>
-    <h2>What this UI refuses to do</h2>
-    <div class="princ">
-      <div class="p"><h4><span class="idx">R1</span>No cards</h4><p>Structure comes from hairlines, indentation, and type scale. If a box appears, it must be a real container of state (a diff, a specimen) — never decoration.</p></div>
-      <div class="p"><h4><span class="idx">R2</span>Hue is meaning</h4><p>Amber = you, cyan = machine, violet = coach, green/red = verdicts from real runs. Nothing is colored to look nice.</p></div>
-      <div class="p"><h4><span class="idx">R3</span>Stale things fade</h4><p>Health carries through luminance. An untested artifact dims until re-verified; attention goes where the light is.</p></div>
-      <div class="p"><h4><span class="idx">R4</span>The session is the interface</h4><p>Ask, receipt, coach, library — all read top-to-bottom as one working document. No modal graveyards, no widget grids.</p></div>
+    <p class="sec-kick" style="color: var(--tx-dim);">The rules</p>
+    <h2>What the canvas refuses</h2>
+    <div class="rules">
+      <div class="rule"><h4>No chrome</h4><p>No borders, gutters, sigils, or status bars. Work floats on the canvas in washes of light; hierarchy comes from scale and hue.</p></div>
+      <div class="rule"><h4>Hue is meaning</h4><p>Amber is you, cyan is the machine, violet is the coach. Green and red only ever report verdicts from real runs.</p></div>
+      <div class="rule"><h4>Stale things fade</h4><p>Health is luminance. Untested work dims until re-verified — attention goes where the light is.</p></div>
+      <div class="rule"><h4>Your words lead</h4><p>The ask is the headline, set larger than anything the machine says back. The tool's voice never upstages yours.</p></div>
     </div>
   </section>
 
-  <p class="pagefoot">Dark-only is a commitment, not an omission — this direction lives in one visual world. If a light variant is ever wanted, it's a second syntax theme ("daylight"), designed on its own terms. Annotations toggle: click "annotations on" above the specimen.</p>
+  <p class="pagefoot">Night Studio is dark-only by commitment — one visual world, executed fully. Monospace survives in exactly one place: inside payloads and measurements, where exactness is the message. Everything else speaks in rounded display type and soft light.</p>
 
 </div>
 
 <script>
-  var toggle = document.getElementById('anno-toggle');
-  var on = true;
-  function flip() {
-    on = !on;
-    document.querySelectorAll('#specimen .anno').forEach(function (r) {
-      r.style.display = on ? '' : 'none';
-    });
-    toggle.textContent = 'annotations ' + (on ? 'on' : 'off');
-  }
-  toggle.addEventListener('click', flip);
-  toggle.addEventListener('keydown', function (e) {
-    if (e.key === 'Enter' || e.key === ' ') { e.preventDefault(); flip(); }
+  document.querySelectorAll('[data-n]').forEach(function (el) {
+    var key = el.getAttribute('data-n');
+    function set(on) {
+      document.querySelectorAll('[data-n="' + key + '"]').forEach(function (m) {
+        m.classList.toggle('lit', on);
+      });
+    }
+    el.addEventListener('mouseenter', function () { set(true); });
+    el.addEventListener('mouseleave', function () { set(false); });
+    el.addEventListener('focus', function () { set(true); });
+    el.addEventListener('blur', function () { set(false); });
   });
 </script>
