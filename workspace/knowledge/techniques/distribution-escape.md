@@ -15,3 +15,9 @@ accents beats timid palettes").
 **Mechanism**: naming the clichés moves them from "high-probability default" to
 "explicitly excluded," and a committed direction replaces the vacuum that
 convergence fills. Vary your own examples too — the model imitates their spread.
+
+**Refinements from the official cookbook**: steer specific design dimensions
+individually (typography, color, motion, backgrounds) rather than one global vibe
+line; and the productized form is a skill that forces choosing a named aesthetic
+direction *before* generation — the reusable version of "give it a direction to
+commit to."

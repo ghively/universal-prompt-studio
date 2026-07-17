@@ -17,7 +17,12 @@ Retrieved context is only as good as its packaging:
 - **Don't paraphrase snippets before insertion** — the model grounds better on
   original text, and paraphrase launders retrieval errors into "context."
 - **Contextual retrieval is now standard**: prepend a 50-100-token LLM-generated
-  context line to each chunk before embedding (5-15% retrieval-precision gains in
-  production); hybrid BM25+vector with reranking is the baseline stack.
+  context line to each chunk before embedding — Anthropic's published numbers are
+  failure-rate REDUCTIONS of 35% (contextual embeddings), 49% (+contextual BM25),
+  67% (+reranking). The production baseline: two-stage hybrid (BM25+dense fused
+  with RRF) then cross-encoder rerank — reranking is the largest single gain.
+- **Deduplicate and date**: near-duplicate retrieved chunks and semantically-
+  similar-but-wrong distractors are the dominant long-context failure; dedupe/MMR
+  the set, surface doc dates so the model can arbitrate conflicts, cap set size.
 - **Retrieve-then-focus beats dump-everything**: the measured case for RAG even
   with 1M windows — see context-compaction for the rot data.

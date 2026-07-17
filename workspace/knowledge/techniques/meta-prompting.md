@@ -14,3 +14,9 @@ never a replacement — it must beat the incumbent on the same checks before
 promotion. Automated optimization loops (generate variants → eval → keep winners →
 mutate) are the industrial version; they need a trustworthy metric before they're
 anything but noise amplifiers.
+
+**Disambiguation**: "meta-prompting" also names a conductor/expert orchestration
+technique (Suzgun & Kalai 2024); this card means LLM-improves-the-prompt.
+**Two hardening rules**: candidates must be evaluated ON THE TARGET MODEL — a
+strong model's notion of better does not transfer down; and note this is now
+productized (Anthropic Console improver, OpenAI optimizer) — the baseline to beat.

@@ -14,3 +14,10 @@ tool when it shouldn't.
 when..." — and reserve emphasis for the one rule that genuinely outranks the others.
 If a behavior still undertriggers at calm intensity, that's a signal to restructure
 the instruction, not to shout it.
+
+**Calm means unemphatic AND direct — not softened**: hedged politeness ("would you
+be so kind", "if appropriate, perhaps consider") measurably degrades
+instruction-following just as shouting does; blunt directness slightly outperforms
+very-polite phrasing on current models [single-study, preprint]. The target is a
+band: no emphasis inflation, no courtesy padding. Reasoning models literally spend
+thinking tokens reconciling emphatic language.

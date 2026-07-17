@@ -15,3 +15,11 @@ in at most 3 sentences" does.
 **Before**: "Don't make up details."
 **After**: "Only state facts you can quote from the transcript; if a detail is
 missing, write UNKNOWN."
+
+**Scope (reconciles with distribution-escape)**: negation fails when it leaves a
+behavioral vacuum; it *works* as counter-pressure against a known high-probability
+default when a positive direction accompanies it ("avoid Inter and purple
+gradients; draw from IDE themes"). Interpretability work traced the rebound:
+after "do not mention X," middle layers amplify the forbidden token — and the
+effect worsens in long, crowded prompts, which is when negative-only rules fail
+hardest.

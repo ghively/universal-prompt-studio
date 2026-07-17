@@ -30,8 +30,10 @@ OpenAI current-generation guidance.
   model tested, well before window limits — focused ~300-token prompts beat 113k
   dumps. Budget effective context to a fraction of advertised; retrieve-then-focus;
   compaction and memory files are now first-class API features, not DIY.
-- **Judge panels demoted**: correlated judge errors mean one strong calibrated
-  judge at temp 0 with position-swapping beats a naive majority panel.
+- **Judge panels demoted — with scope**: correlated errors mean one strong
+  calibrated judge at temp 0 with position-swapping beats a NAIVE majority panel
+  of similar judges; heterogeneous aspect-verifier ensembles remain a live,
+  distinct pattern.
 
 ## The order of operations for any prompt
 1. **Say what you want** in one plain sentence before any structure. If you can't,
