@@ -1,90 +1,81 @@
-# Design Language — "Specimen & Margin"
+# Design Language v2 — "Ideas, syntax-highlighted"
 
-*Companion to PRODUCT.md. Live mockup: `docs/design/mockup.html` (Ask mode, receipt,
-library, coach digest, model fingerprint).*
+*Companion to PRODUCT.md. Live mockup: `docs/design/mockup.html`.
+v2 replaces "Specimen & Margin" after owner feedback: too cardy, too generic,
+wanted an idea-workspace vibe — direction chosen: dark IDE × bold expressive.*
 
 ## Concept
 
-The product's soul is **text under examination**, so the UI borrows from the two
-worlds that are genuinely its own:
+The whole app is **one continuous working session** — a lit terminal, not a
+dashboard. There are no cards, no panels, no rounded rectangles: structure comes
+from hairlines, indentation, line-number gutters, and type scale. Color does
+semantic work the way an editor theme does — every hue has a job, nothing is
+colored to look nice.
 
-- the **annotated manuscript** — margin notes, editorial typography, generous
-  measure, explanation beside the artifact;
-- the **lab instrument** — mono readouts, calibrated meters, graph-paper restraint,
-  numbers you can trust.
+**Dark-only, by commitment.** This direction lives in one visual world. A light
+variant, if ever wanted, is a second syntax theme ("daylight") designed on its own
+terms — not an inversion.
 
-The signature visual: the prompt is a **specimen** — an exact payload bound for a
-machine, set in monospace on cool paper — while everything human (explanations,
-questions, coaching) lives in the margins in editorial type. Hovering a numbered
-section of the specimen lights its margin note, and vice versa. The annotated
-specimen *is* the curriculum.
+## The theme — five hues, five jobs
 
-## Tokens
+| Hue | Hex | Job |
+|---|---|---|
+| **Amber (human)** | `#FFB454` | your asks, your answers, your actions |
+| **Cyan (machine)** | `#5CCFE6` | payloads, model names, links, measured data |
+| **Violet (coach)** | `#C792EA` | annotations, findings, observation |
+| Green (pass) | `#86D97C` | verdicts from real runs only |
+| Red (fail) | `#FF5F6B` | verdicts from real runs only |
+| Ground / raise | `#0C0F14` / `#12161D` | blue-black, never pure black |
+| Text / dim / faint | `#D8DDE6` / `#7E8899` / `#4C5666` | three text levels |
+| Hairline | `#232A35` | all structure |
 
-| Token | Light | Dark | Role |
-|---|---|---|---|
-| paper | `#F3F5F7` | `#12161D` | ground (cool, biased toward accent) |
-| surface | `#FCFDFE` | `#1A202A` | cards, panels |
-| ink | `#1B2430` | `#E5EAF2` | text |
-| ink-soft / ink-faint | `#536070` / `#8A96A4` | `#9BA8B9` / `#6B7889` | secondary / captions |
-| **cobalt (accent)** | `#2B50C4` | `#8FA7FF` | interaction + annotation, nothing else |
-| pass | `#2E7D4F` | `#5CBA8C` | verdicts only |
-| stale/warn | `#A87708` | `#D9A83F` | verdicts only |
-| regressed/fail | `#B3383E` | `#E0707A` | verdicts only |
+**State carries through luminance**: stale artifacts literally fade (reduced
+opacity) until re-verified. Attention goes where the light is.
 
-Both themes are first-class; tokens are defined on `:root`, redefined under
-`prefers-color-scheme: dark`, and again under `[data-theme=…]` so an explicit toggle
-beats the OS preference. A faint accent-tinted engineering grid appears in the
-masthead/header zones only.
-
-## Type — three voices
+## Type — two voices
 
 | Voice | Stack | Used for |
 |---|---|---|
-| Serif · narrative | Iowan Old Style / Palatino / Georgia | headings, explanations, coach findings, interrogation questions |
-| Sans · interface | system-ui stack | controls, labels, body UI |
-| Mono · evidence | ui-monospace / SF Mono / Menlo | **payloads and measurements only**: prompts, costs, checks, model IDs, versions |
+| Mono (default) | ui-monospace / SF Mono / Menlo | nearly everything — this is an IDE |
+| Display sans | system sans at 800–850 weight, tight tracking, uppercase | big expressive moments: headlines, section titles |
 
-The serif/mono contrast carries the identity: human voice vs. machine payload.
-In the build, ship a real webfont pairing with the same roles (candidates: a
-bookish text serif + a neutral grotesque + a crisp mono), self-hosted — no CDN fonts.
+Since the ground is mono-first, semantics move from typeface to **hue** (v1's
+"mono means measured" rule is superseded by "hue is meaning"). The bold uppercase
+display face is the expressive counterweight — used at large sizes only.
 
-## Rules the UI never breaks
+## Signature treatments
 
-1. **Mono means measured.** If it's monospace, it was counted, not written. Never
-   set decorative text in mono.
-2. **Semantic color is earned.** Green/amber/red appear only as verdicts from real
-   runs. Decoration never borrows them; the accent never judges.
-3. **Margins teach.** Explanation sits beside the artifact — never in modals or
-   tooltip graveyards.
-4. **Calm by default.** Nothing pulses, spins, or slides unless state actually
-   changed. Motion is a reporting tool; `prefers-reduced-motion` is honored.
+- **Ask mode is a scrollback.** Your ask is a big amber `>` line; the
+  interrogation renders as inline dialogue (`?` question / `=` answer / `+`
+  derived check in green); the compiled prompt is numbered source with the
+  explanation **woven in as violet comment lines** (`# technique — why · card ›`),
+  toggleable so the exact payload is always one click away.
+- **The receipt is a diff.** Original-ask output as `−` lines, compiled-prompt
+  output as `+` lines, checks in a `@` context line, verdict row with cost and a
+  transcripts link.
+- **The library is a tree**, not a card wall: status glyph + name + kind + mono
+  stat per row; regressed rows go red, stale rows fade.
+- **The coach writes a log**, not tips: `finding:` entries with evidence refs and
+  a single amber `[ action ]`.
+- **The model fingerprint is a text instrument**: `▮▮▮▮▮▮▮▮▮▯ .94` meter rows,
+  stamped with battery version and measurement date.
+- **Buttons are bracketed text**: `[ save to library ]` — amber, terminal-native.
+- A slim **status bar** tops the app: workspace, attention count, month spend vs cap.
 
-## Layout
+## Rules the UI refuses to break
 
-- Left icon rail (64px): ASK · LIB · COACH · MODELS · LAB · QUEUE. Active item gets
-  accent + soft fill.
-- Content column max ~1000px; running text ≤ 65ch.
-- Ask screen anatomy: ask bar (serif — your words are narrative) → interrogation
-  Q&A rows, each showing its **derived check** on the right (the "your answers
-  become tests" mechanic made visible) → evidence chips (mono pills) → the
-  specimen/margin two-column grid → the receipt.
-- Receipt: two equal columns (your ask vs. compiled prompt), per-check ✓/✕ rows,
-  full-width verdict strip linking to raw transcripts.
-- Library rows: status dot (health) + name + kind chip + mono stat. State reads at
-  a glance without reading.
-- Model panels: curated notes and measured fingerprint are visually separated;
-  meters carry battery version + measurement date. "Measured, not asserted."
-
-## Component inventory (v0.1 needs only these)
-
-ask bar · interrogation row (+ derived-check tag) · evidence chip · specimen block
-(+ numbered segment) · margin note (+ model-why footer) · receipt column ·
-check row · verdict strip · status dot · kind chip · panel/panel-header ·
-meter row · primary button · rail item · toast.
+1. **No cards.** A box must be a real container of state (a diff, a specimen) —
+   never decoration.
+2. **Hue is meaning.** Amber = you, cyan = machine, violet = coach, green/red =
+   verdicts from real runs.
+3. **Stale things fade.** Health is luminance.
+4. **The session is the interface.** Everything reads top-to-bottom as one working
+   document. No modal graveyards, no widget grids.
 
 ## Accessibility
 
-Visible focus states everywhere (specimen segments and notes are focusable and
-cross-highlight on focus, not just hover); contrast checked on both themes;
-tabular numerals for all aligned digits; wide content scrolls in its own container.
+Focus states in amber outline on all interactive text; hover targets get a
+hue-dim background wash; contrast verified on the dark ground (dim text `#7E8899`
+on `#0C0F14` ≈ 5.5:1); caret blink and all motion honor `prefers-reduced-motion`;
+tabular numerals wherever digits align; wide code/diff content scrolls in its own
+container.
