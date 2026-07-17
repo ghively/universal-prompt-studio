@@ -1,0 +1,23 @@
+id: deepseek-r1
+label: DeepSeek R1 (via OpenRouter)
+provider: openrouter
+api_model_id: deepseek/deepseek-r1
+context_window: 164000
+max_output_tokens: 33000
+pricing: { input_per_mtok_usd: 0.55, output_per_mtok_usd: 2.19 }
+sampling:
+  default_temperature: 0.6
+  notes: "Vendor recommends ~0.6; higher values get rambly."
+reasoning:
+  kind: always-thinking
+  cot_prompting: harmful
+  notes: "Always emits a reasoning trace (exposed as message.reasoning via OpenRouter). Never prompt it to think step by step — it already does, and the instruction degrades it. Keep prompts short and direct."
+formatting_idiom: "Plain, direct instructions. Minimal structure beats heavy templating. State the output format in one line at the end."
+structured_output: "Weakest of the seed set at strict schemas; validate output and expect retries."
+strengths: [visible reasoning traces (great for the studio's instruments), math, cheap deep reasoning]
+failure_modes: [format discipline, long reasoning preambles leaking into output, schema adherence]
+prompting_notes: |
+  - Use it to SEE how a model reasons about your prompt, not for format-critical work.
+  - One task per prompt; no few-shot walls (they bloat its reasoning).
+last_reviewed: 2026-07-17
+sources: ["https://openrouter.ai/deepseek/deepseek-r1"]

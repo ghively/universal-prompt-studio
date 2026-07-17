@@ -1,0 +1,23 @@
+id: claude-haiku-4-5
+label: Claude Haiku 4.5
+provider: anthropic
+api_model_id: claude-haiku-4-5-20251001
+context_window: 200000
+max_output_tokens: 64000
+pricing: { input_per_mtok_usd: 1.0, output_per_mtok_usd: 5.0 }
+sampling:
+  default_temperature: 1.0
+  notes: "Same API semantics as other Claude models."
+reasoning:
+  kind: none
+  cot_prompting: neutral
+  notes: "Fast utility model. Brief in-prompt reasoning requests are fine; keep them short."
+formatting_idiom: "Same XML idiom as the Claude family. Responds well to terse, imperative instructions."
+structured_output: "Tool-use with forced tool_choice; very reliable for small schemas."
+strengths: [speed, cost, classification, extraction, judging with a tight rubric]
+failure_modes: [thin on multi-step reasoning, may miss subtle context in very long documents]
+prompting_notes: |
+  - The studio's workhorse for judges, input generation, and coach confirmation.
+  - Give it one job per call; don't stack tasks.
+last_reviewed: 2026-07-17
+sources: ["https://docs.anthropic.com/en/docs/about-claude/models"]

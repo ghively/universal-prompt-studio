@@ -1,0 +1,24 @@
+id: claude-sonnet-5
+label: Claude Sonnet 5
+provider: anthropic
+api_model_id: claude-sonnet-5
+context_window: 200000
+max_output_tokens: 64000
+pricing: { input_per_mtok_usd: 3.0, output_per_mtok_usd: 15.0 }
+sampling:
+  default_temperature: 1.0
+  notes: "temperature and top_p are mutually exclusive on the Anthropic API — set one, never both. Thinking mode forces temperature 1."
+reasoning:
+  kind: hybrid-thinking
+  cot_prompting: harmful
+  notes: "Has native extended thinking with a token budget. Do NOT write 'think step by step' into prompts — request a thinking budget via the API instead. In-prompt CoT instructions waste tokens and can degrade output."
+formatting_idiom: "XML tags are its strongest sectioning signal (<role>, <instructions>, <context>). System prompt for persona. Prefill the assistant turn to force an output format."
+structured_output: "Tool-use with a JSON schema and tool_choice forcing the tool is the reliable path; 'return only JSON' in-prompt works but is weaker."
+strengths: [instruction fidelity, long-context synthesis, code, honest uncertainty when asked for it]
+failure_modes: [over-hedging when confidence is not explicitly requested, occasional preamble before JSON unless told 'return only JSON', verbosity on open-ended asks]
+prompting_notes: |
+  - Put documents/long content first or last but keep instructions adjacent to the end; ask it to quote before answering for grounding.
+  - Explicit failure behavior works well: "if unclear, output UNCLEAR" is respected.
+  - Keep the stable part of the prompt as a fixed prefix for cache hits.
+last_reviewed: 2026-07-17
+sources: ["https://docs.anthropic.com/en/docs/about-claude/models"]

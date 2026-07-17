@@ -1,0 +1,23 @@
+id: gpt-4o
+label: GPT-4o (via OpenRouter)
+provider: openrouter
+api_model_id: openai/gpt-4o
+context_window: 128000
+max_output_tokens: 16384
+pricing: { input_per_mtok_usd: 2.5, output_per_mtok_usd: 10.0 }
+sampling:
+  default_temperature: 1.0
+  notes: "temperature 0-2 range; 0.2-0.7 for factual work."
+reasoning:
+  kind: none
+  cot_prompting: helpful
+  notes: "Not a reasoning model; brief 'work through this before answering' can help on multi-step tasks."
+formatting_idiom: "Markdown headers and numbered lists as structure; system message carries persona and rules and is followed well."
+structured_output: "response_format json_schema (strict mode) via the API, or function calling. In-prompt JSON asks are moderately reliable."
+strengths: [general chat quality, format versatility, broad tool ecosystem]
+failure_modes: [confident fabrication on niche facts, instruction drift over very long conversations]
+prompting_notes: |
+  - Repeat critical constraints at the end of long prompts.
+  - Prefers markdown over XML tags for sectioning.
+last_reviewed: 2026-07-17
+sources: ["https://openrouter.ai/openai/gpt-4o"]
