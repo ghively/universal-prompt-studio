@@ -8,9 +8,12 @@ OpenAI current-generation guidance.
 ## What changed recently (read this first when returning after months away)
 
 - **Effort replaced thinking budgets.** Adaptive thinking + an effort parameter
-  (low→max) is the reasoning control on current Claude and GPT lines; manual
-  budget_tokens errors on Claude 4.7+/Fable 5. In-prompt CoT on these models is
-  harmful, not just wasteful.
+  (Anthropic: low|medium|high|xhigh|max, DEFAULT high; OpenAI: per-model range) is
+  the reasoning control; budget_tokens hard-errors on Claude 4.7+/Sonnet 5/Fable 5.
+  Calibrate by SWEEP on your eval (non-monotonic cost curve), never by vibes.
+  In-prompt CoT on adaptive/always-on models is harmful; interleaved thinking is
+  automatic; thinking display now DEFAULTS to omitted (opt into summaries); task
+  budgets (model-visible countdowns) exist in beta for pacing agent loops.
 - **Prefilled assistant turns are gone** on current Claude (400 error). Format
   forcing moved to native Structured Outputs / forced tool-use.
 - **Lean beats elaborate.** Both major labs now measure *gains* from stripping
@@ -68,6 +71,8 @@ OpenAI current-generation guidance.
 - Keyword walls ("high quality, professional, masterpiece") — noise on every modern model.
 - Anti-laziness padding ("do not stop early", "if in doubt use the tool") ported from
   2024-era prompts — now causes overwork and overtriggering.
+- max/xhigh effort on routine tasks — measured cost with no quality gain, sometimes
+  a quality loss (overthinking).
 
 ## Skills and agent artifacts
 
